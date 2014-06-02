@@ -10,5 +10,8 @@
     <string name="title_activity_loaddata">LoadData</string>
     <string name="title_activity_main_activity2">MainActivity2</string>
     <string name="title_activity_adapter_feeds">AdapterFeeds</string>
+    <string name="feed_id">id</string>
+    <string name="feed_userid">userid</string>
+    <string name="feed_name">name</string>
 
 </resources>

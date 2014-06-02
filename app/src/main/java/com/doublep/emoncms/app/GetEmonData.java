@@ -2,6 +2,8 @@ package com.doublep.emoncms.app;
 
 import android.util.Log;
 
+import com.doublep.emoncms.app.models.FeedDetails;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -37,10 +39,11 @@ public class GetEmonData {
         strAPI = "480fa3515ab1294e45a8d4854c1a0784";
         String strFeedList = strURL + "feed/list.json&apikey=" + strAPI;
         BufferedReader in;
-        String result ;
-        JSONArray feeds ;
-        ArrayList<HashMap<String, String>> feedList = null;
+        String result;
+        JSONArray feeds;
 
+
+        ArrayList feedList = new ArrayList();
         try {
             HttpClient client = new DefaultHttpClient();
             HttpGet request = new HttpGet();
@@ -76,19 +79,18 @@ public class GetEmonData {
 
 
                 // tmp hashmap for single contact
-                HashMap<String, String> feed = new HashMap<String, String>();
-
+                FeedDetails feed = new FeedDetails();
+                feed.setStrDataType(datatype);
+                feed.setStrEngine(engine);
+                feed.setStrID(id);
+                feed.setStrName(name);
+                feed.setStrPublic(strPublic);
+                feed.setStrSize(size);
+                feed.setStrTag(tag);
+                feed.setStrTime(time);
+                feed.setStrUserID(userid);
+                feed.setStrValue(value);
                 // adding each child node to HashMap key => value
-                feed.put(FEED_ID, id);
-                feed.put(FEED_USERID, userid);
-                feed.put(FEED_NAME, name);
-                feed.put(FEED_DATATYPE, datatype);
-                feed.put(FEED_TAG, tag);
-                feed.put(FEED_PUBLIC, strPublic);
-                feed.put(FEED_SIZE, size);
-                feed.put(FEED_ENGINE, engine);
-                feed.put(FEED_TIME, time);
-                feed.put(FEED_VALUE, value);
 
                 // adding contact to contact list
                 feedList.add(feed);

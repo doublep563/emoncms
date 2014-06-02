@@ -3,13 +3,13 @@ package com.doublep.emoncms.app;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.doublep.emoncms.app.loaders.LoadData;
+import com.doublep.emoncms.app.Views.Feeds;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -35,7 +35,7 @@ public class MainActivity extends ActionBarActivity {
 
             Toast toast = Toast.makeText(context, text, duration);
             toast.show();
-            Intent i = new Intent(this, LoadData.class);
+            Intent i = new Intent(this, Feeds.class);
             startActivity(i);
 
         }

@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.doublep.emoncms.app.R;
 import com.doublep.emoncms.app.models.FeedDetails;
 
 import java.util.ArrayList;
@@ -30,22 +31,26 @@ public class AdapterFeeds extends ArrayAdapter<FeedDetails> {
         if (v == null) {
             LayoutInflater vi = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            v = vi.inflate(R.layout.club_course_info_list, null);
+            v = vi.inflate(R.layout.feed_list_detail, null);
         }
-        feedList o = items.get(position);
+        FeedDetails o = items.get(position);
         if (o != null) {
-            TextView tvClubContactType = (TextView) v
-                    .findViewById(R.id.ContactType);
-            TextView tvClubContactInfo = (TextView) v
-                    .findViewById(R.id.ContactInfo);
+            TextView tvfeed_id = (TextView) v
+                    .findViewById(R.id.textView_id);
+            TextView tvfeed_userid = (TextView) v
+                    .findViewById(R.id.textView_userid);
+            TextView tvfeed_name = (TextView) v
+                    .findViewById(R.id.textView_name);
 
-            if (tvClubContactType != null) {
-                tvClubContactType.setText(o.getContactType());
+            if (tvfeed_id != null) {
+                tvfeed_id.setText(o.getStrID());
             }
-            if (tvClubContactInfo != null) {
-                tvClubContactInfo.setText(o.getContactInfo());
+            if (tvfeed_userid != null) {
+                tvfeed_userid.setText(o.getStrUserID());
             }
-
+            if (tvfeed_name != null) {
+                tvfeed_name.setText(o.getStrName());
+            }
         }
         return v;
     }
