@@ -16,14 +16,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".SettingsActivity"
-            android:label="@string/title_activity_settings"></activity>
-        <activity
-            android:name=".GetEmonData"
-            android:label="@string/title_activity_get_emom_data"></activity>
+
         <activity
             android:name=".Views.Feeds"
+            android:label="@string/title_activity_adapter_feeds"></activity>
+        <activity
+            android:name=".Preferences"
             android:label="@string/title_activity_adapter_feeds"></activity>
     </application>
 

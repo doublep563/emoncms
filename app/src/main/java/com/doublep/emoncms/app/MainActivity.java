@@ -59,7 +59,7 @@ public class MainActivity extends ActionBarActivity {
         switch (item.getItemId()) {
             case R.id.action_settings:
                 // Launch settings activity
-                Intent i = new Intent(this, SettingsActivity.class);
+                Intent i = new Intent(this, Preferences.class);
                 startActivity(i);
                 break;
 
