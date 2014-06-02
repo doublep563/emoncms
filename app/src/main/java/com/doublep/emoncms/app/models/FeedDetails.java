@@ -10,6 +10,18 @@ public class FeedDetails implements Parcelable {
 
     // Basic Club Details
 
+    @SuppressWarnings("rawtypes")
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
+        @Override
+        public FeedDetails createFromParcel(Parcel in) {
+            return new FeedDetails(in);
+        }
+
+        @Override
+        public FeedDetails[] newArray(int size) {
+            return new FeedDetails[size];
+        }
+    };
     private String strID = "";
     private String strUserID = "";
     private String strName = "";
@@ -21,95 +33,93 @@ public class FeedDetails implements Parcelable {
     private String strTime = "";
     private String strValue = "";
 
-
     public FeedDetails() {
-        ;
-    };
+
+    }
 
     public FeedDetails(Parcel in) {
         readFromParcel(in);
-    }
-
-    public void setStrID(String strID) {
-        this.strID = strID;
     }
 
     public String getStrID() {
         return strID;
     }
 
-    public void setStrUserID(String strUserID) {
-        this.strUserID = strUserID;
+    public void setStrID(String strID) {
+        this.strID = strID;
     }
 
     public String getStrUserID() {
         return strUserID;
     }
 
-    public void setStrName(String strName) {
-        this.strName = strName;
+    public void setStrUserID(String strUserID) {
+        this.strUserID = strUserID;
     }
 
     public String getStrName() {
         return strName;
     }
 
-    public void setStrDataType(String strDataType) {
-        this.strDataType = strDataType;
+    public void setStrName(String strName) {
+        this.strName = strName;
     }
 
     public String getStrDataType() {
         return strDataType;
     }
 
-    public void setStrTag(String strTag) {
-        this.strTag = strTag;
+    public void setStrDataType(String strDataType) {
+        this.strDataType = strDataType;
     }
 
     public String getStrTag() {
         return strTag;
     }
 
-    public void setStrPublic(String strPublic) {
-        this.strPublic = strPublic;
+    public void setStrTag(String strTag) {
+        this.strTag = strTag;
     }
 
     public String getStrPublic() {
         return strPublic;
     }
 
-    public void setStrSize(String strSize) {
-        this.strSize = strSize;
+    public void setStrPublic(String strPublic) {
+        this.strPublic = strPublic;
     }
 
     public String getStrSize() {
         return strSize;
     }
 
-    public void setStrEngine(String strEngine) {
-        this.strEngine = strEngine;
+    public void setStrSize(String strSize) {
+        this.strSize = strSize;
     }
 
     public String getStrEngine() {
         return strEngine;
     }
 
-    public void setStrTime(String strTime) {
-        this.strTime = strTime;
+    public void setStrEngine(String strEngine) {
+        this.strEngine = strEngine;
     }
 
     public String getStrTime() {
-        return strTime;
+        return strTime + " Secs Ago";
     }
 
-    public void setStrValue(String strValue) {
-        this.strValue = strValue;
+    public void setStrTime(String strTime) {
+        this.strTime = strTime;
     }
 
     public String getStrValue() {
         return strValue;
     }
 
+    public void setStrValue(String strValue) {
+        this.strValue = strValue;
+    }
 
     @Override
     public int describeContents() {
@@ -149,17 +159,4 @@ public class FeedDetails implements Parcelable {
         strValue = in.readString();
 
     }
-
-    @SuppressWarnings("rawtypes")
-    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
-        @Override
-        public FeedDetails createFromParcel(Parcel in) {
-            return new FeedDetails(in);
-        }
-
-        @Override
-        public FeedDetails[] newArray(int size) {
-            return new FeedDetails[size];
-        }
-    };
 }

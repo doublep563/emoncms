@@ -9,9 +9,17 @@
     <string name="title_activity_get_emom_data">GetEmomData</string>
     <string name="title_activity_loaddata">LoadData</string>
     <string name="title_activity_main_activity2">MainActivity2</string>
-    <string name="title_activity_adapter_feeds">AdapterFeeds</string>
+    <string name="title_activity_adapter_feeds">Feeds</string>
     <string name="feed_id">id</string>
     <string name="feed_userid">userid</string>
     <string name="feed_name">name</string>
+    <string name="feed_updated">Updated</string>
+    <string name="feed_value">Value</string>
+    <string name="feed_tag">Tag</string>
+    <string name="view_id">ID</string>
+    <string name="view_name">Name</string>
+    <string name="view_Update">Updated</string>
+    <string name="view_Value">Value</string>
+    <string name="view_tag">Tag</string>
 
 </resources>

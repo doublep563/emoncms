@@ -77,6 +77,10 @@ public class GetEmonData {
                 String time = c.getString(FEED_TIME);
                 String value = c.getString(FEED_VALUE);
 
+                // Calculate Last Updated Value
+                int intTime =Integer.parseInt(time);
+                long unixTime = System.currentTimeMillis() / 1000L;
+                int myTime = (int) unixTime - intTime;
 
                 // tmp hashmap for single contact
                 FeedDetails feed = new FeedDetails();
@@ -87,7 +91,7 @@ public class GetEmonData {
                 feed.setStrPublic(strPublic);
                 feed.setStrSize(size);
                 feed.setStrTag(tag);
-                feed.setStrTime(time);
+                feed.setStrTime(Integer.toString(myTime));
                 feed.setStrUserID(userid);
                 feed.setStrValue(value);
                 // adding each child node to HashMap key => value

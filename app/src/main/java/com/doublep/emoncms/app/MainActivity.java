@@ -29,8 +29,10 @@ public class MainActivity extends ActionBarActivity {
             Toast toast = Toast.makeText(context, text, duration);
             toast.show();
         } else {
+
+            long unixTime = System.currentTimeMillis() / 1000L;
             Context context = getApplicationContext();
-            CharSequence text = "No Shared Preferences set!!!!";
+            CharSequence text = "Current Time" + unixTime;
             int duration = Toast.LENGTH_LONG;
 
             Toast toast = Toast.makeText(context, text, duration);
