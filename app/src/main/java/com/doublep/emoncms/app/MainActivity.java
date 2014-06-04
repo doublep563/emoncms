@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,14 +14,22 @@ import com.doublep.emoncms.app.Views.Feeds;
 
 
 public class MainActivity extends ActionBarActivity {
-    public static final boolean DEBUG = true;
-    public String strURL, strAPI;
-    public static final String appPrefs = "AppPrefs" ;
+
+    public static boolean DEBUG = true;
+    public SharedPreferences prefs;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Set default Shared Preferences
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+
         if (CheckPreferences()) {
             Context context = getApplicationContext();
             CharSequence text = "Shared Preferences set!!!!";
@@ -69,13 +78,6 @@ public class MainActivity extends ActionBarActivity {
 
     private boolean CheckPreferences() {
 
-        SharedPreferences sharedpreferences = getSharedPreferences(appPrefs, Context.MODE_PRIVATE);
-
-        if (sharedpreferences.contains(strURL) && sharedpreferences.contains(strAPI) )
-        {
-            return true;
-        }
-        else return false;
-
+        return false;
     }
 }

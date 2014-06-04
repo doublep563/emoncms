@@ -4,12 +4,16 @@ import android.app.Activity;
 import android.app.ListActivity;
 import android.app.LoaderManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.Loader;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ListView;
 
 import com.doublep.emoncms.app.MainActivity;
+import com.doublep.emoncms.app.Preferences;
 import com.doublep.emoncms.app.R;
 import com.doublep.emoncms.app.adapters.AdapterFeeds;
 import com.doublep.emoncms.app.loaders.LoadFeeds;
@@ -66,6 +70,29 @@ public class Feeds extends ListActivity implements
     public void onLoaderReset(Loader<ArrayList> loader) {
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onLoadReset() called! +++");
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                // Launch settings activity
+                Intent i = new Intent(this, Preferences.class);
+                startActivity(i);
+                break;
+
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 

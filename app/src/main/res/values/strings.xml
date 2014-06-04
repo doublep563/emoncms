@@ -43,5 +43,25 @@
     <string name="summary_parent_preference">summary_parent_preference</string>
     <string name="title_child_preference">title_child_preference</string>
     <string name="summary_child_preference">summary_child_preference</string>
+    <string name="pref_title1">emoncms Preferences</string>
+    <string name="pref_emoncms_url">emoncms URL</string>
+    <string name="pref_emoncms_url_summary">Enter the full URL to your emoncms server</string>
+    <string name="pref_emoncms_url_dialog">Enter URL</string>
+    <string name="pref_emoncms_api">emoncms API Key</string>
+    <string name="pref_emoncms_api_summary">Enter your readonly API key</string>
+    <string name="pref_emoncms_api_dialog">Enter API key</string>
+    <string name="pref_emoncms_rasppi">Raspberry PI Interface</string>
+    <string name="pref_emoncms_rasppi_summary">Check if Raspberry Pi Interface is running</string>
+    <string name="pref_emoncms_feeds">Feeds Summary</string>
+    <string name="pref_emoncms_feeds_summary">Show Feeds summary</string>
+    <string name="pref_title2">emoncms Web Site Login and password</string>
+    <string name="pref_emoncms_login">Login</string>
+    <string name="pref_emoncms_login_summary">Enter your login to emoncms</string>
+    <string name="pref_emoncms_login_dialog">Enter Login</string>
+    <string name="pref_emoncms_password">Password</string>
+    <string name="pref_emoncms_password_summary">Enter password for emoncms</string>
+    <string name="pref_emoncms_password_dialog">Enter password</string>
+    <string name="pref_title2_summary">Enter details if you wish to go to full web site</string>
+    <string name="pref_default"></string>
 
 </resources>
