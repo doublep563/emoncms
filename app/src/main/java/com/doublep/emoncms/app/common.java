@@ -1,7 +1,5 @@
 package com.doublep.emoncms.app;
 
-import android.app.Application;
-
 /**
  * Created by Paul Patchell on 03/06/2014.
  */

@@ -62,6 +62,16 @@
     <string name="pref_emoncms_password_summary">Enter password for emoncms</string>
     <string name="pref_emoncms_password_dialog">Enter password</string>
     <string name="pref_title2_summary">Enter details if you wish to go to full web site</string>
-    <string name="pref_default"></string>
+    <string name="pref_default">Not Set</string>
+    <string name="emoncms_url">URL to Web Server</string>
+    <string name="emoncms_rapberry_pi_status">Raspberry Pi Interface Status</string>
+    <string name="emoncms_feed_summary">Feed Summary</string>
+    <string name="emoncms_last_updated">Updated</string>
+    <string name="emoncms_web_site">Go to Web Site</string>
+    <string name="dialog_settings">Test</string>
+    <string name="dialog_settings_message">You need to set the URL and API key of your web server</string>
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
+    <string name="getting_started">Getting Started</string>
 
 </resources>

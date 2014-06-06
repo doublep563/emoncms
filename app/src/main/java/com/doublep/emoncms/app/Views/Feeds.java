@@ -1,6 +1,5 @@
 package com.doublep.emoncms.app.Views;
 
-import android.app.Activity;
 import android.app.ListActivity;
 import android.app.LoaderManager;
 import android.content.Context;
@@ -10,7 +9,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ListView;
 
 import com.doublep.emoncms.app.MainActivity;
 import com.doublep.emoncms.app.Preferences;
@@ -38,15 +36,6 @@ public class Feeds extends ListActivity implements
         super.onCreate(icicle);
         Context mContext = this;
         setContentView(R.layout.feed_list);
-
-
-
-        //ListView listView = (ListView) findViewById(R.id.list_data);
-
-        //LoadFeeds abc = new LoadFeeds(mContext, strURL, strAPI);
-
-
-        //setListShown(false);
 
         getLoaderManager().initLoader(LOADER_ID, null, this);
     }

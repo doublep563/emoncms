@@ -3,7 +3,6 @@ package com.doublep.emoncms.app.loaders;
 
 import android.content.AsyncTaskLoader;
 import android.content.Context;
-
 import android.util.Log;
 
 import com.doublep.emoncms.app.GetEmonData;
