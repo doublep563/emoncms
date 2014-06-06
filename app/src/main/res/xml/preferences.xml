@@ -20,7 +20,7 @@
             android:title="@string/pref_emoncms_api" />
 
         <CheckBoxPreference
-            android:defaultValue="true"
+            android:defaultValue="false"
             android:key="pref_key_raspberry_pi"
             android:summary="@string/pref_emoncms_rasppi_summary"
             android:title="@string/pref_emoncms_rasppi" />

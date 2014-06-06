@@ -19,24 +19,27 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 
 
 public class MainActivity extends ActionBarActivity {
 
 
-    public static boolean DEBUG = true;
     private static final String TAG = "MainActivity";
-    public SharedPreferences prefs;
-    int mStackLevel = 0;
+    public static boolean DEBUG = true;
     public static String strEmoncmsURL;
     public static String strEmoncmsAPI;
+    static String strURL;
+    static String strAPI;
+    public SharedPreferences prefs;
+    int mStackLevel = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-       // setContentView(R.layout.activity_main);
-    //TODO Getting Started Screen. Setup the preferences
+        // setContentView(R.layout.activity_main);
+        //TODO Getting Started Screen. Setup the preferences
         CheckPreferences();
 
     }
@@ -76,11 +79,41 @@ public class MainActivity extends ActionBarActivity {
 
         if (strEmoncmsURL.equalsIgnoreCase(getResources().getString(R.string.pref_default))) {
             showDialog();
-        }
-        else if (strEmoncmsAPI.equalsIgnoreCase(getResources().getString(R.string.pref_default))) {
+        } else if (strEmoncmsAPI.equalsIgnoreCase(getResources().getString(R.string.pref_default))) {
             showDialog();
         }
         return false;
+    }
+
+    void showDialog() {
+        mStackLevel++;
+
+        // DialogFragment.show() will take care of adding the fragment
+        // in a transaction.  We also want to remove any currently showing
+        // dialog, so make our own transaction and take care of that here.
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        Fragment prev = getFragmentManager().findFragmentByTag("dialog");
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+
+        // Create and show the dialog.
+        DialogFragment newFragment = SettingsDialogFragment.newInstance(mStackLevel);
+        newFragment.show(ft, "dialog");
+    }
+
+    public void doSaveSettings(String strURL, String strAPI) {
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(common.PREF_KEY_EMONCMS_URL, strURL);
+        editor.putString(common.PREF_KEY_EMONCMS_API, strAPI);
+        editor.commit();
+        //TODO Test the URL and API provided
+        //TODO Create StartActivityforResult
+        Intent i = new Intent(this, Preferences.class);
+        startActivity(i);
     }
 
     public static class SettingsDialogFragment extends DialogFragment {
@@ -106,40 +139,36 @@ public class MainActivity extends ActionBarActivity {
             View view = inflater.inflate(R.layout.setup, null);
             builder.setView(view);
 
-            EditText mURL = (EditText) view.findViewById(R.id.url);
-            EditText mAPI = (EditText) view.findViewById(R.id.api);
+            final EditText mURL = (EditText) view.findViewById(R.id.url);
+            final EditText mAPI = (EditText) view.findViewById(R.id.api);
+
+            Button btnCancel = (Button) view.findViewById(R.id.btnCancel);
+
+            btnCancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    SettingsDialogFragment.this.dismiss();
+                }
+            });
+
+            Button btnSave = (Button) view.findViewById(R.id.btnSave);
+
+            btnSave.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    strURL = mURL.getText().toString();
+                    strAPI = mAPI.getText().toString();
+                    if (MainActivity.DEBUG) {
+                        Log.i("MainActivity", "btnSave.setOnClickListener" + strURL + " " + strAPI);
+                    }
+                    ((MainActivity) getActivity()).doSaveSettings(strURL, strAPI);
+                }
+            });
             // Create the AlertDialog object and return it
             return builder.create();
         }
 
 
-
-
-
-
-    }
-
-    void showDialog() {
-        mStackLevel++;
-
-        // DialogFragment.show() will take care of adding the fragment
-        // in a transaction.  We also want to remove any currently showing
-        // dialog, so make our own transaction and take care of that here.
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        Fragment prev = getFragmentManager().findFragmentByTag("dialog");
-        if (prev != null) {
-            ft.remove(prev);
-        }
-        ft.addToBackStack(null);
-
-        // Create and show the dialog.
-        DialogFragment newFragment = SettingsDialogFragment.newInstance(mStackLevel);
-        newFragment.show(ft, "dialog");
-    }
-
-    public  void doSettingsClick() {
-        Intent i = new Intent(this, Preferences.class);
-        startActivity(i);
     }
 
 
