@@ -1,11 +1,7 @@
 package com.doublep.emoncms.app.models;
 
-import android.content.res.Resources;
 import android.os.Parcel;
 import android.os.Parcelable;
-
-import com.doublep.emoncms.app.MainActivity;
-import com.doublep.emoncms.app.R;
 
 /**
  * Created by Paul Patchell on 02/06/2014.

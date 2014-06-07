@@ -113,19 +113,22 @@ public class GetEmonData {
 
         ArrayList summaryList = new ArrayList();
         String RASPBERRY_PI_STATUS = null;
-        String FEEDS_GOOD = null;
-        String FEEDS_BAD = null;
+        int FEEDS_GOOD = 0;
+        int FEEDS_BAD = 0;
+
+        String FEED_TIME = "time";
         //TODO Fix in Preferences Setup
         strURL = strURL.replace("\n", "");
 
-        String strFeedList = strURL + "/raspberrypi/getrunning.json&apikey=" + strAPI;
-        //String strFeedList = strURL + "/raspberrypi/getrunning.json";
+        String strRaspURL = strURL + "/raspberrypi/getrunning.json&apikey=" + strAPI;
+        String strFeedList = strURL + "/feed/list.json&apikey=" + strAPI;
+
 
 
         try {
             HttpClient client = new DefaultHttpClient();
             HttpGet request = new HttpGet();
-            request.setURI(new URI(strFeedList));
+            request.setURI(new URI(strRaspURL));
 
 
             HttpResponse response = client.execute(request);
@@ -149,10 +152,54 @@ public class GetEmonData {
             Log.d("InputStream", e.getLocalizedMessage());
         }
 
+        try {
+            HttpClient client = new DefaultHttpClient();
+            HttpGet request = new HttpGet();
+            request.setURI(new URI(strFeedList));
+
+
+            HttpResponse response = client.execute(request);
+
+            BufferedReader in = new BufferedReader(new InputStreamReader(response.getEntity()
+                    .getContent()));
+            StringBuffer sb = new StringBuffer("");
+            String line = "";
+            String NL = System.getProperty("line.separator");
+            while ((line = in.readLine()) != null) {
+                sb.append(line + NL);
+            }
+            in.close();
+            String result = sb.toString();
+            JSONArray feeds = new JSONArray(result);
+
+            for (int i = 0; i < feeds.length(); i++) {
+                JSONObject c = feeds.getJSONObject(i);
+
+
+                String time = c.getString(FEED_TIME);
+
+
+                // Calculate Last Updated Value
+                int intTime = Integer.parseInt(time);
+                long unixTime = System.currentTimeMillis() / 1000L;
+                int myTime = (int) unixTime - intTime;
+                //TODO Externalise 120 to Preferences
+                if(myTime > 120) {
+                    FEEDS_BAD = FEEDS_BAD + 1;
+                }
+                else FEEDS_GOOD = FEEDS_GOOD +1;
+
+            }
+
+        } catch (Exception e) {
+            Log.d("InputStream", e.getLocalizedMessage());
+        }
+
+
         SummaryStatus summaryStatus = new SummaryStatus();
         summaryStatus.setStrRaspPiStatus(RASPBERRY_PI_STATUS);
-        summaryStatus.setStrFeedsGood("Good Feeds");
-        summaryStatus.setStrFeedsBad("Bad Feeds");
+        summaryStatus.setStrFeedsGood(Integer.toString(FEEDS_GOOD));
+        summaryStatus.setStrFeedsBad(Integer.toString(FEEDS_BAD));
         summaryList.add(summaryStatus);
         return summaryList;
     }

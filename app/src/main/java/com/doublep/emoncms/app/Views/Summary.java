@@ -10,15 +10,12 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
 
 import com.doublep.emoncms.app.MainActivity;
 import com.doublep.emoncms.app.Preferences;
 import com.doublep.emoncms.app.R;
-import com.doublep.emoncms.app.adapters.AdapterFeeds;
 import com.doublep.emoncms.app.common;
-import com.doublep.emoncms.app.loaders.LoadFeeds;
 import com.doublep.emoncms.app.loaders.LoadSummaryStatus;
 import com.doublep.emoncms.app.models.SummaryStatus;
 
@@ -47,6 +44,7 @@ public class Summary extends Activity implements
 
         if (MainActivity.DEBUG) Log.i(TAG, "URL is " + strEmoncmsURL);
         if (MainActivity.DEBUG) Log.i(TAG, "API is " + strEmoncmsAPI);
+
 
 
         getLoaderManager().initLoader(LOADER_ID, null, this);
@@ -119,6 +117,8 @@ public class Summary extends Activity implements
 
         SummaryStatus status = (SummaryStatus) summaryStatus.get(0);
         String strRaspPiStatus = status.getStrRaspPiStatus();
+        String strGoodFeeds = status.getStrFeedsGood();
+        String strBadFeeds = status.getStrFeedsBad();
 
         TextView t = (TextView) findViewById(R.id.textView2);
         t.setText(strEmoncmsURL);
@@ -126,6 +126,11 @@ public class Summary extends Activity implements
         TextView tv5 = (TextView) findViewById(R.id.textView5);
         tv5.setText(strRaspPiStatus);
 
+        TextView tv8 = (TextView) findViewById(R.id.textView8);
+        tv8.setText(strGoodFeeds);
+
+        TextView tv10 = (TextView) findViewById(R.id.textView10);
+        tv10.setText(strBadFeeds);
 
         if (MainActivity.DEBUG) Log.i(TAG, "+++ BuildSummaryView() called! +++");
     }
