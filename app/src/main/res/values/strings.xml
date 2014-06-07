@@ -78,5 +78,7 @@
     <string name="emomcms_rasppi_down">RFM12 to Pi interface script is DOWN!!!</string>
     <string name="emoncms_good_feeds">Good Feeds</string>
     <string name="emoncms_bad_feeds">Bad Feeds</string>
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
 
 </resources>

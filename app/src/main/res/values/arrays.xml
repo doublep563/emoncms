@@ -2,4 +2,11 @@
 <resources>
     <string-array name="entries_list_preference">entries_list_preference</string-array>
     <string-array name="entryvalues_list_preference">entryvalues_list_preference</string-array>
+    <string-array name="nav_titles">
+        <item>Summary</item>
+        <item>Feeds</item>
+        <item>Input</item>
+        <item>Raspberry Pi</item>
+    </string-array>
+
 </resources>
