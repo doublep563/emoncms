@@ -37,7 +37,7 @@ public class FeedDetails implements Parcelable {
 
     }
 
-    public FeedDetails(Parcel in) {
+    private FeedDetails(Parcel in) {
         readFromParcel(in);
     }
 

@@ -20,8 +20,7 @@ import java.util.ArrayList;
 
 public class GetEmonData {
 
-    public static ArrayList GetFeeds(String strURL, String strAPI)
-            throws Exception {
+    public static ArrayList GetFeeds() {
         // JSON Node names
         String FEED_ID = "id";
         String FEED_USERID = "userid";
@@ -35,8 +34,8 @@ public class GetEmonData {
         String FEED_VALUE = "value";
 
 
-        strURL = "http://doublep.dnsd.me/emoncms/";
-        strAPI = "480fa3515ab1294e45a8d4854c1a0784";
+        String strURL = "http://doublep.dnsd.me/emoncms/";
+        String strAPI = "480fa3515ab1294e45a8d4854c1a0784";
         String strFeedList = strURL + "feed/list.json&apikey=" + strAPI;
         BufferedReader in;
         String result;
@@ -55,7 +54,7 @@ public class GetEmonData {
             in = new BufferedReader(new InputStreamReader(response.getEntity()
                     .getContent()));
             StringBuffer sb = new StringBuffer("");
-            String line = "";
+            String line;
             String NL = System.getProperty("line.separator");
             while ((line = in.readLine()) != null) {
                 sb.append(line + NL);
@@ -108,8 +107,7 @@ public class GetEmonData {
         return feedList;
     }
 
-    public static ArrayList GetStatus(String strURL, String strAPI)
-            throws Exception {
+    public static ArrayList GetStatus(String strURL, String strAPI) {
 
         ArrayList summaryList = new ArrayList();
         String RASPBERRY_PI_STATUS = null;
@@ -136,7 +134,7 @@ public class GetEmonData {
             BufferedReader in = new BufferedReader(new InputStreamReader(response.getEntity()
                     .getContent()));
             StringBuffer sb = new StringBuffer("");
-            String line = "";
+            String line;
             String NL = System.getProperty("line.separator");
             while ((line = in.readLine()) != null) {
                 sb.append(line + NL);

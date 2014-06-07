@@ -16,13 +16,10 @@ import java.util.ArrayList;
 public class LoadFeeds extends AsyncTaskLoader<ArrayList> {
 
 
-    private String strURL;
-    private String strAPI;
-
     public LoadFeeds(Context context, String strURL, String strAPI) {
         super(context);
-        this.strURL = strURL;
-        this.strAPI = strAPI;
+        String strURL1 = strURL;
+        String strAPI1 = strAPI;
 
     }
 
@@ -33,7 +30,7 @@ public class LoadFeeds extends AsyncTaskLoader<ArrayList> {
         ArrayList mFeedDetails = null;
 
         try {
-            mFeedDetails = GetEmonData.GetFeeds(strURL, strAPI);
+            mFeedDetails = GetEmonData.GetFeeds();
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

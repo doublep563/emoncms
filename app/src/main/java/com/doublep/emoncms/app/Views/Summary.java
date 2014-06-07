@@ -7,9 +7,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.doublep.emoncms.app.MainActivity;
 import com.doublep.emoncms.app.R;
@@ -29,9 +26,7 @@ public class Summary extends ListFragment implements
     private static final String TAG = "Summary";
     private static final int LOADER_ID = 1;
     public static String strEmoncmsURL = "";
-    String strEmoncmsAPI;
-    ArrayList summaryStatus;
-    AdapterSummary mAdapter;
+    private String strEmoncmsAPI;
     private String strRaspPiStatus;
     private String strGoodFeeds;
     private String strBadFeeds;
@@ -67,10 +62,6 @@ public class Summary extends ListFragment implements
         super.onPause();
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.summary_list, container, false);
-    }
 
     @Override
     public Loader<ArrayList> onCreateLoader(int id, Bundle args) {
@@ -81,8 +72,8 @@ public class Summary extends ListFragment implements
     @Override
     public void onLoadFinished(Loader<ArrayList> loader, ArrayList data) {
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onLoadFinished() called! +++");
-        summaryStatus = data;
-        mAdapter = new AdapterSummary(getActivity(), R.layout.summary, summaryStatus);
+        ArrayList summaryStatus = data;
+        AdapterSummary mAdapter = new AdapterSummary(getActivity(), R.layout.summary, summaryStatus);
         setListAdapter(mAdapter);
 
     }

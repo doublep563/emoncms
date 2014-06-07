@@ -1,8 +1,6 @@
 package com.doublep.emoncms.app.adapters;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,8 +9,6 @@ import android.widget.TextView;
 
 import com.doublep.emoncms.app.R;
 import com.doublep.emoncms.app.Views.Summary;
-import com.doublep.emoncms.app.common;
-import com.doublep.emoncms.app.models.FeedDetails;
 import com.doublep.emoncms.app.models.SummaryStatus;
 
 import java.util.ArrayList;
@@ -22,10 +18,6 @@ public class AdapterSummary extends ArrayAdapter<SummaryStatus> {
 
     private final ArrayList<SummaryStatus> items;
     private final Context context;
-    private String strRaspPiStatus;
-    private String strGoodFeeds;
-    private String strBadFeeds;
-    private String strEmoncmsURL;
 
     public AdapterSummary(Context context, int textViewResourceId,
                           ArrayList<SummaryStatus> items) {
@@ -45,11 +37,11 @@ public class AdapterSummary extends ArrayAdapter<SummaryStatus> {
         SummaryStatus o = items.get(0);
 
         //SummaryStatus status = (SummaryStatus) summaryStatus.get(0);
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-        strEmoncmsURL = Summary.strEmoncmsURL;
-        strRaspPiStatus =  o.getStrRaspPiStatus();
-        strGoodFeeds = o.getStrFeedsGood();
-        strBadFeeds = o.getStrFeedsBad();
+       // SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        String strEmoncmsURL = Summary.strEmoncmsURL;
+        String strRaspPiStatus = o.getStrRaspPiStatus();
+        String strGoodFeeds = o.getStrFeedsGood();
+        String strBadFeeds = o.getStrFeedsBad();
 
         if (o != null) {
             TextView t = (TextView) v.findViewById(R.id.textView2);

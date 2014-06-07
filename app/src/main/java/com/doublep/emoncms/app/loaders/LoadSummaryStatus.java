@@ -16,8 +16,8 @@ import java.util.ArrayList;
 public class LoadSummaryStatus extends AsyncTaskLoader<ArrayList> {
 
 
-    private String strURL;
-    private String strAPI;
+    private final String strURL;
+    private final String strAPI;
 
     public LoadSummaryStatus(Context context, String strURL, String strAPI) {
         super(context);

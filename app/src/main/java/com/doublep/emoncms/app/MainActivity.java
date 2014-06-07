@@ -25,20 +25,19 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import com.doublep.emoncms.app.Views.Feeds;
 import com.doublep.emoncms.app.Views.Summary;
 
 
 public class MainActivity extends ActionBarActivity {
 
 
+    public static final boolean DEBUG = true;
     private static final String TAG = "MainActivity";
-    public static boolean DEBUG = true;
-    public static String strEmoncmsURL;
-    public static String strEmoncmsAPI;
-    static String strURL;
-    static String strAPI;
+    private static String strURL;
+    private static String strAPI;
     public SharedPreferences prefs;
-    int mStackLevel = 0;
+    private int mStackLevel = 0;
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private String[] mNavTitles;
@@ -93,11 +92,11 @@ public class MainActivity extends ActionBarActivity {
         getActionBar().setHomeButtonEnabled(true);
 
         //TODO Getting Started Screen. Setup the preferences
-        //if (CheckPreferences()) {
-         //   if (MainActivity.DEBUG) Log.i(TAG, "CheckPreferences is True ");
-          //  Intent i = new Intent(this, Summary.class);
-          //  startActivity(i);
-       // }
+        if (CheckPreferences()) {
+            if (MainActivity.DEBUG) Log.i(TAG, "CheckPreferences is True ");
+            Intent i = new Intent(this, Summary.class);
+            startActivity(i);
+        }
 
     }
 
@@ -132,8 +131,8 @@ public class MainActivity extends ActionBarActivity {
     private boolean CheckPreferences() {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         //Are the URL and API set?
-        strEmoncmsURL = sharedPref.getString(common.PREF_KEY_EMONCMS_URL, getResources().getString(R.string.pref_default));
-        strEmoncmsAPI = sharedPref.getString(common.PREF_KEY_EMONCMS_API, getResources().getString(R.string.pref_default));
+        String strEmoncmsURL = sharedPref.getString(common.PREF_KEY_EMONCMS_URL, getResources().getString(R.string.pref_default));
+        String strEmoncmsAPI = sharedPref.getString(common.PREF_KEY_EMONCMS_API, getResources().getString(R.string.pref_default));
 
         if (MainActivity.DEBUG) Log.i(TAG, "URL is " + strEmoncmsURL);
         if (MainActivity.DEBUG) Log.i(TAG, "API is " + strEmoncmsAPI);
@@ -164,7 +163,7 @@ public class MainActivity extends ActionBarActivity {
         newFragment.show(ft, "dialog");
     }
 
-    public void doSaveSettings(String strURL, String strAPI) {
+    void doSaveSettings(String strURL, String strAPI) {
         //TODO This needs to be moved to Preferences class or use method from class to standardise
         //TODO updating of preferences e.g. removing /n from text views
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -176,6 +175,55 @@ public class MainActivity extends ActionBarActivity {
         //TODO Create StartActivityforResult
         Intent i = new Intent(this, Preferences.class);
         startActivity(i);
+    }
+
+    /**
+     * Swaps fragments in the main content view
+     */
+    private void selectItem(int position) {
+        // 0 = Summary
+        if (position == 0) {
+            Fragment fragment = new Summary();
+            Bundle args = new Bundle();
+
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.content_frame, fragment)
+                    .commit();
+        }
+        // 1 = Feeds
+        else if (position == 1) {
+            Fragment fragment = new Feeds();
+            Bundle args = new Bundle();
+
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.content_frame, fragment)
+                    .commit();
+        }
+        // Highlight the selected item, update the title, and close the drawer
+        mDrawerList.setItemChecked(position, true);
+        setTitle(mNavTitles[position]);
+        mDrawerLayout.closeDrawer(mDrawerList);
+    }
+
+    @Override
+    public void setTitle(CharSequence title) {
+        mTitle = title;
+        getActionBar().setTitle(mTitle);
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        mDrawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
     public static class SettingsDialogFragment extends DialogFragment {
@@ -238,45 +286,6 @@ public class MainActivity extends ActionBarActivity {
         public void onItemClick(AdapterView parent, View view, int position, long id) {
             selectItem(position);
         }
-    }
-
-    /** Swaps fragments in the main content view */
-    private void selectItem(int position) {
-        // Create a new fragment and specify the planet to show based on position
-        Fragment fragment = new Summary();
-        Bundle args = new Bundle();
-       // args.putInt(PlanetFragment.ARG_PLANET_NUMBER, position);
-       // fragment.setArguments(args);
-
-        // Insert the fragment by replacing any existing fragment
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.content_frame, fragment)
-               .commit();
-
-        // Highlight the selected item, update the title, and close the drawer
-        mDrawerList.setItemChecked(position, true);
-        setTitle(mNavTitles[position]);
-        mDrawerLayout.closeDrawer(mDrawerList);
-    }
-
-    @Override
-    public void setTitle(CharSequence title) {
-        mTitle = title;
-        getActionBar().setTitle(mTitle);
-    }
-
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        // Sync the toggle state after onRestoreInstanceState has occurred.
-        mDrawerToggle.syncState();
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
 

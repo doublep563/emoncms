@@ -25,16 +25,13 @@ public class SummaryStatus implements Parcelable {
     private String strRaspPiStatus = "";
     private String strFeedsGood = "";
     private String strFeedsBad = "";
-    //TODO Need to externalise these to set colors on Summary View
-    private String strRaspPiStatusUp = "RFM12 to Pi interface script is up and running";
-    private String strRaspPiStatusDown = "RFM12 to Pi interface script is DOWN!!!";
 
 
     public SummaryStatus() {
 
     }
 
-    public SummaryStatus(Parcel in) {
+    private SummaryStatus(Parcel in) {
         readFromParcel(in);
     }
 
@@ -44,9 +41,11 @@ public class SummaryStatus implements Parcelable {
 
     public void setStrRaspPiStatus(String strRaspPiStatus) {
         if (strRaspPiStatus.equalsIgnoreCase("true")) {
+            String strRaspPiStatusUp = "RFM12 to Pi interface script is up and running";
             this.strRaspPiStatus = strRaspPiStatusUp;
         }
         else {
+            String strRaspPiStatusDown = "RFM12 to Pi interface script is DOWN!!!";
             this.strRaspPiStatus = strRaspPiStatusDown;
         }
     }
