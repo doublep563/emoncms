@@ -22,6 +22,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.doublep.emoncms.app.Views.Summary;
+
 
 public class MainActivity extends ActionBarActivity {
 
@@ -38,9 +40,13 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // setContentView(R.layout.activity_main);
+        // setContentView(R.layout.summary);
         //TODO Getting Started Screen. Setup the preferences
-        CheckPreferences();
+        if (CheckPreferences()) {
+            if (MainActivity.DEBUG) Log.i(TAG, "CheckPreferences is True ");
+            Intent i = new Intent(this, Summary.class);
+            startActivity(i);
+        }
 
     }
 
@@ -76,13 +82,13 @@ public class MainActivity extends ActionBarActivity {
 
         if (MainActivity.DEBUG) Log.i(TAG, "URL is " + strEmoncmsURL);
         if (MainActivity.DEBUG) Log.i(TAG, "API is " + strEmoncmsAPI);
-
+        //TODO Protect against empty string in these fields
         if (strEmoncmsURL.equalsIgnoreCase(getResources().getString(R.string.pref_default))) {
             showDialog();
         } else if (strEmoncmsAPI.equalsIgnoreCase(getResources().getString(R.string.pref_default))) {
             showDialog();
         }
-        return false;
+        return true;
     }
 
     void showDialog() {
@@ -104,7 +110,8 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void doSaveSettings(String strURL, String strAPI) {
-
+        //TODO This needs to be moved to Preferences class or use method from class to standardise
+        //TODO updating of preferences e.g. removing /n from text views
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(common.PREF_KEY_EMONCMS_URL, strURL);

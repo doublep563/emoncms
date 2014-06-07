@@ -23,7 +23,10 @@
             android:label="@string/title_activity_adapter_feeds"></activity>
         <activity
             android:name=".Preferences"
-            android:label="@string/title_activity_adapter_feeds"></activity>
+            android:label="@string/title_activity_settings"></activity>
+        <activity
+            android:name=".Views.Summary"
+            android:label="@string/emoncms_summary_title"></activity>
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />

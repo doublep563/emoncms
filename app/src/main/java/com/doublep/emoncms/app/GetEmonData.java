@@ -3,6 +3,7 @@ package com.doublep.emoncms.app;
 import android.util.Log;
 
 import com.doublep.emoncms.app.models.FeedDetails;
+import com.doublep.emoncms.app.models.SummaryStatus;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -77,7 +78,7 @@ public class GetEmonData {
                 String value = c.getString(FEED_VALUE);
 
                 // Calculate Last Updated Value
-                int intTime =Integer.parseInt(time);
+                int intTime = Integer.parseInt(time);
                 long unixTime = System.currentTimeMillis() / 1000L;
                 int myTime = (int) unixTime - intTime;
 
@@ -105,6 +106,55 @@ public class GetEmonData {
 
 
         return feedList;
+    }
+
+    public static ArrayList GetStatus(String strURL, String strAPI)
+            throws Exception {
+
+        ArrayList summaryList = new ArrayList();
+        String RASPBERRY_PI_STATUS = null;
+        String FEEDS_GOOD = null;
+        String FEEDS_BAD = null;
+        //TODO Fix in Preferences Setup
+        strURL = strURL.replace("\n", "");
+
+        String strFeedList = strURL + "/raspberrypi/getrunning.json&apikey=" + strAPI;
+        //String strFeedList = strURL + "/raspberrypi/getrunning.json";
+
+
+        try {
+            HttpClient client = new DefaultHttpClient();
+            HttpGet request = new HttpGet();
+            request.setURI(new URI(strFeedList));
+
+
+            HttpResponse response = client.execute(request);
+
+            BufferedReader in = new BufferedReader(new InputStreamReader(response.getEntity()
+                    .getContent()));
+            StringBuffer sb = new StringBuffer("");
+            String line = "";
+            String NL = System.getProperty("line.separator");
+            while ((line = in.readLine()) != null) {
+                sb.append(line + NL);
+            }
+            in.close();
+            String result = sb.toString();
+            result = result.replace("\n", "");
+            RASPBERRY_PI_STATUS = result;
+
+
+        } catch (Exception e) {
+            //TODO Handle Error with Dialog to User
+            Log.d("InputStream", e.getLocalizedMessage());
+        }
+
+        SummaryStatus summaryStatus = new SummaryStatus();
+        summaryStatus.setStrRaspPiStatus(RASPBERRY_PI_STATUS);
+        summaryStatus.setStrFeedsGood("Good Feeds");
+        summaryStatus.setStrFeedsBad("Bad Feeds");
+        summaryList.add(summaryStatus);
+        return summaryList;
     }
 }
 
