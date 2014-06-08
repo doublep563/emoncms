@@ -26,12 +26,16 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 import com.doublep.emoncms.app.Views.FeedChart;
+import com.doublep.emoncms.app.Views.FeedChartDisplay;
 import com.doublep.emoncms.app.Views.Feeds;
 import com.doublep.emoncms.app.Views.Summary;
+import com.doublep.emoncms.app.models.FeedData;
+
+import java.util.ArrayList;
 
 
 public class MainActivity extends ActionBarActivity implements
-            Feeds.OnFeedListener{
+            Feeds.OnFeedListener, FeedChart.OnFeedChartListener {
 
 
     public static final boolean DEBUG = true;
@@ -261,6 +265,25 @@ public class MainActivity extends ActionBarActivity implements
                 .commit();
 
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onFeedSelected() called! +++");
+
+    }
+
+    public void onFeedChartSelected(String strFeedID, ArrayList feedData) {
+
+        Fragment fragment = new FeedChartDisplay();
+        Bundle args = new Bundle();
+        args.putString("strFeedID", strFeedID);
+        fragment.setArguments(args);
+
+        FragmentManager fragmentManager = getFragmentManager();
+        // getFragmentManager().popBackStack();
+        FragmentTransaction transaction =fragmentManager.beginTransaction();
+
+        transaction.replace(R.id.content_frame, fragment)
+                .addToBackStack(null)
+                .commitAllowingStateLoss();
+
+        if (MainActivity.DEBUG) Log.i(TAG, "+++ onFeedChartSelected() called! +++");
 
     }
 

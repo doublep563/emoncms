@@ -1,5 +1,6 @@
 package com.doublep.emoncms.app.Views;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.LoaderManager;
@@ -14,6 +15,7 @@ import com.doublep.emoncms.app.R;
 import com.doublep.emoncms.app.common;
 import com.doublep.emoncms.app.loaders.LoadFeedChart;
 import com.doublep.emoncms.app.loaders.LoadFeeds;
+import com.doublep.emoncms.app.models.FeedData;
 
 import java.util.ArrayList;
 
@@ -28,6 +30,8 @@ public class FeedChart extends Fragment implements
     private static final int LOADER_ID = 1;
     private String strEmoncmsURL;
     private String strEmoncmsAPI;
+    private ArrayList feedData;
+    OnFeedChartListener mListener;
 
     public static FeedChart newInstance(int index) {
         FeedChart f = new FeedChart();
@@ -57,6 +61,20 @@ public class FeedChart extends Fragment implements
     }
 
     @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        // This makes sure that the container activity has implemented
+        // the callback interface. If not, it throws an exception
+        try {
+            mListener = (OnFeedChartListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnHeadlineSelectedListener");
+        }
+    }
+
+    @Override
     public Loader<ArrayList> onCreateLoader(int id, Bundle args) {
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onCreateLoader() called! +++");
         //return new LoadFeeds(getActivity(), strEmoncmsURL, strEmoncmsAPI);
@@ -65,8 +83,12 @@ public class FeedChart extends Fragment implements
 
     @Override
     public void onLoadFinished(Loader<ArrayList> loader, ArrayList data) {
-        if (MainActivity.DEBUG) Log.i(TAG, "+++ onLoadFinished() called! +++");
+        feedData= data;
+        if (mListener!=null) {
+            mListener.onFeedChartSelected(strFeedID, feedData);
+        }
 
+        if (MainActivity.DEBUG) Log.i(TAG, "+++ onLoadFinished() called! +++");
     }
 
     @Override
@@ -74,4 +96,12 @@ public class FeedChart extends Fragment implements
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onLoadReset() called! +++");
 
     }
+
+     public interface OnFeedChartListener {
+
+        public void onFeedChartSelected(String strFeedID, ArrayList feedData);
+
+    }
+
+
 }
