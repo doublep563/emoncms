@@ -13,17 +13,16 @@ import java.util.ArrayList;
 /**
  * Created by Paul Patchell on 02/06/2014.
  */
-public class LoadFeeds extends AsyncTaskLoader<ArrayList> {
+public class LoadFeedChart extends AsyncTaskLoader<ArrayList> {
 
 
-    private final String strURL1;
-    private final String strAPI1;
-    private static final String TAG = "LoadFeeds";
+    private final String mFeedID;
+    private static final String TAG = "LoadFeedChart";
 
-    public LoadFeeds(Context context, String strURL, String strAPI) {
+    public LoadFeedChart(Context context, String strFeedID) {
         super(context);
-         strURL1 = strURL;
-         strAPI1 = strAPI;
+        mFeedID = strFeedID;
+
 
     }
 
@@ -31,17 +30,19 @@ public class LoadFeeds extends AsyncTaskLoader<ArrayList> {
     @SuppressWarnings({})
     public ArrayList loadInBackground() {
 
-        ArrayList mFeedDetails = null;
+        ArrayList mFeedData = null;
 
         try {
-            mFeedDetails = GetEmonData.GetFeeds(strURL1, strAPI1);
+            mFeedData = GetEmonData.GetFeedData(mFeedID);
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
-        if (MainActivity.DEBUG) Log.i(TAG, "+++ loadInBackground() called! +++");
-        return mFeedDetails;
+        if (MainActivity.DEBUG) {
+            if (MainActivity.DEBUG) Log.i(TAG, "+++ loadInBackground() called! +++");
+        }
+        return mFeedData;
     }
 
     @Override

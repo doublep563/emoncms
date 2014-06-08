@@ -7,6 +7,9 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.View;
+import android.widget.ListView;
+import android.widget.Toast;
 
 import com.doublep.emoncms.app.MainActivity;
 import com.doublep.emoncms.app.R;
@@ -30,6 +33,7 @@ public class Summary extends ListFragment implements
     private String strRaspPiStatus;
     private String strGoodFeeds;
     private String strBadFeeds;
+    private AdapterSummary mAdapter;
 
     public static Summary newInstance(int index) {
         Summary f = new Summary();
@@ -71,10 +75,11 @@ public class Summary extends ListFragment implements
 
     @Override
     public void onLoadFinished(Loader<ArrayList> loader, ArrayList data) {
-        if (MainActivity.DEBUG) Log.i(TAG, "+++ onLoadFinished() called! +++");
+
         ArrayList summaryStatus = data;
-        AdapterSummary mAdapter = new AdapterSummary(getActivity(), R.layout.summary, summaryStatus);
+        mAdapter = new AdapterSummary(getActivity(), R.layout.summary, summaryStatus);
         setListAdapter(mAdapter);
+        if (MainActivity.DEBUG) Log.i(TAG, "+++ onLoadFinished() called! +++");
 
     }
 
@@ -83,4 +88,6 @@ public class Summary extends ListFragment implements
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onLoadReset() called! +++");
 
     }
+
+
 }

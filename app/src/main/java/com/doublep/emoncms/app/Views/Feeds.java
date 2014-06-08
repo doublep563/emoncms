@@ -1,5 +1,8 @@
 package com.doublep.emoncms.app.Views;
 
+import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.ListFragment;
 import android.app.LoaderManager;
 import android.content.Loader;
@@ -7,12 +10,16 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.View;
+import android.widget.ListView;
+import android.widget.Toast;
 
 import com.doublep.emoncms.app.MainActivity;
 import com.doublep.emoncms.app.R;
 import com.doublep.emoncms.app.adapters.AdapterFeeds;
 import com.doublep.emoncms.app.common;
 import com.doublep.emoncms.app.loaders.LoadFeeds;
+import com.doublep.emoncms.app.models.FeedDetails;
 
 import java.util.ArrayList;
 
@@ -27,6 +34,7 @@ public class Feeds extends ListFragment implements
     private static final String TAG = "Feeds";
     private String strEmoncmsURL;
     private String strEmoncmsAPI;
+    OnFeedListener mListener;
 
     public static Feeds newInstance(int index) {
         Feeds f = new Feeds();
@@ -54,6 +62,20 @@ public class Feeds extends ListFragment implements
     }
 
     @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        // This makes sure that the container activity has implemented
+        // the callback interface. If not, it throws an exception
+        try {
+            mListener = (OnFeedListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnHeadlineSelectedListener");
+        }
+    }
+
+    @Override
     public Loader<ArrayList> onCreateLoader(int id, Bundle args) {
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onCreateLoader() called! +++");
         return new LoadFeeds(getActivity(), strEmoncmsURL, strEmoncmsAPI);
@@ -74,5 +96,21 @@ public class Feeds extends ListFragment implements
 
     }
 
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        FeedDetails feedDetails = (FeedDetails) getListAdapter().getItem(position);
+        String strFeedID = feedDetails.getStrID();
+        if (mListener!=null) {
+            mListener.onFeedSelected(strFeedID);
+        }
+        if (MainActivity.DEBUG) Log.i(TAG, "+++ onListItemClick() called! +++  " + strFeedID);
+        if (MainActivity.DEBUG) Log.i(TAG, "+++ onListItemClick() called! +++");
+    }
+
+    public interface OnFeedListener {
+
+        public void onFeedSelected(String strFeedID);
+
+    }
 
 }

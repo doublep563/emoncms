@@ -25,11 +25,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import com.doublep.emoncms.app.Views.FeedChart;
 import com.doublep.emoncms.app.Views.Feeds;
 import com.doublep.emoncms.app.Views.Summary;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity implements
+            Feeds.OnFeedListener{
 
 
     public static final boolean DEBUG = true;
@@ -52,6 +54,9 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
 
         mTitle = mDrawerTitle = getTitle();
+
+
+
 
         mNavTitles = getResources().getStringArray(R.array.nav_titles);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -94,8 +99,15 @@ public class MainActivity extends ActionBarActivity {
         //TODO Getting Started Screen. Setup the preferences
         if (CheckPreferences()) {
             if (MainActivity.DEBUG) Log.i(TAG, "CheckPreferences is True ");
-            Intent i = new Intent(this, Summary.class);
-            startActivity(i);
+            Fragment fragment = new Summary();
+            Bundle args = new Bundle();
+
+            FragmentManager fragmentManager = getFragmentManager();
+            //getFragmentManager().popBackStack();
+            FragmentTransaction transaction =fragmentManager.beginTransaction();
+            transaction.replace(R.id.content_frame, fragment)
+                    .addToBackStack(null)
+                    .commit();
         }
 
     }
@@ -187,18 +199,24 @@ public class MainActivity extends ActionBarActivity {
             Bundle args = new Bundle();
 
             FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.content_frame, fragment)
+           // getFragmentManager().popBackStack();
+            FragmentTransaction transaction =fragmentManager.beginTransaction();
+            transaction.replace(R.id.content_frame, fragment)
+                    .addToBackStack(null)
                     .commit();
         }
         // 1 = Feeds
         else if (position == 1) {
-            Fragment fragment = new Feeds();
+            Fragment feeds = new Feeds();
+
             Bundle args = new Bundle();
 
             FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.content_frame, fragment)
+            //getFragmentManager().popBackStack();
+            FragmentTransaction transaction =fragmentManager.beginTransaction();
+
+            transaction.replace(R.id.content_frame, feeds)
+                    .addToBackStack(null)
                     .commit();
         }
         // Highlight the selected item, update the title, and close the drawer
@@ -224,6 +242,26 @@ public class MainActivity extends ActionBarActivity {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    public void onFeedSelected(String strFeedID) {
+
+        Fragment fragment = new FeedChart();
+        Bundle args = new Bundle();
+        args.putString("strFeedID", strFeedID);
+        fragment.setArguments(args);
+
+        FragmentManager fragmentManager = getFragmentManager();
+       // getFragmentManager().popBackStack();
+        FragmentTransaction transaction =fragmentManager.beginTransaction();
+
+        transaction.replace(R.id.content_frame, fragment)
+                .addToBackStack(null)
+                .commit();
+
+        if (MainActivity.DEBUG) Log.i(TAG, "+++ onFeedSelected() called! +++");
+
     }
 
     public static class SettingsDialogFragment extends DialogFragment {
@@ -288,5 +326,12 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
-
+    @Override
+    public void onBackPressed() {
+        if (getFragmentManager().getBackStackEntryCount() == 0) {
+            this.finish();
+        } else {
+            getFragmentManager().popBackStack();
+        }
+    }
 }

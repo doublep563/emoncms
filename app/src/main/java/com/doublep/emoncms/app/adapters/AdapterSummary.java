@@ -1,12 +1,14 @@
 package com.doublep.emoncms.app.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.doublep.emoncms.app.MainActivity;
 import com.doublep.emoncms.app.R;
 import com.doublep.emoncms.app.Views.Summary;
 import com.doublep.emoncms.app.models.SummaryStatus;
@@ -16,6 +18,7 @@ import java.util.ArrayList;
 
 public class AdapterSummary extends ArrayAdapter<SummaryStatus> {
 
+    private static final String TAG = "AdapterSummary";
     private final ArrayList<SummaryStatus> items;
     private final Context context;
 
@@ -56,6 +59,7 @@ public class AdapterSummary extends ArrayAdapter<SummaryStatus> {
             TextView tv10 = (TextView) v.findViewById(R.id.textView10);
             tv10.setText(strBadFeeds);
         }
+
         return v;
     }
 }

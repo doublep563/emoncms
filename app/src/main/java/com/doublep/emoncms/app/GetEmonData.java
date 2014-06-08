@@ -20,7 +20,9 @@ import java.util.ArrayList;
 
 public class GetEmonData {
 
-    public static ArrayList GetFeeds() {
+    private static final String TAG = "GetEmonData";
+
+    public static ArrayList GetFeeds(String strURL, String strAPI) {
         // JSON Node names
         String FEED_ID = "id";
         String FEED_USERID = "userid";
@@ -34,9 +36,10 @@ public class GetEmonData {
         String FEED_VALUE = "value";
 
 
-        String strURL = "http://doublep.dnsd.me/emoncms/";
-        String strAPI = "480fa3515ab1294e45a8d4854c1a0784";
-        String strFeedList = strURL + "feed/list.json&apikey=" + strAPI;
+        //String strURL = "http://doublep.dnsd.me/emoncms/";
+        //String strAPI = "480fa3515ab1294e45a8d4854c1a0784";
+        strURL = strURL.replace("\n", "");
+        String strFeedList = strURL + "/feed/list.json&apikey=" + strAPI;
         BufferedReader in;
         String result;
         JSONArray feeds;
@@ -200,6 +203,16 @@ public class GetEmonData {
         summaryStatus.setStrFeedsBad(Integer.toString(FEEDS_BAD));
         summaryList.add(summaryStatus);
         return summaryList;
+    }
+
+    public static ArrayList GetFeedData(String strFeedID) {
+
+        if (MainActivity.DEBUG) Log.i(TAG, "+++ GetFeedData() called! +++");
+        ArrayList feedData = new ArrayList();
+
+
+        return feedData;
+
     }
 }
 

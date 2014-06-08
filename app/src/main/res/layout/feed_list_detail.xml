@@ -26,7 +26,7 @@
 
             <TextView
                 android:id="@+id/textView_id"
-                android:layout_gravity="center|right"
+                android:layout_gravity="right"
                 android:layout_span="4"
                 android:hint="@string/feed_id"
                 android:text="@string/feed_id"
@@ -47,7 +47,7 @@
 
             <TextView
                 android:id="@+id/textView_name"
-                android:layout_gravity="center|right"
+                android:layout_gravity="right"
                 android:layout_span="4"
                 android:text="@string/feed_name"
 
@@ -67,7 +67,7 @@
 
             <TextView
                 android:id="@+id/textView_tag"
-                android:layout_gravity="center|right"
+                android:layout_gravity="right"
                 android:layout_span="4"
                 android:text="@string/feed_tag"
 
@@ -87,7 +87,7 @@
 
             <TextView
                 android:id="@+id/textView_value"
-                android:layout_gravity="center|right"
+                android:layout_gravity="right"
                 android:layout_span="4"
                 android:text="@string/feed_value"
 
@@ -107,7 +107,7 @@
 
             <TextView
                 android:id="@+id/textView_updated"
-                android:layout_gravity="center|right"
+                android:layout_gravity="right"
                 android:layout_span="4"
                 android:text="@string/feed_updated"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
