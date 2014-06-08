@@ -2,6 +2,7 @@ package com.doublep.emoncms.app;
 
 import android.util.Log;
 
+import com.doublep.emoncms.app.models.FeedData;
 import com.doublep.emoncms.app.models.FeedDetails;
 import com.doublep.emoncms.app.models.SummaryStatus;
 
@@ -84,6 +85,7 @@ public class GetEmonData {
                 long unixTime = System.currentTimeMillis() / 1000L;
                 int myTime = (int) unixTime - intTime;
 
+
                 // tmp hashmap for single contact
                 FeedDetails feed = new FeedDetails();
                 feed.setStrDataType(datatype);
@@ -123,7 +125,6 @@ public class GetEmonData {
 
         String strRaspURL = strURL + "/raspberrypi/getrunning.json&apikey=" + strAPI;
         String strFeedList = strURL + "/feed/list.json&apikey=" + strAPI;
-
 
 
         try {
@@ -185,10 +186,9 @@ public class GetEmonData {
                 long unixTime = System.currentTimeMillis() / 1000L;
                 int myTime = (int) unixTime - intTime;
                 //TODO Externalise 120 to Preferences
-                if(myTime > 120) {
+                if (myTime > 120) {
                     FEEDS_BAD = FEEDS_BAD + 1;
-                }
-                else FEEDS_GOOD = FEEDS_GOOD +1;
+                } else FEEDS_GOOD = FEEDS_GOOD + 1;
 
             }
 
@@ -205,11 +205,51 @@ public class GetEmonData {
         return summaryList;
     }
 
-    public static ArrayList GetFeedData(String strFeedID) {
+    public static ArrayList GetFeedData(String strURL, String strAPI, String strFeedID) {
+
+        ArrayList feedData = new ArrayList();
+        long endTime = System.currentTimeMillis();
+        long startTime = endTime - 86400000;
+        JSONArray feedArray;
+        //TODO Fix in Preferences Setup
+        strURL = strURL.replace("\n", "");
+
+        String strFeedURL = strURL + "/feed/data.json&apikey=" + strAPI + "?id=" + strFeedID + "&start=" + startTime + "&end=" + endTime + "&dp=80";
+
+        try {
+            HttpClient client = new DefaultHttpClient();
+            HttpGet request = new HttpGet();
+            request.setURI(new URI(strFeedURL));
+
+            HttpResponse response = client.execute(request);
+
+            BufferedReader in = new BufferedReader(new InputStreamReader(response.getEntity()
+                    .getContent()));
+            StringBuffer sb = new StringBuffer("");
+            String line;
+            String NL = System.getProperty("line.separator");
+            while ((line = in.readLine()) != null) {
+                sb.append(line + NL);
+            }
+            in.close();
+            String result = sb.toString();
+            feedArray = new JSONArray(result);
+            for (int i = 0; i < feedArray.length(); i++) {
+                //JSONObject c = feedArray.getJSONObject(i);
+               long mTime = feedArray.getJSONArray(i).getLong(0);
+               long mdata = feedArray.getJSONArray(i).getLong(1);
+                FeedData fData = new FeedData();
+                fData.setFeedTime(mTime);
+                fData.setFeedData(mdata);
+                feedData.add(fData);
+            }
+
+        } catch (Exception e) {
+            //TODO Handle Error with Dialog to User
+            Log.d("InputStream", e.getLocalizedMessage());
+        }
 
         if (MainActivity.DEBUG) Log.i(TAG, "+++ GetFeedData() called! +++");
-        ArrayList feedData = new ArrayList();
-
 
         return feedData;
 

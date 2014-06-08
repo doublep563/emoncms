@@ -18,10 +18,14 @@ public class LoadFeedChart extends AsyncTaskLoader<ArrayList> {
 
     private final String mFeedID;
     private static final String TAG = "LoadFeedChart";
+    private final String mURL;
+    private final String mAPI;
 
-    public LoadFeedChart(Context context, String strFeedID) {
+    public LoadFeedChart(Context context, String strEmoncmsURL, String strEmoncmsAPI, String strFeedID) {
         super(context);
         mFeedID = strFeedID;
+        mURL = strEmoncmsURL;
+        mAPI = strEmoncmsAPI;
 
 
     }
@@ -33,7 +37,7 @@ public class LoadFeedChart extends AsyncTaskLoader<ArrayList> {
         ArrayList mFeedData = null;
 
         try {
-            mFeedData = GetEmonData.GetFeedData(mFeedID);
+            mFeedData = GetEmonData.GetFeedData(mURL, mAPI, mFeedID);
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
