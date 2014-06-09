@@ -125,6 +125,8 @@ public class GetEmonData {
 
         String strRaspURL = strURL + "/raspberrypi/getrunning.json&apikey=" + strAPI;
         String strFeedList = strURL + "/feed/list.json&apikey=" + strAPI;
+        //String strRaspURL = "http://192.168.0.27/raspberrypi/getrunning.json&apikey=" + strAPI;
+        //String strFeedList = "http://192.168.0.27/feed/list.json&apikey=" + strAPI;
 
 
         try {

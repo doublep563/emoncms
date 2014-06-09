@@ -2,11 +2,12 @@ package com.doublep.emoncms.app.Views;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.app.LoaderManager;
 import android.content.Loader;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -14,8 +15,6 @@ import com.doublep.emoncms.app.MainActivity;
 import com.doublep.emoncms.app.R;
 import com.doublep.emoncms.app.common;
 import com.doublep.emoncms.app.loaders.LoadFeedChart;
-import com.doublep.emoncms.app.loaders.LoadFeeds;
-import com.doublep.emoncms.app.models.FeedData;
 
 import java.util.ArrayList;
 
@@ -23,15 +22,15 @@ import java.util.ArrayList;
  * Created by Paul Patchell on 08/06/2014.
  */
 public class FeedChart extends Fragment implements
-        LoaderManager.LoaderCallbacks<ArrayList>{
+        LoaderManager.LoaderCallbacks<ArrayList> {
 
     private static final String TAG = "FeedChart";
-    private String strFeedID;
     private static final int LOADER_ID = 1;
+    OnFeedChartListener mListener;
+    private String strFeedID;
     private String strEmoncmsURL;
     private String strEmoncmsAPI;
     private ArrayList feedData;
-    OnFeedChartListener mListener;
 
     public static FeedChart newInstance(int index) {
         FeedChart f = new FeedChart();
@@ -48,16 +47,60 @@ public class FeedChart extends Fragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        strFeedID = getArguments().getString("strFeedID");
-        if (MainActivity.DEBUG) Log.i(TAG, "+++ onCreate() called! +++  " + strFeedID);
+
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onCreate() called! +++");
+
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        if (MainActivity.DEBUG) Log.i(TAG, "+++ onActivityCreated() called! +++");
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (MainActivity.DEBUG) Log.i(TAG, "+++ onStart() called! +++");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        strFeedID = getArguments().getString("strFeedID");
 
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
         //TODO Add API field to Summary.xml
-         strEmoncmsURL = sharedPref.getString(common.PREF_KEY_EMONCMS_URL, getResources().getString(R.string.pref_default));
-         strEmoncmsAPI = sharedPref.getString(common.PREF_KEY_EMONCMS_API, getResources().getString(R.string.pref_default));
-
+        strEmoncmsURL = sharedPref.getString(common.PREF_KEY_EMONCMS_URL, getResources().getString(R.string.pref_default));
+        strEmoncmsAPI = sharedPref.getString(common.PREF_KEY_EMONCMS_API, getResources().getString(R.string.pref_default));
+        setRetainInstance(true);
         getLoaderManager().initLoader(LOADER_ID, null, this);
+        if (MainActivity.DEBUG) Log.i(TAG, "+++ onResume() called! +++");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (MainActivity.DEBUG) Log.i(TAG, "+++ onPause() called! +++");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (MainActivity.DEBUG) Log.i(TAG, "+++ onStop() called! +++");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (MainActivity.DEBUG) Log.i(TAG, "+++ onDestroy() called! +++");
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        if (MainActivity.DEBUG) Log.i(TAG, "+++ onDetach() called! +++");
     }
 
     @Override
@@ -83,10 +126,8 @@ public class FeedChart extends Fragment implements
 
     @Override
     public void onLoadFinished(Loader<ArrayList> loader, ArrayList data) {
-        feedData= data;
-        if (mListener!=null) {
-            mListener.onFeedChartSelected(strFeedID, feedData);
-        }
+        feedData = data;
+        handler.sendEmptyMessage(2);
 
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onLoadFinished() called! +++");
     }
@@ -97,11 +138,26 @@ public class FeedChart extends Fragment implements
 
     }
 
-     public interface OnFeedChartListener {
+    public interface OnFeedChartListener {
 
         public void onFeedChartSelected(String strFeedID, ArrayList feedData);
 
     }
 
 
+    private Handler handler = new Handler()  // handler for commiting fragment after data is loaded
+    {
+        @Override
+        public void handleMessage(Message msg)
+        {
+            if(msg.what == 2)
+            {
+                if (mListener != null) {
+                    mListener.onFeedChartSelected(strFeedID, feedData);
+                }
+                if (MainActivity.DEBUG) Log.i(TAG, "+++ Handler() called! +++");
+                // commit the fragment
+            }
+        }
+    };
 }

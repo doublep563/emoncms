@@ -1,8 +1,6 @@
 package com.doublep.emoncms.app.Views;
 
 import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.app.ListFragment;
 import android.app.LoaderManager;
 import android.content.Loader;
@@ -12,7 +10,6 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.doublep.emoncms.app.MainActivity;
 import com.doublep.emoncms.app.R;
@@ -32,9 +29,9 @@ public class Feeds extends ListFragment implements
     // The Loader's id (this id is specific to the ListFragment's LoaderManager)
     private static final int LOADER_ID = 1;
     private static final String TAG = "Feeds";
+    OnFeedListener mListener;
     private String strEmoncmsURL;
     private String strEmoncmsAPI;
-    OnFeedListener mListener;
 
     public static Feeds newInstance(int index) {
         Feeds f = new Feeds();
@@ -47,18 +44,58 @@ public class Feeds extends ListFragment implements
         return f;
     }
 
-    public void onCreate(Bundle icicle) {
-        super.onCreate(icicle);
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        if (MainActivity.DEBUG) Log.i(TAG, "+++ onActivityCreated() called! +++");
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (MainActivity.DEBUG) Log.i(TAG, "+++ onStart() called! +++");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
         //TODO Add API field to Summary.xml
         strEmoncmsURL = sharedPref.getString(common.PREF_KEY_EMONCMS_URL, getResources().getString(R.string.pref_default));
         strEmoncmsAPI = sharedPref.getString(common.PREF_KEY_EMONCMS_API, getResources().getString(R.string.pref_default));
-
-        if (MainActivity.DEBUG) Log.i(TAG, "URL is " + strEmoncmsURL);
-        if (MainActivity.DEBUG) Log.i(TAG, "API is " + strEmoncmsAPI);
-
-
         getLoaderManager().initLoader(LOADER_ID, null, this);
+        if (MainActivity.DEBUG) Log.i(TAG, "+++ onResume() called! +++");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (MainActivity.DEBUG) Log.i(TAG, "+++ onPause() called! +++");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (MainActivity.DEBUG) Log.i(TAG, "+++ onStop() called! +++");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (MainActivity.DEBUG) Log.i(TAG, "+++ onDestroy() called! +++");
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        if (MainActivity.DEBUG) Log.i(TAG, "+++ onDetach() called! +++");
+    }
+
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (MainActivity.DEBUG) Log.i(TAG, "+++ onCreate() called! +++");
     }
 
     @Override
@@ -100,7 +137,7 @@ public class Feeds extends ListFragment implements
     public void onListItemClick(ListView l, View v, int position, long id) {
         FeedDetails feedDetails = (FeedDetails) getListAdapter().getItem(position);
         String strFeedID = feedDetails.getStrID();
-        if (mListener!=null) {
+        if (mListener != null) {
             mListener.onFeedSelected(strFeedID);
         }
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onListItemClick() called! +++  " + strFeedID);

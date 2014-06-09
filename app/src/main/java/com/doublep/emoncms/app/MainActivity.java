@@ -58,10 +58,6 @@ public class MainActivity extends ActionBarActivity implements
         setContentView(R.layout.activity_main);
 
         mTitle = mDrawerTitle = getTitle();
-
-
-
-
         mNavTitles = getResources().getStringArray(R.array.nav_titles);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
@@ -102,18 +98,55 @@ public class MainActivity extends ActionBarActivity implements
 
         //TODO Getting Started Screen. Setup the preferences
         if (CheckPreferences()) {
-            if (MainActivity.DEBUG) Log.i(TAG, "CheckPreferences is True ");
-            Fragment fragment = new Summary();
-            Bundle args = new Bundle();
+            if (savedInstanceState == null) {
+                Fragment sumFrag = new Summary();
+                FragmentManager fragmentManager = getFragmentManager();
+                FragmentTransaction transaction = fragmentManager.beginTransaction();
+                transaction.replace(R.id.content_frame, sumFrag)
+                        .addToBackStack(null)
+                        .commit();
+                if (MainActivity.DEBUG) Log.i(TAG, "+++ CheckPreferences() New Fragment called! +++");
+            }
+            else{
 
-            FragmentManager fragmentManager = getFragmentManager();
-            //getFragmentManager().popBackStack();
-            FragmentTransaction transaction =fragmentManager.beginTransaction();
-            transaction.replace(R.id.content_frame, fragment)
-                    .addToBackStack(null)
-                    .commit();
+                Summary sumFrag =  (Summary)getFragmentManager().findFragmentByTag("sumFrag");
+                if (MainActivity.DEBUG) Log.i(TAG, "+++ CheckPreferences() Reuse Fragment called! +++");
+            }
+
+            if (MainActivity.DEBUG) Log.i(TAG, "+++ CheckPreferences() called! +++");
         }
+        if (MainActivity.DEBUG) Log.i(TAG, "+++ OnCreate() called! +++");
 
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (MainActivity.DEBUG) Log.i(TAG, "+++ onStart() called! +++");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (MainActivity.DEBUG) Log.i(TAG, "+++ onResume() called! +++");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (MainActivity.DEBUG) Log.i(TAG, "+++ onPause() called! +++");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (MainActivity.DEBUG) Log.i(TAG, "+++ onStop() called! +++");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (MainActivity.DEBUG) Log.i(TAG, "+++ onDestroy() called! +++");
     }
 
 
@@ -150,14 +183,15 @@ public class MainActivity extends ActionBarActivity implements
         String strEmoncmsURL = sharedPref.getString(common.PREF_KEY_EMONCMS_URL, getResources().getString(R.string.pref_default));
         String strEmoncmsAPI = sharedPref.getString(common.PREF_KEY_EMONCMS_API, getResources().getString(R.string.pref_default));
 
-        if (MainActivity.DEBUG) Log.i(TAG, "URL is " + strEmoncmsURL);
-        if (MainActivity.DEBUG) Log.i(TAG, "API is " + strEmoncmsAPI);
+        //if (MainActivity.DEBUG) Log.i(TAG, "URL is " + strEmoncmsURL);
+        //if (MainActivity.DEBUG) Log.i(TAG, "API is " + strEmoncmsAPI);
         //TODO Protect against empty string in these fields
         if (strEmoncmsURL.equalsIgnoreCase(getResources().getString(R.string.pref_default))) {
             showDialog();
         } else if (strEmoncmsAPI.equalsIgnoreCase(getResources().getString(R.string.pref_default))) {
             showDialog();
         }
+        if (MainActivity.DEBUG) Log.i(TAG, "+++ CheckPreferences() called! +++");
         return true;
     }
 
@@ -181,7 +215,8 @@ public class MainActivity extends ActionBarActivity implements
 
     void doSaveSettings(String strURL, String strAPI) {
         //TODO This needs to be moved to Preferences class or use method from class to standardise
-        //TODO updating of preferences e.g. removing /n from text views
+        //TODO updating of preferences e.g. removing /n from text
+        //TODO Validate input and test. What happens with no "http://"? Invalid URL or API Key?
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(common.PREF_KEY_EMONCMS_URL, strURL);
@@ -208,6 +243,7 @@ public class MainActivity extends ActionBarActivity implements
             transaction.replace(R.id.content_frame, fragment)
                     .addToBackStack(null)
                     .commit();
+            if (MainActivity.DEBUG) Log.i(TAG, "+++ selectItem() Summary called! +++");
         }
         // 1 = Feeds
         else if (position == 1) {
@@ -227,12 +263,14 @@ public class MainActivity extends ActionBarActivity implements
         mDrawerList.setItemChecked(position, true);
         setTitle(mNavTitles[position]);
         mDrawerLayout.closeDrawer(mDrawerList);
+        if (MainActivity.DEBUG) Log.i(TAG, "+++ selectItems() feeds called! +++");
     }
 
     @Override
     public void setTitle(CharSequence title) {
         mTitle = title;
         getActionBar().setTitle(mTitle);
+        if (MainActivity.DEBUG) Log.i(TAG, "+++ setTitle() called! +++");
     }
 
     @Override
@@ -240,12 +278,14 @@ public class MainActivity extends ActionBarActivity implements
         super.onPostCreate(savedInstanceState);
         // Sync the toggle state after onRestoreInstanceState has occurred.
         mDrawerToggle.syncState();
+        if (MainActivity.DEBUG) Log.i(TAG, "+++ onPostCreate() called! +++");
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         mDrawerToggle.onConfigurationChanged(newConfig);
+        if (MainActivity.DEBUG) Log.i(TAG, "+++ onConfigurationChanged() called! +++");
     }
 
     @Override
@@ -270,18 +310,18 @@ public class MainActivity extends ActionBarActivity implements
 
     public void onFeedChartSelected(String strFeedID, ArrayList feedData) {
 
-        Fragment fragment = new FeedChartDisplay();
+        Fragment feedchart  = new FeedChartDisplay();
         Bundle args = new Bundle();
         args.putString("strFeedID", strFeedID);
-        fragment.setArguments(args);
+        feedchart.setArguments(args);
 
         FragmentManager fragmentManager = getFragmentManager();
         // getFragmentManager().popBackStack();
         FragmentTransaction transaction =fragmentManager.beginTransaction();
 
-        transaction.replace(R.id.content_frame, fragment)
-                .addToBackStack(null)
-                .commitAllowingStateLoss();
+        transaction.replace(R.id.content_frame, feedchart ,"abcd" )
+                //.addToBackStack("abcd")
+                .commit();
 
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onFeedChartSelected() called! +++");
 
@@ -353,8 +393,24 @@ public class MainActivity extends ActionBarActivity implements
     public void onBackPressed() {
         if (getFragmentManager().getBackStackEntryCount() == 0) {
             this.finish();
-        } else {
-            getFragmentManager().popBackStack();
         }
+        else {
+
+            Fragment fragments = getFragmentManager().findFragmentByTag("abcd");
+            if(fragments == null) {
+
+                getFragmentManager().popBackStack();
+                if (MainActivity.DEBUG) Log.i(TAG, "+++ popbackstack! +++");
+            }
+            else {
+                getFragmentManager().beginTransaction().remove(getFragmentManager().findFragmentByTag("abcd")).commit();
+                getFragmentManager().popBackStack();
+
+                if (MainActivity.DEBUG) Log.i(TAG, "+++ Remove the abcd fragment and popbackstack! +++");
+            }
+
+        }
+        if (MainActivity.DEBUG) Log.i(TAG, "+++ onBackPressed() called! +++");
+
     }
 }

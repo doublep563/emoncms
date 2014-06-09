@@ -49,23 +49,66 @@ public class Summary extends ListFragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
         //TODO Add API field to Summary.xml
+        //TODO OnCreate does not refresh preferences when fragment is reused.. Need to move to another methhod
+        //TODO check other fragments for this behaviour
+
+
+        //if (MainActivity.DEBUG) Log.i(TAG, "URL is " + strEmoncmsURL);
+        //if (MainActivity.DEBUG) Log.i(TAG, "API is " + strEmoncmsAPI);
+
+
+
+        if (MainActivity.DEBUG) Log.i(TAG, "+++ onCreate() called! +++");
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        if (MainActivity.DEBUG) Log.i(TAG, "+++ onActivityCreated() called! +++");
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (MainActivity.DEBUG) Log.i(TAG, "+++ onStart() called! +++");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
         strEmoncmsURL = sharedPref.getString(common.PREF_KEY_EMONCMS_URL, getResources().getString(R.string.pref_default));
         strEmoncmsAPI = sharedPref.getString(common.PREF_KEY_EMONCMS_API, getResources().getString(R.string.pref_default));
-
-        if (MainActivity.DEBUG) Log.i(TAG, "URL is " + strEmoncmsURL);
-        if (MainActivity.DEBUG) Log.i(TAG, "API is " + strEmoncmsAPI);
-
-
         getLoaderManager().initLoader(LOADER_ID, null, this);
+        if (MainActivity.DEBUG) Log.i(TAG, "+++ onResume() called! +++");
     }
 
     @Override
     public void onPause() {
         super.onPause();
+        if (MainActivity.DEBUG) Log.i(TAG, "+++ onPause() called! +++");
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (MainActivity.DEBUG) Log.i(TAG, "+++ onStop() called! +++");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (MainActivity.DEBUG) Log.i(TAG, "+++ onDestroy() called! +++");
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        if (MainActivity.DEBUG) Log.i(TAG, "+++ onDetach() called! +++");
+    }
 
     @Override
     public Loader<ArrayList> onCreateLoader(int id, Bundle args) {
