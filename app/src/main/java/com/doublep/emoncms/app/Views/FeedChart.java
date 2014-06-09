@@ -22,7 +22,7 @@ import java.util.ArrayList;
  * Created by Paul Patchell on 08/06/2014.
  */
 public class FeedChart extends Fragment implements
-        LoaderManager.LoaderCallbacks<ArrayList> {
+        LoaderManager.LoaderCallbacks<Bundle> {
 
     private static final String TAG = "FeedChart";
     private static final int LOADER_ID = 1;
@@ -30,7 +30,7 @@ public class FeedChart extends Fragment implements
     private String strFeedID;
     private String strEmoncmsURL;
     private String strEmoncmsAPI;
-    private ArrayList feedData;
+    private Bundle feedData;
 
     public static FeedChart newInstance(int index) {
         FeedChart f = new FeedChart();
@@ -118,14 +118,14 @@ public class FeedChart extends Fragment implements
     }
 
     @Override
-    public Loader<ArrayList> onCreateLoader(int id, Bundle args) {
+    public Loader<Bundle> onCreateLoader(int id, Bundle args) {
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onCreateLoader() called! +++");
         //return new LoadFeeds(getActivity(), strEmoncmsURL, strEmoncmsAPI);
         return new LoadFeedChart(getActivity(), strEmoncmsURL, strEmoncmsAPI, strFeedID);
     }
 
     @Override
-    public void onLoadFinished(Loader<ArrayList> loader, ArrayList data) {
+    public void onLoadFinished(Loader<Bundle> loader, Bundle data) {
         feedData = data;
         handler.sendEmptyMessage(2);
 
@@ -133,14 +133,14 @@ public class FeedChart extends Fragment implements
     }
 
     @Override
-    public void onLoaderReset(Loader<ArrayList> loader) {
+    public void onLoaderReset(Loader<Bundle> loader) {
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onLoadReset() called! +++");
 
     }
 
     public interface OnFeedChartListener {
 
-        public void onFeedChartSelected(String strFeedID, ArrayList feedData);
+        public void onFeedChartSelected(String strFeedID, Bundle feedData);
 
     }
 

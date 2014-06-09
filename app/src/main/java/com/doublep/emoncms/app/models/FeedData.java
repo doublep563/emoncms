@@ -11,13 +11,12 @@ public class FeedData implements Parcelable {
     // Basic Club Details
 
     @SuppressWarnings("rawtypes")
-    public static final Creator CREATOR = new Creator() {
+    public static final Parcelable.Creator<FeedData> CREATOR = new Parcelable.Creator<FeedData>() {
         @Override
         public FeedData createFromParcel(Parcel in) {
             return new FeedData(in);
         }
 
-        @Override
         public FeedData[] newArray(int size) {
             return new FeedData[size];
         }

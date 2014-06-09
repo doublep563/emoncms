@@ -3,6 +3,7 @@ package com.doublep.emoncms.app.loaders;
 
 import android.content.AsyncTaskLoader;
 import android.content.Context;
+import android.os.Bundle;
 import android.util.Log;
 
 import com.doublep.emoncms.app.GetEmonData;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 /**
  * Created by Paul Patchell on 02/06/2014.
  */
-public class LoadFeedChart extends AsyncTaskLoader<ArrayList> {
+public class LoadFeedChart extends AsyncTaskLoader<Bundle> {
 
 
     private final String mFeedID;
@@ -32,9 +33,9 @@ public class LoadFeedChart extends AsyncTaskLoader<ArrayList> {
 
 
     @SuppressWarnings({})
-    public ArrayList loadInBackground() {
+    public Bundle loadInBackground() {
 
-        ArrayList mFeedData = null;
+        Bundle mFeedData = null;
 
         try {
             mFeedData = GetEmonData.GetFeedData(mURL, mAPI, mFeedID);
@@ -56,7 +57,7 @@ public class LoadFeedChart extends AsyncTaskLoader<ArrayList> {
     }
 
     @Override
-    public void deliverResult(ArrayList data) {
+    public void deliverResult(Bundle data) {
 
         if (MainActivity.DEBUG) Log.i(TAG, "+++ deliverResult() called! +++");
         super.deliverResult(data);

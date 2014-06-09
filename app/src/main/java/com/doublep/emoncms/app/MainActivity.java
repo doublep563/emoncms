@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Parcel;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
@@ -183,13 +184,15 @@ public class MainActivity extends ActionBarActivity implements
         String strEmoncmsURL = sharedPref.getString(common.PREF_KEY_EMONCMS_URL, getResources().getString(R.string.pref_default));
         String strEmoncmsAPI = sharedPref.getString(common.PREF_KEY_EMONCMS_API, getResources().getString(R.string.pref_default));
 
-        //if (MainActivity.DEBUG) Log.i(TAG, "URL is " + strEmoncmsURL);
-        //if (MainActivity.DEBUG) Log.i(TAG, "API is " + strEmoncmsAPI);
+        if (MainActivity.DEBUG) Log.i(TAG, "URL is " + strEmoncmsURL);
+        if (MainActivity.DEBUG) Log.i(TAG, "API is " + strEmoncmsAPI);
         //TODO Protect against empty string in these fields
         if (strEmoncmsURL.equalsIgnoreCase(getResources().getString(R.string.pref_default))) {
             showDialog();
+            return false;
         } else if (strEmoncmsAPI.equalsIgnoreCase(getResources().getString(R.string.pref_default))) {
             showDialog();
+            return false;
         }
         if (MainActivity.DEBUG) Log.i(TAG, "+++ CheckPreferences() called! +++");
         return true;
@@ -308,18 +311,21 @@ public class MainActivity extends ActionBarActivity implements
 
     }
 
-    public void onFeedChartSelected(String strFeedID, ArrayList feedData) {
+    public void onFeedChartSelected(String strFeedID, Bundle feedData) {
+        ArrayList mFeedData = (ArrayList) feedData.getParcelableArrayList("feedData");
 
-        Fragment feedchart  = new FeedChartDisplay();
+        Fragment feedChart  = new FeedChartDisplay();
         Bundle args = new Bundle();
         args.putString("strFeedID", strFeedID);
-        feedchart.setArguments(args);
+        args.putParcelableArrayList("feedData", mFeedData);
+
+        feedChart.setArguments(args);
 
         FragmentManager fragmentManager = getFragmentManager();
         // getFragmentManager().popBackStack();
         FragmentTransaction transaction =fragmentManager.beginTransaction();
 
-        transaction.replace(R.id.content_frame, feedchart ,"abcd" )
+        transaction.replace(R.id.content_frame, feedChart ,"abcd" )
                 //.addToBackStack("abcd")
                 .commit();
 
@@ -373,6 +379,7 @@ public class MainActivity extends ActionBarActivity implements
                         Log.i("MainActivity", "btnSave.setOnClickListener" + strURL + " " + strAPI);
                     }
                     ((MainActivity) getActivity()).doSaveSettings(strURL, strAPI);
+                    SettingsDialogFragment.this.dismiss();
                 }
             });
             // Create the AlertDialog object and return it

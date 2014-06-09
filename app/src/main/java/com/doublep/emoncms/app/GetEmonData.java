@@ -1,5 +1,6 @@
 package com.doublep.emoncms.app;
 
+import android.os.Bundle;
 import android.util.Log;
 
 import com.doublep.emoncms.app.models.FeedData;
@@ -207,7 +208,7 @@ public class GetEmonData {
         return summaryList;
     }
 
-    public static ArrayList GetFeedData(String strURL, String strAPI, String strFeedID) {
+    public static Bundle GetFeedData(String strURL, String strAPI, String strFeedID) {
 
         ArrayList feedData = new ArrayList();
         long endTime = System.currentTimeMillis();
@@ -216,8 +217,9 @@ public class GetEmonData {
         //TODO Fix in Preferences Setup
         strURL = strURL.replace("\n", "");
 
-        String strFeedURL = strURL + "/feed/data.json&apikey=" + strAPI + "?id=" + strFeedID + "&start=" + startTime + "&end=" + endTime + "&dp=80";
+        String strFeedURL = strURL + "/feed/data.json&apikey=" + strAPI + "?id=" + strFeedID + "&start=" + startTime + "&end=" + endTime + "&dp=800";
 
+        Bundle mBundle = null;
         try {
             HttpClient client = new DefaultHttpClient();
             HttpGet request = new HttpGet();
@@ -238,12 +240,15 @@ public class GetEmonData {
             feedArray = new JSONArray(result);
             for (int i = 0; i < feedArray.length(); i++) {
                 //JSONObject c = feedArray.getJSONObject(i);
-               long mTime = feedArray.getJSONArray(i).getLong(0);
-               long mdata = feedArray.getJSONArray(i).getLong(1);
+                long mTime = feedArray.getJSONArray(i).getLong(0);
+                long mdata = feedArray.getJSONArray(i).getLong(1);
                 FeedData fData = new FeedData();
+
                 fData.setFeedTime(mTime);
                 fData.setFeedData(mdata);
                 feedData.add(fData);
+                mBundle = new Bundle();
+                mBundle.putParcelableArrayList("feedData", feedData);
             }
 
         } catch (Exception e) {
@@ -253,7 +258,7 @@ public class GetEmonData {
 
         if (MainActivity.DEBUG) Log.i(TAG, "+++ GetFeedData() called! +++");
 
-        return feedData;
+        return mBundle;
 
     }
 }

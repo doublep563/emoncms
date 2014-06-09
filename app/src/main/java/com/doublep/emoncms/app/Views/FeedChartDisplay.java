@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 
 import com.doublep.emoncms.app.MainActivity;
 import com.doublep.emoncms.app.R;
+import com.doublep.emoncms.app.models.FeedData;
 
 import org.achartengine.ChartFactory;
 import org.achartengine.GraphicalView;
@@ -22,6 +23,7 @@ import org.achartengine.model.XYMultipleSeriesDataset;
 import org.achartengine.renderer.XYMultipleSeriesRenderer;
 import org.achartengine.renderer.XYSeriesRenderer;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -35,10 +37,16 @@ public class FeedChartDisplay extends Fragment {
     private TimeSeries time_series;
     private GraphicalView mChartView;
     private LinearLayout layout;
+    private String strFeedID;
+    private ArrayList<FeedData> feedData;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        //TODO Need more info on the Feed to display in the chart i.e tag, name
+        //TODO USe setTitle to include above info in title bar. In MainActivity?
+        strFeedID = getArguments().getString("strFeedID");
+        feedData = getArguments().getParcelableArrayList("feedData");
 
         // create dataset and renderer
         mDataset = new XYMultipleSeriesDataset();
@@ -48,6 +56,8 @@ public class FeedChartDisplay extends Fragment {
         mRenderer.setLabelsTextSize(15);
         mRenderer.setLegendTextSize(15);
         mRenderer.setPointSize(3f);
+        mRenderer.setYAxisMin(0);
+
 
         XYSeriesRenderer r = new XYSeriesRenderer();
         r.setColor(Color.GREEN);
@@ -62,7 +72,7 @@ public class FeedChartDisplay extends Fragment {
 
         mDataset.addSeries(time_series);
 
-        fillData();
+        LoadData();
 
         mChartView = ChartFactory.getTimeChartView(getActivity(), mDataset, mRenderer,
                 "H:mm:ss");
@@ -117,7 +127,20 @@ public class FeedChartDisplay extends Fragment {
         long value = new Date().getTime() - 3 * TimeChart.DAY;
         for (int i = 0; i < 100; i++) {
             time_series.add(new Date(value + i * TimeChart.DAY / 4), i);
+
         }
+        if (MainActivity.DEBUG) Log.i(TAG, "+++ fillData() called! +++");
+    }
+
+    private void LoadData() {
+        for (int i = 0; i < feedData.size(); i++) {
+            //JSONObject c = feedArray.getJSONObject(i);
+            long mTime = feedData.get(i).getFeedTime();
+            long mData = feedData.get(i).getFeedData();
+            time_series.add(mTime, mData);
+         }
+
+
         if (MainActivity.DEBUG) Log.i(TAG, "+++ fillData() called! +++");
     }
 
