@@ -59,6 +59,8 @@ public class MainActivity extends ActionBarActivity implements
         setContentView(R.layout.activity_main);
 
         mTitle = mDrawerTitle = getTitle();
+        //TODO mNavTitles calls all the default values
+        //TODO Need to Check Preferences to see what other options are set
         mNavTitles = getResources().getStringArray(R.array.nav_titles);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
@@ -324,6 +326,8 @@ public class MainActivity extends ActionBarActivity implements
         FragmentManager fragmentManager = getFragmentManager();
         // getFragmentManager().popBackStack();
         FragmentTransaction transaction =fragmentManager.beginTransaction();
+        //Custom Animation
+        transaction.setCustomAnimations(R.anim.fadein, R.anim.fadeout);
 
         transaction.replace(R.id.content_frame, feedChart ,"abcd" )
                 //.addToBackStack("abcd")

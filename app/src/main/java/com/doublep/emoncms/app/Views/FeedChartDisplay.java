@@ -57,6 +57,8 @@ public class FeedChartDisplay extends Fragment {
         mRenderer.setLegendTextSize(15);
         mRenderer.setPointSize(3f);
         mRenderer.setYAxisMin(0);
+        mRenderer.setApplyBackgroundColor(true);
+        mRenderer.setBackgroundColor(Color.BLACK);
 
 
         XYSeriesRenderer r = new XYSeriesRenderer();
@@ -123,18 +125,9 @@ public class FeedChartDisplay extends Fragment {
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onDetach() called! +++");
     }
 
-    private void fillData() {
-        long value = new Date().getTime() - 3 * TimeChart.DAY;
-        for (int i = 0; i < 100; i++) {
-            time_series.add(new Date(value + i * TimeChart.DAY / 4), i);
-
-        }
-        if (MainActivity.DEBUG) Log.i(TAG, "+++ fillData() called! +++");
-    }
-
     private void LoadData() {
         for (int i = 0; i < feedData.size(); i++) {
-            //JSONObject c = feedArray.getJSONObject(i);
+
             long mTime = feedData.get(i).getFeedTime();
             long mData = feedData.get(i).getFeedData();
             time_series.add(mTime, mData);
