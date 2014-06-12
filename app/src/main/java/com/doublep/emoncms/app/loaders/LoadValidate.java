@@ -9,23 +9,22 @@ import android.util.Log;
 import com.doublep.emoncms.app.GetEmonData;
 import com.doublep.emoncms.app.MainActivity;
 
+import java.util.ArrayList;
+
 /**
  * Created by Paul Patchell on 02/06/2014.
  */
-public class LoadFeedChart extends AsyncTaskLoader<Bundle> {
+public class LoadValidate extends AsyncTaskLoader<Bundle> {
 
 
-    private final String mFeedID;
-    private static final String TAG = "LoadFeedChart";
-    private final String mURL;
-    private final String mAPI;
+    private final String strURL1;
+    private final String strAPI1;
+    private static final String TAG = "LoadValidate";
 
-    public LoadFeedChart(Context context, String strEmoncmsURL, String strEmoncmsAPI, String strFeedID) {
+    public LoadValidate(Context context, String strURL, String strAPI) {
         super(context);
-        mFeedID = strFeedID;
-        mURL = strEmoncmsURL;
-        mAPI = strEmoncmsAPI;
-
+         strURL1 = strURL;
+         strAPI1 = strAPI;
 
     }
 
@@ -33,19 +32,17 @@ public class LoadFeedChart extends AsyncTaskLoader<Bundle> {
     @SuppressWarnings({})
     public Bundle loadInBackground() {
 
-        Bundle mFeedData = null;
+       Bundle mValidate = null;
 
         try {
-            mFeedData = GetEmonData.GetFeedData(mURL, mAPI, mFeedID);
+            mValidate = GetEmonData.Validate(strURL1, strAPI1);
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
-        if (MainActivity.DEBUG) {
-            if (MainActivity.DEBUG) Log.i(TAG, "+++ loadInBackground() called! +++");
-        }
-        return mFeedData;
+        if (MainActivity.DEBUG) Log.i(TAG, "+++ loadInBackground() called! +++");
+        return mValidate;
     }
 
     @Override

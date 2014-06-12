@@ -16,8 +16,6 @@ import com.doublep.emoncms.app.R;
 import com.doublep.emoncms.app.common;
 import com.doublep.emoncms.app.loaders.LoadFeedChart;
 
-import java.util.ArrayList;
-
 /**
  * Created by Paul Patchell on 08/06/2014.
  */

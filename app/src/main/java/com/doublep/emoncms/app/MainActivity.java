@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.os.Parcel;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
@@ -29,21 +28,20 @@ import android.widget.ListView;
 import com.doublep.emoncms.app.Views.FeedChart;
 import com.doublep.emoncms.app.Views.FeedChartDisplay;
 import com.doublep.emoncms.app.Views.Feeds;
+import com.doublep.emoncms.app.Views.StartUp;
 import com.doublep.emoncms.app.Views.Summary;
-import com.doublep.emoncms.app.models.FeedData;
 
 import java.util.ArrayList;
 
 
 public class MainActivity extends ActionBarActivity implements
-            Feeds.OnFeedListener, FeedChart.OnFeedChartListener {
+        Feeds.OnFeedListener, FeedChart.OnFeedChartListener, StartUp.OnStartupListener {
 
 
     public static final boolean DEBUG = true;
     private static final String TAG = "MainActivity";
     private static String strURL;
     private static String strAPI;
-    public SharedPreferences prefs;
     private int mStackLevel = 0;
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
@@ -83,23 +81,23 @@ public class MainActivity extends ActionBarActivity implements
             /** Called when a drawer has settled in a completely closed state. */
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
-                getActionBar().setTitle(mTitle);
+                getSupportActionBar().setTitle(mTitle);
             }
 
             /** Called when a drawer has settled in a completely open state. */
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                getActionBar().setTitle(mDrawerTitle);
+                getSupportActionBar().setTitle(mDrawerTitle);
             }
         };
 
         // Set the drawer toggle as the DrawerListener
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
 
-        //TODO Getting Started Screen. Setup the preferences
+
         if (CheckPreferences()) {
             if (savedInstanceState == null) {
                 Fragment sumFrag = new Summary();
@@ -108,16 +106,29 @@ public class MainActivity extends ActionBarActivity implements
                 transaction.replace(R.id.content_frame, sumFrag)
                         .addToBackStack(null)
                         .commit();
-                if (MainActivity.DEBUG) Log.i(TAG, "+++ CheckPreferences() New Fragment called! +++");
-            }
-            else{
+                if (MainActivity.DEBUG)
+                    Log.i(TAG, "+++ CheckPreferences() New Fragment called! +++");
+            } else {
 
-                Summary sumFrag =  (Summary)getFragmentManager().findFragmentByTag("sumFrag");
-                if (MainActivity.DEBUG) Log.i(TAG, "+++ CheckPreferences() Reuse Fragment called! +++");
+                //Summary sumFrag =  (Summary)getFragmentManager().findFragmentByTag("sumFrag");
+                if (MainActivity.DEBUG)
+                    Log.i(TAG, "+++ CheckPreferences() Reuse Fragment called! +++");
             }
 
-            if (MainActivity.DEBUG) Log.i(TAG, "+++ CheckPreferences() called! +++");
+        } else {
+            Fragment StartupFrag = new StartUp();
+            FragmentManager fragmentManager = getFragmentManager();
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
+            transaction.replace(R.id.content_frame, StartupFrag)
+                    .addToBackStack(null)
+                    .commit();
+
+
+            if (MainActivity.DEBUG)
+                Log.i(TAG, "+++ CheckPreferences() StartUp Fragment called! +++");
         }
+
+
         if (MainActivity.DEBUG) Log.i(TAG, "+++ OnCreate() called! +++");
 
     }
@@ -182,6 +193,8 @@ public class MainActivity extends ActionBarActivity implements
 
     private boolean CheckPreferences() {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+
+        if (MainActivity.DEBUG) Log.i(TAG, "+++ CheckPreferences() called! +++");
         //Are the URL and API set?
         String strEmoncmsURL = sharedPref.getString(common.PREF_KEY_EMONCMS_URL, getResources().getString(R.string.pref_default));
         String strEmoncmsAPI = sharedPref.getString(common.PREF_KEY_EMONCMS_API, getResources().getString(R.string.pref_default));
@@ -190,14 +203,15 @@ public class MainActivity extends ActionBarActivity implements
         if (MainActivity.DEBUG) Log.i(TAG, "API is " + strEmoncmsAPI);
         //TODO Protect against empty string in these fields
         if (strEmoncmsURL.equalsIgnoreCase(getResources().getString(R.string.pref_default))) {
-            showDialog();
+            //showDialog();
             return false;
         } else if (strEmoncmsAPI.equalsIgnoreCase(getResources().getString(R.string.pref_default))) {
-            showDialog();
+            //showDialog();
             return false;
+        } else {
+            return true;
         }
-        if (MainActivity.DEBUG) Log.i(TAG, "+++ CheckPreferences() called! +++");
-        return true;
+
     }
 
     void showDialog() {
@@ -229,6 +243,7 @@ public class MainActivity extends ActionBarActivity implements
         editor.commit();
         //TODO Test the URL and API provided
         //TODO Create StartActivityforResult
+        //TODo
         Intent i = new Intent(this, Preferences.class);
         startActivity(i);
     }
@@ -240,11 +255,11 @@ public class MainActivity extends ActionBarActivity implements
         // 0 = Summary
         if (position == 0) {
             Fragment fragment = new Summary();
-            Bundle args = new Bundle();
+
 
             FragmentManager fragmentManager = getFragmentManager();
-           // getFragmentManager().popBackStack();
-            FragmentTransaction transaction =fragmentManager.beginTransaction();
+            // getFragmentManager().popBackStack();
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
             transaction.replace(R.id.content_frame, fragment)
                     .addToBackStack(null)
                     .commit();
@@ -254,11 +269,9 @@ public class MainActivity extends ActionBarActivity implements
         else if (position == 1) {
             Fragment feeds = new Feeds();
 
-            Bundle args = new Bundle();
-
             FragmentManager fragmentManager = getFragmentManager();
             //getFragmentManager().popBackStack();
-            FragmentTransaction transaction =fragmentManager.beginTransaction();
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
 
             transaction.replace(R.id.content_frame, feeds)
                     .addToBackStack(null)
@@ -274,7 +287,7 @@ public class MainActivity extends ActionBarActivity implements
     @Override
     public void setTitle(CharSequence title) {
         mTitle = title;
-        getActionBar().setTitle(mTitle);
+        getSupportActionBar().setTitle(mTitle);
         if (MainActivity.DEBUG) Log.i(TAG, "+++ setTitle() called! +++");
     }
 
@@ -302,8 +315,8 @@ public class MainActivity extends ActionBarActivity implements
         fragment.setArguments(args);
 
         FragmentManager fragmentManager = getFragmentManager();
-       // getFragmentManager().popBackStack();
-        FragmentTransaction transaction =fragmentManager.beginTransaction();
+        // getFragmentManager().popBackStack();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
 
         transaction.replace(R.id.content_frame, fragment)
                 .addToBackStack(null)
@@ -316,7 +329,7 @@ public class MainActivity extends ActionBarActivity implements
     public void onFeedChartSelected(String strFeedID, Bundle feedData) {
         ArrayList mFeedData = (ArrayList) feedData.getParcelableArrayList("feedData");
 
-        Fragment feedChart  = new FeedChartDisplay();
+        Fragment feedChart = new FeedChartDisplay();
         Bundle args = new Bundle();
         args.putString("strFeedID", strFeedID);
         args.putParcelableArrayList("feedData", mFeedData);
@@ -325,11 +338,11 @@ public class MainActivity extends ActionBarActivity implements
 
         FragmentManager fragmentManager = getFragmentManager();
         // getFragmentManager().popBackStack();
-        FragmentTransaction transaction =fragmentManager.beginTransaction();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
         //Custom Animation
         transaction.setCustomAnimations(R.anim.fadein, R.anim.fadeout);
 
-        transaction.replace(R.id.content_frame, feedChart ,"abcd" )
+        transaction.replace(R.id.content_frame, feedChart, "abcd")
                 //.addToBackStack("abcd")
                 .commit();
 
@@ -337,6 +350,61 @@ public class MainActivity extends ActionBarActivity implements
 
     }
 
+    @Override
+    public void onBackPressed() {
+        if (getFragmentManager().getBackStackEntryCount() == 0) {
+            this.finish();
+        } else {
+
+            Fragment fragments = getFragmentManager().findFragmentByTag("abcd");
+            if (fragments == null) {
+
+                getFragmentManager().popBackStack();
+                if (MainActivity.DEBUG) Log.i(TAG, "+++ popbackstack! +++");
+            } else {
+                getFragmentManager().beginTransaction().remove(getFragmentManager().findFragmentByTag("abcd")).commit();
+                getFragmentManager().popBackStack();
+
+                if (MainActivity.DEBUG)
+                    Log.i(TAG, "+++ Remove the abcd fragment and popbackstack! +++");
+            }
+
+        }
+        if (MainActivity.DEBUG) Log.i(TAG, "+++ onBackPressed() called! +++");
+
+    }
+
+    @Override
+    public void onStartUpCompleted() {
+        //TODO this won't work!!!!!!!!!!
+        if (CheckPreferences()) {
+
+                Fragment sumFrag = new Summary();
+                FragmentManager fragmentManager = getFragmentManager();
+                FragmentTransaction transaction = fragmentManager.beginTransaction();
+                transaction.replace(R.id.content_frame, sumFrag)
+                        .addToBackStack(null)
+                        .commit();
+                if (MainActivity.DEBUG)
+                    Log.i(TAG, "+++ CheckPreferences() New Fragment called! +++");
+
+
+        } else {
+            Fragment StartupFrag = new StartUp();
+            FragmentManager fragmentManager = getFragmentManager();
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
+            transaction.replace(R.id.content_frame, StartupFrag)
+                    .addToBackStack(null)
+                    .commit();
+
+
+            if (MainActivity.DEBUG)
+                Log.i(TAG, "+++ CheckPreferences() StartUp Fragment called! +++");
+        }
+        if (MainActivity.DEBUG) Log.i(TAG, "+++ onStartUpCompleted() called! +++");
+    }
+
+    //TODO Move to its own class
     public static class SettingsDialogFragment extends DialogFragment {
 
 
@@ -371,7 +439,8 @@ public class MainActivity extends ActionBarActivity implements
                     SettingsDialogFragment.this.dismiss();
                 }
             });
-
+            //TODO Should be btnValidate
+            //TODO need to check what the user has input to ensure we can connect.
             Button btnSave = (Button) view.findViewById(R.id.btnSave);
 
             btnSave.setOnClickListener(new View.OnClickListener() {
@@ -398,30 +467,5 @@ public class MainActivity extends ActionBarActivity implements
         public void onItemClick(AdapterView parent, View view, int position, long id) {
             selectItem(position);
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (getFragmentManager().getBackStackEntryCount() == 0) {
-            this.finish();
-        }
-        else {
-
-            Fragment fragments = getFragmentManager().findFragmentByTag("abcd");
-            if(fragments == null) {
-
-                getFragmentManager().popBackStack();
-                if (MainActivity.DEBUG) Log.i(TAG, "+++ popbackstack! +++");
-            }
-            else {
-                getFragmentManager().beginTransaction().remove(getFragmentManager().findFragmentByTag("abcd")).commit();
-                getFragmentManager().popBackStack();
-
-                if (MainActivity.DEBUG) Log.i(TAG, "+++ Remove the abcd fragment and popbackstack! +++");
-            }
-
-        }
-        if (MainActivity.DEBUG) Log.i(TAG, "+++ onBackPressed() called! +++");
-
     }
 }

@@ -7,9 +7,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.View;
-import android.widget.ListView;
-import android.widget.Toast;
 
 import com.doublep.emoncms.app.MainActivity;
 import com.doublep.emoncms.app.R;
@@ -30,9 +27,6 @@ public class Summary extends ListFragment implements
     private static final int LOADER_ID = 1;
     public static String strEmoncmsURL = "";
     private String strEmoncmsAPI;
-    private String strRaspPiStatus;
-    private String strGoodFeeds;
-    private String strBadFeeds;
     private AdapterSummary mAdapter;
 
     public static Summary newInstance(int index) {
@@ -113,14 +107,15 @@ public class Summary extends ListFragment implements
     @Override
     public Loader<ArrayList> onCreateLoader(int id, Bundle args) {
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onCreateLoader() called! +++");
+        //TODO LoadSummaryStatus needs to Check Preferences to see what should be checked.
         return new LoadSummaryStatus(getActivity(), strEmoncmsURL, strEmoncmsAPI);
     }
 
     @Override
     public void onLoadFinished(Loader<ArrayList> loader, ArrayList data) {
 
-        ArrayList summaryStatus = data;
-        mAdapter = new AdapterSummary(getActivity(), R.layout.summary, summaryStatus);
+
+        mAdapter = new AdapterSummary(getActivity(), R.layout.summary, data);
         setListAdapter(mAdapter);
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onLoadFinished() called! +++");
 

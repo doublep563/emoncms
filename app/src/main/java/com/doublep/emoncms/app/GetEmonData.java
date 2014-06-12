@@ -8,9 +8,11 @@ import com.doublep.emoncms.app.models.FeedDetails;
 import com.doublep.emoncms.app.models.SummaryStatus;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -115,6 +117,8 @@ public class GetEmonData {
 
     public static ArrayList GetStatus(String strURL, String strAPI) {
 
+        //TODO LoadSummaryStatus needs to Check Preferences to see what should be checked.
+
         ArrayList summaryList = new ArrayList();
         String RASPBERRY_PI_STATUS = null;
         int FEEDS_GOOD = 0;
@@ -128,9 +132,10 @@ public class GetEmonData {
         String strFeedList = strURL + "/feed/list.json&apikey=" + strAPI;
         //String strRaspURL = "http://192.168.0.27/raspberrypi/getrunning.json&apikey=" + strAPI;
         //String strFeedList = "http://192.168.0.27/feed/list.json&apikey=" + strAPI;
-
+        //TODO LoadSummaryStatus needs to Check Preferences to see what should be checked.
 
         try {
+            //TODO LoadSummaryStatus needs to Check Preferences to see what should be checked.
             HttpClient client = new DefaultHttpClient();
             HttpGet request = new HttpGet();
             request.setURI(new URI(strRaspURL));
@@ -153,7 +158,8 @@ public class GetEmonData {
 
 
         } catch (Exception e) {
-            //TODO Handle Error with Dialog to User
+            //TODO Handle Error with Dialog to User Immediately
+            //TODO Many errors occur because of this
             Log.d("InputStream", e.getLocalizedMessage());
         }
 
@@ -206,6 +212,52 @@ public class GetEmonData {
         summaryStatus.setStrFeedsBad(Integer.toString(FEEDS_BAD));
         summaryList.add(summaryStatus);
         return summaryList;
+    }
+
+    public static Bundle Validate(String strURL, String strAPI) {
+
+        //TODO Fix in Preferences Setup
+        strURL = strURL.replace("\n", "");
+        String strFeedList = strURL + "/feed/list.json&apikey=" + strAPI;
+
+
+        Bundle mBundle = null ;
+        try {
+            mBundle = new Bundle();
+            HttpClient client = new DefaultHttpClient();
+            HttpGet request = new HttpGet();
+            request.setURI(new URI(strFeedList));
+
+            HttpResponse response = client.execute(request);
+            //String responseBody = EntityUtils.toString(response.getEntity());
+
+            BufferedReader in = new BufferedReader(new InputStreamReader(response.getEntity()
+                    .getContent()));
+            StringBuffer sb = new StringBuffer("");
+            String line;
+            String NL = System.getProperty("line.separator");
+            while ((line = in.readLine()) != null) {
+                sb.append(line + NL);
+            }
+            in.close();
+            String result = sb.toString();
+
+
+        } catch (ClientProtocolException e) {
+            mBundle.putString("ClientProtocolException", e.getLocalizedMessage());
+            if (MainActivity.DEBUG)
+                Log.i(TAG, "+++ Validate() ClientProtocolException called! +++" + e.getLocalizedMessage());
+        } catch (Exception e) {
+
+           mBundle.putString("Exception", e.getLocalizedMessage());
+            if (MainActivity.DEBUG)
+                Log.i(TAG, "+++ Validate() Exception called! +++" + e.getLocalizedMessage());
+        }
+
+        if (MainActivity.DEBUG) Log.i(TAG, "+++ Validate() called! +++");
+
+        return mBundle;
+
     }
 
     public static Bundle GetFeedData(String strURL, String strAPI, String strFeedID) {

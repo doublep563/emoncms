@@ -34,26 +34,4 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory
-        android:summary="@string/pref_title2_summary"
-        android:title="@string/pref_title2">
-
-        <Preference android:summary="@string/pref_title2_summary" />
-
-        <EditTextPreference
-            android:defaultValue="@string/pref_default"
-            android:dialogTitle="@string/pref_emoncms_login_dialog"
-            android:key="pref_key_emoncms_login"
-            android:summary="@string/pref_emoncms_login_summary"
-            android:title="@string/pref_emoncms_login" />
-
-        <EditTextPreference
-            android:defaultValue="@string/pref_default"
-            android:dialogTitle="@string/pref_emoncms_password_dialog"
-            android:inputType="textPassword"
-            android:key="pref_key_emoncms_password"
-            android:summary="@string/pref_emoncms_password_summary"
-            android:title="@string/pref_emoncms_password" />
-    </PreferenceCategory>
-
 </PreferenceScreen>

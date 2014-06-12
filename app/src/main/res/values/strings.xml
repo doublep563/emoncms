@@ -80,5 +80,6 @@
     <string name="emoncms_bad_feeds">Bad Feeds</string>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
+    <string name="setup_error">Validation failed. Review error below and try again</string>
 
 </resources>
