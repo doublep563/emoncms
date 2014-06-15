@@ -27,7 +27,6 @@ public class Summary extends ListFragment implements
     private static final int LOADER_ID = 1;
     public static String strEmoncmsURL = "";
     private String strEmoncmsAPI;
-    private AdapterSummary mAdapter;
 
     public static Summary newInstance(int index) {
         Summary f = new Summary();
@@ -115,7 +114,7 @@ public class Summary extends ListFragment implements
     public void onLoadFinished(Loader<ArrayList> loader, ArrayList data) {
 
 
-        mAdapter = new AdapterSummary(getActivity(), R.layout.summary, data);
+        AdapterSummary mAdapter = new AdapterSummary(getActivity(), R.layout.summary, data);
         setListAdapter(mAdapter);
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onLoadFinished() called! +++");
 

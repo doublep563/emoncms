@@ -24,7 +24,7 @@ public class FeedChart extends Fragment implements
 
     private static final String TAG = "FeedChart";
     private static final int LOADER_ID = 1;
-    OnFeedChartListener mListener;
+    private OnFeedChartListener mListener;
     private String strFeedID;
     private String strEmoncmsURL;
     private String strEmoncmsAPI;
@@ -143,7 +143,7 @@ public class FeedChart extends Fragment implements
     }
 
 
-    private Handler handler = new Handler()  // handler for commiting fragment after data is loaded
+    private final Handler handler = new Handler()  // handler for commiting fragment after data is loaded
     {
         @Override
         public void handleMessage(Message msg)

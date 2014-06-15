@@ -29,20 +29,9 @@ public class Feeds extends ListFragment implements
     // The Loader's id (this id is specific to the ListFragment's LoaderManager)
     private static final int LOADER_ID = 1;
     private static final String TAG = "Feeds";
-    OnFeedListener mListener;
+    private OnFeedListener mListener;
     private String strEmoncmsURL;
     private String strEmoncmsAPI;
-
-    public static Feeds newInstance(int index) {
-        Feeds f = new Feeds();
-
-        // Supply index input as an argument.
-        Bundle args = new Bundle();
-        args.putInt("index", index);
-        f.setArguments(args);
-
-        return f;
-    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -121,8 +110,8 @@ public class Feeds extends ListFragment implements
     @Override
     public void onLoadFinished(Loader<ArrayList> loader, ArrayList data) {
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onLoadFinished() called! +++");
-        ArrayList feedDetails = data;
-        AdapterFeeds mAdapter = new AdapterFeeds(getActivity(), R.layout.feed_list, feedDetails);
+        AdapterFeeds mAdapter;
+        mAdapter = new AdapterFeeds(getActivity(), R.layout.feed_list, data);
 
         setListAdapter(mAdapter);
     }
@@ -141,7 +130,7 @@ public class Feeds extends ListFragment implements
             mListener.onFeedSelected(strFeedID);
         }
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onListItemClick() called! +++  " + strFeedID);
-        if (MainActivity.DEBUG) Log.i(TAG, "+++ onListItemClick() called! +++");
+
     }
 
     public interface OnFeedListener {

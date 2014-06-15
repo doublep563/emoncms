@@ -35,20 +35,15 @@ public class AdapterFeeds extends ArrayAdapter<FeedDetails> {
         }
         FeedDetails o = items.get(position);
         if (o != null) {
-            TextView tvfeed_id = (TextView) v
-                    .findViewById(R.id.textView_id);
+            assert v != null;
+
             TextView tvfeed_name = (TextView) v
                     .findViewById(R.id.textView_name);
             TextView tvfeed_tag = (TextView) v
                     .findViewById(R.id.textView_tag);
             TextView tvfeed_value = (TextView) v
                     .findViewById(R.id.textView_value);
-            TextView tvfeed_updated = (TextView) v
-                    .findViewById(R.id.textView_updated);
 
-            if (tvfeed_id != null) {
-                tvfeed_id.setText(o.getStrID());
-            }
             if (tvfeed_name != null) {
                 tvfeed_name.setText(o.getStrName());
             }
@@ -58,9 +53,7 @@ public class AdapterFeeds extends ArrayAdapter<FeedDetails> {
             if (tvfeed_value != null) {
                 tvfeed_value.setText(o.getStrValue());
             }
-            if (tvfeed_updated != null) {
-                tvfeed_updated.setText(o.getStrTime());
-            }
+
         }
         return v;
     }

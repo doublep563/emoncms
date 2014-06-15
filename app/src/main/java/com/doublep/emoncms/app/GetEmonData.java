@@ -12,7 +12,6 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -26,7 +25,7 @@ public class GetEmonData {
 
     private static final String TAG = "GetEmonData";
 
-    public static ArrayList GetFeeds(String strURL, String strAPI) {
+    public static ArrayList<FeedDetails> GetFeeds(String strURL, String strAPI) {
         // JSON Node names
         String FEED_ID = "id";
         String FEED_USERID = "userid";
@@ -40,8 +39,7 @@ public class GetEmonData {
         String FEED_VALUE = "value";
 
 
-        //String strURL = "http://doublep.dnsd.me/emoncms/";
-        //String strAPI = "480fa3515ab1294e45a8d4854c1a0784";
+
         strURL = strURL.replace("\n", "");
         String strFeedList = strURL + "/feed/list.json&apikey=" + strAPI;
         BufferedReader in;
@@ -49,7 +47,7 @@ public class GetEmonData {
         JSONArray feeds;
 
 
-        ArrayList feedList = new ArrayList();
+        ArrayList<FeedDetails> feedList = new ArrayList<FeedDetails>();
         try {
             HttpClient client = new DefaultHttpClient();
             HttpGet request = new HttpGet();
@@ -60,11 +58,11 @@ public class GetEmonData {
 
             in = new BufferedReader(new InputStreamReader(response.getEntity()
                     .getContent()));
-            StringBuffer sb = new StringBuffer("");
+            StringBuilder sb = new StringBuilder("");
             String line;
             String NL = System.getProperty("line.separator");
             while ((line = in.readLine()) != null) {
-                sb.append(line + NL);
+                sb.append(line).append(NL);
             }
             in.close();
             result = sb.toString();
@@ -89,7 +87,7 @@ public class GetEmonData {
                 int myTime = (int) unixTime - intTime;
 
 
-                // tmp hashmap for single contact
+                // tmp hashmap for feed details
                 FeedDetails feed = new FeedDetails();
                 feed.setStrDataType(datatype);
                 feed.setStrEngine(engine);
@@ -115,11 +113,11 @@ public class GetEmonData {
         return feedList;
     }
 
-    public static ArrayList GetStatus(String strURL, String strAPI) {
+    public static ArrayList<SummaryStatus> GetStatus(String strURL, String strAPI) {
 
         //TODO LoadSummaryStatus needs to Check Preferences to see what should be checked.
 
-        ArrayList summaryList = new ArrayList();
+        ArrayList<SummaryStatus> summaryList = new ArrayList<SummaryStatus>();
         String RASPBERRY_PI_STATUS = null;
         int FEEDS_GOOD = 0;
         int FEEDS_BAD = 0;
@@ -130,8 +128,7 @@ public class GetEmonData {
 
         String strRaspURL = strURL + "/raspberrypi/getrunning.json&apikey=" + strAPI;
         String strFeedList = strURL + "/feed/list.json&apikey=" + strAPI;
-        //String strRaspURL = "http://192.168.0.27/raspberrypi/getrunning.json&apikey=" + strAPI;
-        //String strFeedList = "http://192.168.0.27/feed/list.json&apikey=" + strAPI;
+
         //TODO LoadSummaryStatus needs to Check Preferences to see what should be checked.
 
         try {
@@ -145,11 +142,11 @@ public class GetEmonData {
 
             BufferedReader in = new BufferedReader(new InputStreamReader(response.getEntity()
                     .getContent()));
-            StringBuffer sb = new StringBuffer("");
+            StringBuilder sb = new StringBuilder("");
             String line;
             String NL = System.getProperty("line.separator");
             while ((line = in.readLine()) != null) {
-                sb.append(line + NL);
+                sb.append(line).append(NL);
             }
             in.close();
             String result = sb.toString();
@@ -173,11 +170,11 @@ public class GetEmonData {
 
             BufferedReader in = new BufferedReader(new InputStreamReader(response.getEntity()
                     .getContent()));
-            StringBuffer sb = new StringBuffer("");
-            String line = "";
+            StringBuilder sb = new StringBuilder("");
+            String line ;
             String NL = System.getProperty("line.separator");
             while ((line = in.readLine()) != null) {
-                sb.append(line + NL);
+                sb.append(line).append(NL);
             }
             in.close();
             String result = sb.toString();
@@ -215,9 +212,10 @@ public class GetEmonData {
     }
 
     public static Bundle Validate(String strURL, String strAPI) {
-
+        if (MainActivity.DEBUG) Log.i(TAG, "Before white space URL is " + strURL);
         //TODO Fix in Preferences Setup
         strURL = strURL.replace("\n", "");
+        if (MainActivity.DEBUG) Log.i(TAG, "After white space URL is " + strURL);
         String strFeedList = strURL + "/feed/list.json&apikey=" + strAPI;
 
 
@@ -231,17 +229,7 @@ public class GetEmonData {
             HttpResponse response = client.execute(request);
             //String responseBody = EntityUtils.toString(response.getEntity());
 
-            BufferedReader in = new BufferedReader(new InputStreamReader(response.getEntity()
-                    .getContent()));
-            StringBuffer sb = new StringBuffer("");
-            String line;
-            String NL = System.getProperty("line.separator");
-            while ((line = in.readLine()) != null) {
-                sb.append(line + NL);
-            }
-            in.close();
-            String result = sb.toString();
-
+            // If there is an error, catch it below and return in the bundle
 
         } catch (ClientProtocolException e) {
             mBundle.putString("ClientProtocolException", e.getLocalizedMessage());
@@ -249,7 +237,8 @@ public class GetEmonData {
                 Log.i(TAG, "+++ Validate() ClientProtocolException called! +++" + e.getLocalizedMessage());
         } catch (Exception e) {
 
-           mBundle.putString("Exception", e.getLocalizedMessage());
+            assert mBundle != null;
+            mBundle.putString("Exception", e.getLocalizedMessage());
             if (MainActivity.DEBUG)
                 Log.i(TAG, "+++ Validate() Exception called! +++" + e.getLocalizedMessage());
         }
@@ -262,14 +251,18 @@ public class GetEmonData {
 
     public static Bundle GetFeedData(String strURL, String strAPI, String strFeedID) {
 
-        ArrayList feedData = new ArrayList();
-        long endTime = System.currentTimeMillis();
+        ArrayList<FeedData> feedData = new ArrayList<FeedData>();
+        // Take 2 minutes off the end time to ensure that data exists in the database
+        long endTime = System.currentTimeMillis() - 120000;
+
         long startTime = endTime - 86400000;
         JSONArray feedArray;
         //TODO Fix in Preferences Setup
         strURL = strURL.replace("\n", "");
 
-        String strFeedURL = strURL + "/feed/data.json&apikey=" + strAPI + "?id=" + strFeedID + "&start=" + startTime + "&end=" + endTime + "&dp=800";
+        String strFeedURL = strURL + "/feed/data.json&apikey=" + strAPI + "?id=" + strFeedID + "&start=" + startTime + "&end=" + endTime + "&dp=100";
+
+        if (MainActivity.DEBUG) Log.i(TAG, "+++ GetFeedData() strFeedURL is " + strFeedURL);
 
         Bundle mBundle = null;
         try {
@@ -281,14 +274,16 @@ public class GetEmonData {
 
             BufferedReader in = new BufferedReader(new InputStreamReader(response.getEntity()
                     .getContent()));
-            StringBuffer sb = new StringBuffer("");
+            StringBuilder sb = new StringBuilder("");
             String line;
             String NL = System.getProperty("line.separator");
             while ((line = in.readLine()) != null) {
-                sb.append(line + NL);
+                sb.append(line).append(NL);
             }
             in.close();
             String result = sb.toString();
+            //TODO Need to handle hull data in here in cases where the query to database returns
+            //TODO no values
             feedArray = new JSONArray(result);
             for (int i = 0; i < feedArray.length(); i++) {
                 //JSONObject c = feedArray.getJSONObject(i);

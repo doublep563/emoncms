@@ -9,8 +9,6 @@ import android.util.Log;
 import com.doublep.emoncms.app.GetEmonData;
 import com.doublep.emoncms.app.MainActivity;
 
-import java.util.ArrayList;
-
 /**
  * Created by Paul Patchell on 02/06/2014.
  */

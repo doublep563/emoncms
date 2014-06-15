@@ -1,8 +1,5 @@
 package com.doublep.emoncms.app;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -15,14 +12,11 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
 
 import com.doublep.emoncms.app.Views.FeedChart;
@@ -40,9 +34,6 @@ public class MainActivity extends ActionBarActivity implements
 
     public static final boolean DEBUG = true;
     private static final String TAG = "MainActivity";
-    private static String strURL;
-    private static String strAPI;
-    private int mStackLevel = 0;
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private String[] mNavTitles;
@@ -214,24 +205,6 @@ public class MainActivity extends ActionBarActivity implements
 
     }
 
-    void showDialog() {
-        mStackLevel++;
-
-        // DialogFragment.show() will take care of adding the fragment
-        // in a transaction.  We also want to remove any currently showing
-        // dialog, so make our own transaction and take care of that here.
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        Fragment prev = getFragmentManager().findFragmentByTag("dialog");
-        if (prev != null) {
-            ft.remove(prev);
-        }
-        ft.addToBackStack(null);
-
-        // Create and show the dialog.
-        DialogFragment newFragment = SettingsDialogFragment.newInstance(mStackLevel);
-        newFragment.show(ft, "dialog");
-    }
-
     void doSaveSettings(String strURL, String strAPI) {
         //TODO This needs to be moved to Preferences class or use method from class to standardise
         //TODO updating of preferences e.g. removing /n from text
@@ -327,7 +300,8 @@ public class MainActivity extends ActionBarActivity implements
     }
 
     public void onFeedChartSelected(String strFeedID, Bundle feedData) {
-        ArrayList mFeedData = (ArrayList) feedData.getParcelableArrayList("feedData");
+        ArrayList mFeedData;
+        mFeedData = (ArrayList) feedData.getParcelableArrayList("feedData");
 
         Fragment feedChart = new FeedChartDisplay();
         Bundle args = new Bundle();
@@ -379,14 +353,14 @@ public class MainActivity extends ActionBarActivity implements
         //TODO this won't work!!!!!!!!!!
         if (CheckPreferences()) {
 
-                Fragment sumFrag = new Summary();
-                FragmentManager fragmentManager = getFragmentManager();
-                FragmentTransaction transaction = fragmentManager.beginTransaction();
-                transaction.replace(R.id.content_frame, sumFrag)
-                        .addToBackStack(null)
-                        .commit();
-                if (MainActivity.DEBUG)
-                    Log.i(TAG, "+++ CheckPreferences() New Fragment called! +++");
+            Fragment sumFrag = new Summary();
+            FragmentManager fragmentManager = getFragmentManager();
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
+            transaction.replace(R.id.content_frame, sumFrag)
+                    .addToBackStack(null)
+                    .commit();
+            if (MainActivity.DEBUG)
+                Log.i(TAG, "+++ CheckPreferences() New Fragment called! +++");
 
 
         } else {
@@ -404,63 +378,6 @@ public class MainActivity extends ActionBarActivity implements
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onStartUpCompleted() called! +++");
     }
 
-    //TODO Move to its own class
-    public static class SettingsDialogFragment extends DialogFragment {
-
-
-        static SettingsDialogFragment newInstance(int num) {
-            SettingsDialogFragment f = new SettingsDialogFragment();
-
-            // Supply num input as an argument.
-            Bundle args = new Bundle();
-            args.putInt("num", num);
-            f.setArguments(args);
-
-            return f;
-
-        }
-
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            // Use the Builder class for convenient dialog construction
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            LayoutInflater inflater = getActivity().getLayoutInflater();
-            View view = inflater.inflate(R.layout.setup, null);
-            builder.setView(view);
-
-            final EditText mURL = (EditText) view.findViewById(R.id.url);
-            final EditText mAPI = (EditText) view.findViewById(R.id.api);
-
-            Button btnCancel = (Button) view.findViewById(R.id.btnCancel);
-
-            btnCancel.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    SettingsDialogFragment.this.dismiss();
-                }
-            });
-            //TODO Should be btnValidate
-            //TODO need to check what the user has input to ensure we can connect.
-            Button btnSave = (Button) view.findViewById(R.id.btnSave);
-
-            btnSave.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    strURL = mURL.getText().toString();
-                    strAPI = mAPI.getText().toString();
-                    if (MainActivity.DEBUG) {
-                        Log.i("MainActivity", "btnSave.setOnClickListener" + strURL + " " + strAPI);
-                    }
-                    ((MainActivity) getActivity()).doSaveSettings(strURL, strAPI);
-                    SettingsDialogFragment.this.dismiss();
-                }
-            });
-            // Create the AlertDialog object and return it
-            return builder.create();
-        }
-
-
-    }
 
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override

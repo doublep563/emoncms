@@ -64,7 +64,7 @@
     <string name="pref_title2_summary">Enter details if you wish to go to full web site</string>
     <string name="pref_default">Not Set</string>
     <string name="emoncms_url">URL to Web Server</string>
-    <string name="emoncms_raspberry_pi_status">Raspberry Pi Interface Status</string>
+    <string name="emoncms_raspberry_pi_status">Raspberry Pi Interface </string>
     <string name="emoncms_feed_summary">Feed Summary</string>
     <string name="emoncms_last_updated">Updated</string>
     <string name="emoncms_web_site">Go to Web Site</string>
@@ -81,5 +81,7 @@
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
     <string name="setup_error">Validation failed. Review error below and try again</string>
+    <string name="btnTest">Test</string>
+    <string name="txtErrorText">Text of the Error</string>
 
 </resources>

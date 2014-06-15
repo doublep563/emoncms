@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources >
 
     <!-- From: file:/usr/local/google/buildbot/repo_clients/https___googleplex-android.googlesource.com_a_platform_manifest.git/klp-ub-dev/frameworks/support/v7/appcompat/res/values-ro/strings.xml -->
     <eat-comment />

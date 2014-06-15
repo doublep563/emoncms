@@ -29,15 +29,13 @@ public class StartUp extends Fragment implements
         LoaderManager.LoaderCallbacks<Bundle> {
 
     private static final String TAG = "StartUp";
-    private String strFeedID;
     private String strURL;
     private String strAPI;
-    private Bundle mBundle;
     private EditText mURL;
     private EditText mAPI;
     private TextView mErrorDescription;
     private TextView mErrorText;
-    OnStartupListener mListener;
+    private OnStartupListener mListener;
 
 
     @Override
@@ -46,7 +44,8 @@ public class StartUp extends Fragment implements
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onCreateView() called! +++");
         View rootView = inflater.inflate(R.layout.setup, container, false);
 
-         mURL = (EditText) rootView.findViewById(R.id.url);
+        assert rootView != null;
+        mURL = (EditText) rootView.findViewById(R.id.url);
          mAPI = (EditText) rootView.findViewById(R.id.api);
          mErrorDescription  = (TextView) rootView.findViewById(R.id.txtErrorDescription);
          mErrorText  = (TextView) rootView.findViewById(R.id.txtErrorText);
@@ -66,10 +65,16 @@ public class StartUp extends Fragment implements
                 mErrorDescription.setVisibility(View.INVISIBLE);
                 mErrorText.setVisibility(View.INVISIBLE);
                 strURL = mURL.getText().toString();
+
+                //Remove new line if copied into text field.
+                strURL = strURL.replace("\n", "");
+
                 strAPI = mAPI.getText().toString();
-                if (MainActivity.DEBUG) {
-                    if (MainActivity.DEBUG) Log.i(TAG, "+++ btnSave() onClick called! +++" + strURL + strAPI);
-                }
+
+                if (MainActivity.DEBUG) Log.i(TAG, "URL is " + strURL);
+                if (MainActivity.DEBUG) Log.i(TAG, "API is " + strAPI);
+                if (MainActivity.DEBUG) Log.i(TAG, "+++ btnSave() onClick called! +++" + strURL + strAPI);
+
                 Loader<Object> mLoader = getLoaderManager().getLoader(LOADER_ID);
                 if(mLoader == null ){
 
@@ -90,18 +95,6 @@ public class StartUp extends Fragment implements
     }
 
     private static final int LOADER_ID = 1;
-
-
-    public static StartUp newInstance(int index) {
-        StartUp f = new StartUp();
-
-        // Supply index input as an argument.
-        Bundle args = new Bundle();
-        args.putInt("index", index);
-        f.setArguments(args);
-
-        return f;
-    }
 
 
     @Override
@@ -178,6 +171,7 @@ public class StartUp extends Fragment implements
 
     @Override
     public void onLoadFinished(Loader<Bundle> loader, Bundle data) {
+        Bundle mBundle;
         mBundle = data;
         if (mBundle.containsKey("Exception")){
             mErrorDescription.setVisibility(View.VISIBLE);
@@ -215,7 +209,7 @@ public class StartUp extends Fragment implements
 
     }
 
-    private Handler handler = new Handler()  // handler for commiting fragment after data is loaded
+    private final Handler handler = new Handler()  // handler for commiting fragment after data is loaded
     {
         @Override
         public void handleMessage(Message msg)

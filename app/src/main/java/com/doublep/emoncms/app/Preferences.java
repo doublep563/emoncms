@@ -10,10 +10,11 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 public class Preferences extends Activity {
 
-    //public SharedPreferences prefs;
+     private static final String TAG = "Preferences";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -76,11 +77,14 @@ public class Preferences extends Activity {
         }
 
         private void updatePrefSummary(Preference p) {
+            //TODO need to Validate any change made to URL and API. Otherwise bad things will happen
             if (p instanceof ListPreference) {
                 ListPreference listPref = (ListPreference) p;
                 p.setSummary(listPref.getEntry());
             }
             if (p instanceof EditTextPreference) {
+                if (MainActivity.DEBUG)
+                    Log.i(TAG, "+++ updatePrefSummary EditTextPreference  +++");
                 EditTextPreference editTextPref = (EditTextPreference) p;
                 if (p.getTitle().toString().contains("assword")) {
                     p.setSummary("******");

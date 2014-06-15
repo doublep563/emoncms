@@ -53,4 +53,6 @@
     <color name="keyguard_avatar_frame_pressed_color">#ff35b5e5</color>
 
     <color name="accessibility_focus_highlight">#80ffff00</color>
+    <color name="emoncms_pale">#fbeed5</color>
+    <color name="emoncms_btn_Color">#49afcd</color>
 </resources>

@@ -41,12 +41,10 @@ public class SummaryStatus implements Parcelable {
 
     public void setStrRaspPiStatus(String strRaspPiStatus) {
         if (strRaspPiStatus.equalsIgnoreCase("true")) {
-            String strRaspPiStatusUp = "RFM12 to Pi interface script is up and running";
-            this.strRaspPiStatus = strRaspPiStatusUp;
+            this.strRaspPiStatus = "RFM12 to Pi interface script is up and running";
         }
         else {
-            String strRaspPiStatusDown = "RFM12 to Pi interface script is DOWN!!!";
-            this.strRaspPiStatus = strRaspPiStatusDown;
+            this.strRaspPiStatus = "RFM12 to Pi interface script is DOWN!!!";
         }
     }
 

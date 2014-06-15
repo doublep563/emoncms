@@ -1,89 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/emoncms_pale"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:padding="24dp">
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
-
-    <TextView
-        android:id="@+id/tvGettingStarted"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical|center_horizontal"
-        android:text="@string/getting_started"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvGettingStarted"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical|center_horizontal"
+            android:text="@string/getting_started"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
 
 
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical|center_horizontal"
-        android:text="@string/dialog_settings_message"
-        android:layout_below="@id/tvGettingStarted"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical|center_horizontal"
+            android:text="@string/dialog_settings_message"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+    </LinearLayout>
 
-
-    <EditText
-        android:id="@+id/url"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/textView1"
-        android:layout_marginBottom="4dp"
-        android:layout_marginLeft="4dp"
-        android:layout_marginRight="4dp"
-        android:layout_marginTop="16dp"
-        android:hint="@string/pref_emoncms_url_summary"
-        android:inputType="textEmailAddress" />
-
-    <EditText
-        android:id="@+id/api"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/url"
-        android:fontFamily="sans-serif"
-        android:hint="@string/pref_emoncms_api_summary"
-        android:inputType="text" />
-
-    <Button
-        android:id="@+id/btnCancel"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/api"
-        android:text="@string/cancel"
-        android:layout_alignParentLeft="true" />
+        android:orientation="vertical">
 
-    <Button
-        android:id="@+id/btnSave"
+        <EditText
+            android:id="@+id/url"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/pref_emoncms_url_summary"
+            android:inputType="textUri" />
+
+        <EditText
+            android:id="@+id/api"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/pref_emoncms_api_summary"
+            android:inputType="text" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/api"
-        android:text="@string/save"
-        android:layout_alignParentRight="true"
-        android:layout_alignLeft="@+id/txtErrorText"
-        android:layout_alignStart="@+id/txtErrorText" />
+        android:orientation="horizontal">
 
-    <TextView
-        android:layout_width="wrap_content"
+        <Button
+            android:id="@+id/btnCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_margin="10dp"
+            android:background="@color/emoncms_btn_Color"
+            android:text="@string/cancel"
+            android:textColor="@android:color/white" />
+
+        <Button
+            android:id="@+id/btnSave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@color/emoncms_btn_Color"
+            android:text="@string/btnTest"
+            android:textColor="@android:color/white" />
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="@string/setup_error"
-        android:id="@+id/txtErrorDescription"
-        android:layout_marginTop="82dp"
-        android:layout_below="@+id/btnCancel"
-        android:layout_alignLeft="@+id/url"
-        android:layout_alignStart="@+id/url"
-        android:visibility="invisible" />
+        android:orientation="vertical">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Medium Text"
-        android:id="@+id/txtErrorText"
-        android:layout_below="@+id/txtErrorDescription"
-        android:layout_centerHorizontal="true"
-        android:visibility="invisible" />
+        <TextView
+            android:id="@+id/txtErrorDescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/setup_error"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:visibility="invisible" />
 
+        <TextView
+            android:id="@+id/txtErrorText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/txtErrorText"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:visibility="invisible" />
+    </LinearLayout>
 
-</RelativeLayout>
+</LinearLayout>

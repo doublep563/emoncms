@@ -123,12 +123,12 @@ public class FeedChartDisplay extends Fragment {
     }
 
     private void LoadData() {
-        for (int i = 0; i < feedData.size(); i++) {
+        for (FeedData aFeedData : feedData) {
 
-            long mTime = feedData.get(i).getFeedTime();
-            long mData = feedData.get(i).getFeedData();
+            long mTime = aFeedData.getFeedTime();
+            long mData = aFeedData.getFeedData();
             time_series.add(mTime, mData);
-         }
+        }
 
 
         if (MainActivity.DEBUG) Log.i(TAG, "+++ fillData() called! +++");
@@ -138,6 +138,7 @@ public class FeedChartDisplay extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup root = (ViewGroup) inflater.inflate(R.layout.feed_chart, null);
+        assert root != null;
         layout = (LinearLayout) root.findViewById(R.id.chart);
 
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onCreateView() called! +++");

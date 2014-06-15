@@ -46,19 +46,18 @@ public class AdapterSummary extends ArrayAdapter<SummaryStatus> {
         String strGoodFeeds = o.getStrFeedsGood();
         String strBadFeeds = o.getStrFeedsBad();
 
-        if (o != null) {
-            TextView t = (TextView) v.findViewById(R.id.txtErrorText);
-            t.setText(strEmoncmsURL);
+        assert v != null;
+        TextView t = (TextView) v.findViewById(R.id.txtErrorText);
+        t.setText(strEmoncmsURL);
 
-            TextView tv5 = (TextView) v.findViewById(R.id.textView5);
-            tv5.setText(strRaspPiStatus);
+        TextView tv5 = (TextView) v.findViewById(R.id.textView5);
+        tv5.setText(strRaspPiStatus);
 
-            TextView tv8 = (TextView) v.findViewById(R.id.textView8);
-            tv8.setText(strGoodFeeds);
+        TextView tv8 = (TextView) v.findViewById(R.id.textView8);
+        tv8.setText(strGoodFeeds);
 
-            TextView tv10 = (TextView) v.findViewById(R.id.textView10);
-            tv10.setText(strBadFeeds);
-        }
+        TextView tv10 = (TextView) v.findViewById(R.id.textView10);
+        tv10.setText(strBadFeeds);
 
         return v;
     }
