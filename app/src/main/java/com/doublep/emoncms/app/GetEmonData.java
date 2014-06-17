@@ -19,6 +19,8 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 
 public class GetEmonData {
@@ -108,6 +110,14 @@ public class GetEmonData {
         } catch (Exception e) {
             Log.d("InputStream", e.getLocalizedMessage());
         }
+        Collections.sort(feedList, new Comparator<FeedDetails>() {
+            @Override
+            public int compare(FeedDetails  fd1, FeedDetails  fd2)
+            {
+
+                return  fd1.getStrName().compareTo(fd2.getStrName());
+            }
+        });
 
 
         return feedList;
@@ -260,7 +270,7 @@ public class GetEmonData {
         //TODO Fix in Preferences Setup
         strURL = strURL.replace("\n", "");
 
-        String strFeedURL = strURL + "/feed/data.json&apikey=" + strAPI + "?id=" + strFeedID + "&start=" + startTime + "&end=" + endTime + "&dp=100";
+        String strFeedURL = strURL + "/feed/data.json&apikey=" + strAPI + "?id=" + strFeedID + "&start=" + startTime + "&end=" + endTime + "&dp=800";
 
         if (MainActivity.DEBUG) Log.i(TAG, "+++ GetFeedData() strFeedURL is " + strFeedURL);
 
@@ -288,14 +298,13 @@ public class GetEmonData {
             for (int i = 0; i < feedArray.length(); i++) {
                 //JSONObject c = feedArray.getJSONObject(i);
                 long mTime = feedArray.getJSONArray(i).getLong(0);
-                long mdata = feedArray.getJSONArray(i).getLong(1);
+                double mdata = feedArray.getJSONArray(i).getDouble(1);
                 FeedData fData = new FeedData();
 
                 fData.setFeedTime(mTime);
                 fData.setFeedData(mdata);
                 feedData.add(fData);
-                mBundle = new Bundle();
-                mBundle.putParcelableArrayList("feedData", feedData);
+
             }
 
         } catch (Exception e) {
@@ -304,9 +313,14 @@ public class GetEmonData {
         }
 
         if (MainActivity.DEBUG) Log.i(TAG, "+++ GetFeedData() called! +++");
+        mBundle = new Bundle();
+        mBundle.putParcelableArrayList("feedData", feedData);
 
         return mBundle;
 
+    }
+
+    private static class SortByTag {
     }
 }
 

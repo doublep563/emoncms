@@ -22,7 +22,7 @@ public class FeedData implements Parcelable {
         }
     };
     private long feedTime;
-    private long feedData;
+    private double feedData;
 
     public FeedData() {
 
@@ -40,11 +40,11 @@ public class FeedData implements Parcelable {
         this.feedTime = feedTime;
     }
 
-    public long getFeedData() {
+    public double getFeedData() {
         return feedData;
     }
 
-    public void setFeedData(long feedData) {
+    public void setFeedData(double feedData) {
         this.feedData = feedData;
     }
 
@@ -58,7 +58,7 @@ public class FeedData implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(feedTime);
-        dest.writeLong(feedData);
+        dest.writeDouble(feedData);
 
 
     }
@@ -69,7 +69,7 @@ public class FeedData implements Parcelable {
         // field in the order that it was
         // written to the parcel
         feedTime = in.readLong();
-        feedData = in.readLong();
+        feedData = in.readDouble();
 
 
     }

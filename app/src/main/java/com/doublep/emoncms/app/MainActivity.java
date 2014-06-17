@@ -280,11 +280,13 @@ public class MainActivity extends ActionBarActivity implements
     }
 
     @Override
-    public void onFeedSelected(String strFeedID) {
+    public void onFeedSelected(String strFeedID, String strFeedTag, String strFeedName) {
 
         Fragment fragment = new FeedChart();
         Bundle args = new Bundle();
         args.putString("strFeedID", strFeedID);
+        args.putString("strFeedTag", strFeedTag);
+        args.putString("strFeedName", strFeedName);
         fragment.setArguments(args);
 
         FragmentManager fragmentManager = getFragmentManager();
@@ -299,13 +301,15 @@ public class MainActivity extends ActionBarActivity implements
 
     }
 
-    public void onFeedChartSelected(String strFeedID, Bundle feedData) {
+    public void onFeedChartSelected(String strFeedID, String strFeedTag, String strFeedName, Bundle feedData) {
         ArrayList mFeedData;
         mFeedData = (ArrayList) feedData.getParcelableArrayList("feedData");
 
         Fragment feedChart = new FeedChartDisplay();
         Bundle args = new Bundle();
         args.putString("strFeedID", strFeedID);
+        args.putString("strFeedTag", strFeedTag);
+        args.putString("strFeedName", strFeedName);
         args.putParcelableArrayList("feedData", mFeedData);
 
         feedChart.setArguments(args);

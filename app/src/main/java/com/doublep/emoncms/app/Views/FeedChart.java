@@ -29,6 +29,8 @@ public class FeedChart extends Fragment implements
     private String strEmoncmsURL;
     private String strEmoncmsAPI;
     private Bundle feedData;
+    private String strFeedTag;
+    private String strFeedName;
 
     public static FeedChart newInstance(int index) {
         FeedChart f = new FeedChart();
@@ -67,6 +69,8 @@ public class FeedChart extends Fragment implements
     public void onResume() {
         super.onResume();
         strFeedID = getArguments().getString("strFeedID");
+        strFeedTag = getArguments().getString("strFeedTag");
+        strFeedName = getArguments().getString("strFeedName");
 
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
         //TODO Add API field to Summary.xml
@@ -138,7 +142,7 @@ public class FeedChart extends Fragment implements
 
     public interface OnFeedChartListener {
 
-        public void onFeedChartSelected(String strFeedID, Bundle feedData);
+        public void onFeedChartSelected(String strFeedID, String strFeedTag, String strFeedName, Bundle feedData);
 
     }
 
@@ -151,7 +155,7 @@ public class FeedChart extends Fragment implements
             if(msg.what == 2)
             {
                 if (mListener != null) {
-                    mListener.onFeedChartSelected(strFeedID, feedData);
+                    mListener.onFeedChartSelected(strFeedID, strFeedTag, strFeedName, feedData);
                 }
                 if (MainActivity.DEBUG) Log.i(TAG, "+++ Handler() called! +++");
                 // commit the fragment

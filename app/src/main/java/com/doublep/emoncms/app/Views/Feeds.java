@@ -126,8 +126,10 @@ public class Feeds extends ListFragment implements
     public void onListItemClick(ListView l, View v, int position, long id) {
         FeedDetails feedDetails = (FeedDetails) getListAdapter().getItem(position);
         String strFeedID = feedDetails.getStrID();
+        String strFeedTag = feedDetails.getStrTag();
+        String strFeedName = feedDetails.getStrName();
         if (mListener != null) {
-            mListener.onFeedSelected(strFeedID);
+            mListener.onFeedSelected(strFeedID, strFeedTag, strFeedName);
         }
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onListItemClick() called! +++  " + strFeedID);
 
@@ -135,7 +137,7 @@ public class Feeds extends ListFragment implements
 
     public interface OnFeedListener {
 
-        public void onFeedSelected(String strFeedID);
+        public void onFeedSelected(String feedID, String strFeedTag, String strFeedID);
 
     }
 

@@ -83,5 +83,6 @@
     <string name="setup_error">Validation failed. Review error below and try again</string>
     <string name="btnTest">Test</string>
     <string name="txtErrorText">Text of the Error</string>
+    <string name="chartTtile">Chart Title</string>
 
 </resources>

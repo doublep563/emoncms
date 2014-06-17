@@ -2,12 +2,16 @@ package com.doublep.emoncms.app.Views;
 
 import android.app.Fragment;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.doublep.emoncms.app.MainActivity;
 import com.doublep.emoncms.app.R;
@@ -29,13 +33,14 @@ import java.util.ArrayList;
 public class FeedChartDisplay extends Fragment {
     private static final String TAG = "FeedChartDisplay";
 
-    private XYMultipleSeriesDataset mDataset;
-    private XYMultipleSeriesRenderer mRenderer;
     private TimeSeries time_series;
-    private GraphicalView mChartView;
-    private LinearLayout layout;
+
     private String strFeedID;
     private ArrayList<FeedData> feedData;
+    private String strFeedTag;
+    private String strFeedName;
+    private LinearLayout chartlayout;
+    private TextView chartTitle;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -43,40 +48,67 @@ public class FeedChartDisplay extends Fragment {
         //TODO Need more info on the Feed to display in the chart i.e tag, name
         //TODO USe setTitle to include above info in title bar. In MainActivity?
         strFeedID = getArguments().getString("strFeedID");
+        strFeedTag = getArguments().getString("strFeedTag");
+        strFeedName = getArguments().getString("strFeedName");
         feedData = getArguments().getParcelableArrayList("feedData");
 
         // create dataset and renderer
-        mDataset = new XYMultipleSeriesDataset();
-        mRenderer = new XYMultipleSeriesRenderer();
-        mRenderer.setAxisTitleTextSize(16);
-        mRenderer.setChartTitleTextSize(20);
-        mRenderer.setLabelsTextSize(15);
-        mRenderer.setLegendTextSize(15);
-        mRenderer.setPointSize(3f);
-        mRenderer.setYAxisMin(0);
+        XYMultipleSeriesDataset mDataset = new XYMultipleSeriesDataset();
+        XYMultipleSeriesRenderer mRenderer = new XYMultipleSeriesRenderer();
+        //Text Size
+        //mRenderer.setAxisTitleTextSize(60);
+        //mRenderer.setChartTitleTextSize(60);
+
+        //mRenderer.setLegendTextSize(45);
+
+        DisplayMetrics metrics = getActivity().getResources().getDisplayMetrics();
+        float val = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 18, metrics);
+        mRenderer.setLabelsTextSize(val);
+        //Text Colors
+        mRenderer.setLabelsColor(Color.BLACK);
+        mRenderer.setAxesColor(Color.BLACK);
+
+        //Chart Title
+        chartTitle.setText(strFeedName + " " + strFeedTag);
+
+        mRenderer.setYLabelsAlign(Paint.Align.RIGHT);
+        mRenderer.setMarginsColor(Color.TRANSPARENT);
+        mRenderer.setMargins(new int[]{10, 100, 90, 0});
+        mRenderer.setPointSize(5f);
+        //TODO Min of 0 is not correct in all circumstances - negative temps
+        //TODO Need to set min/max values based on data returned or just leave it!!!
+        //mRenderer.setYAxisMin(0);
+
+
+
+        //mRenderer.setMarginsColor(getResources().getColor(R.color.emoncms_btn_Color));
         mRenderer.setApplyBackgroundColor(true);
-        mRenderer.setBackgroundColor(Color.BLACK);
+        mRenderer.setBackgroundColor(Color.TRANSPARENT);
+        //mRenderer.setChartTitle(strFeedName);
 
 
         XYSeriesRenderer r = new XYSeriesRenderer();
-        r.setColor(Color.GREEN);
+        r.setColor(Color.BLUE);
         r.setPointStyle(PointStyle.CIRCLE);
+        r.setShowLegendItem(false);
+
         r.setFillPoints(true);
         mRenderer.addSeriesRenderer(r);
         mRenderer.setClickEnabled(true);
         mRenderer.setSelectableBuffer(20);
         mRenderer.setPanEnabled(true);
 
-        time_series = new TimeSeries("test");
+        time_series = new TimeSeries("");
+
 
         mDataset.addSeries(time_series);
 
         LoadData();
 
-        mChartView = ChartFactory.getTimeChartView(getActivity(), mDataset, mRenderer,
+        GraphicalView mChartView = ChartFactory.getTimeChartView(getActivity(), mDataset, mRenderer,
                 "H:mm:ss");
 
-        layout.addView(mChartView);
+        chartlayout.addView(mChartView);
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onActivityCreated() called! +++");
     }
 
@@ -126,7 +158,7 @@ public class FeedChartDisplay extends Fragment {
         for (FeedData aFeedData : feedData) {
 
             long mTime = aFeedData.getFeedTime();
-            long mData = aFeedData.getFeedData();
+            double mData = aFeedData.getFeedData();
             time_series.add(mTime, mData);
         }
 
@@ -139,7 +171,8 @@ public class FeedChartDisplay extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup root = (ViewGroup) inflater.inflate(R.layout.feed_chart, null);
         assert root != null;
-        layout = (LinearLayout) root.findViewById(R.id.chart);
+        chartlayout = (LinearLayout) root.findViewById(R.id.chart);
+         chartTitle = (TextView) root.findViewById(R.id.chartTitle);
 
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onCreateView() called! +++");
         return root;
