@@ -23,7 +23,7 @@ import com.doublep.emoncms.app.common;
 import com.doublep.emoncms.app.loaders.LoadValidate;
 
 /**
- * Created by Paul Patchell on 08/06/2014.
+ * Fragment to get URL and API info from user.
  */
 public class StartUp extends Fragment implements
         LoaderManager.LoaderCallbacks<Bundle> {

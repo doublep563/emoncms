@@ -274,7 +274,7 @@ public class GetEmonData {
 
         if (MainActivity.DEBUG) Log.i(TAG, "+++ GetFeedData() strFeedURL is " + strFeedURL);
 
-        Bundle mBundle = null;
+
         try {
             HttpClient client = new DefaultHttpClient();
             HttpGet request = new HttpGet();
@@ -313,15 +313,14 @@ public class GetEmonData {
         }
 
         if (MainActivity.DEBUG) Log.i(TAG, "+++ GetFeedData() called! +++");
-        mBundle = new Bundle();
+        Bundle mBundle = new Bundle();
         mBundle.putParcelableArrayList("feedData", feedData);
 
         return mBundle;
 
     }
 
-    private static class SortByTag {
-    }
+
 }
 
 

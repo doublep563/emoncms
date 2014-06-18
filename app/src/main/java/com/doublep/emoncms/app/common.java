@@ -1,7 +1,7 @@
 package com.doublep.emoncms.app;
 
 /**
- * Created by Paul Patchell on 03/06/2014.
+ * Common fields through App
  */
 public class common  {
 

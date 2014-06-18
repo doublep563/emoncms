@@ -5,8 +5,6 @@
     <string-array name="nav_titles">
         <item>Summary</item>
         <item>Feeds</item>
-        <item>Input</item>
-        <item>Raspberry Pi</item>
     </string-array>
 
 </resources>

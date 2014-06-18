@@ -15,9 +15,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.doublep.emoncms.app.Views.FeedChart;
 import com.doublep.emoncms.app.Views.FeedChartDisplay;
@@ -31,7 +33,7 @@ import java.util.ArrayList;
 public class MainActivity extends ActionBarActivity implements
         Feeds.OnFeedListener, FeedChart.OnFeedChartListener, StartUp.OnStartupListener {
 
-
+    //Check out for start up implementation http://www.informit.com/articles/article.aspx?p=2066699
     public static final boolean DEBUG = true;
     private static final String TAG = "MainActivity";
     private DrawerLayout mDrawerLayout;
@@ -44,6 +46,8 @@ public class MainActivity extends ActionBarActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
         setContentView(R.layout.activity_main);
 
@@ -172,6 +176,7 @@ public class MainActivity extends ActionBarActivity implements
         }
 
         switch (item.getItemId()) {
+
             case R.id.action_settings:
                 // Launch settings activity
                 Intent i = new Intent(this, Preferences.class);
@@ -302,6 +307,8 @@ public class MainActivity extends ActionBarActivity implements
     }
 
     public void onFeedChartSelected(String strFeedID, String strFeedTag, String strFeedName, Bundle feedData) {
+        mTitle = "Feed Chart";
+        setTitle((mTitle));
         ArrayList mFeedData;
         mFeedData = (ArrayList) feedData.getParcelableArrayList("feedData");
 

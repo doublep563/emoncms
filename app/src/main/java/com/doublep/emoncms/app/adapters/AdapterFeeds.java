@@ -31,7 +31,7 @@ public class AdapterFeeds extends ArrayAdapter<FeedDetails> {
         if (v == null) {
             LayoutInflater vi = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            v = vi.inflate(R.layout.feed_list_detail, null);
+            v = vi.inflate(R.layout.feed_list_detail, parent, false);
         }
         FeedDetails o = items.get(position);
         if (o != null) {

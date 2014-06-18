@@ -21,7 +21,7 @@ import com.doublep.emoncms.app.models.FeedDetails;
 import java.util.ArrayList;
 
 /**
- * Created by Paul Patchell on 02/06/2014.
+ * Fragment to manage feeds
  */
 public class Feeds extends ListFragment implements
         LoaderManager.LoaderCallbacks<ArrayList> {

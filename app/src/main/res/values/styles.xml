@@ -2,7 +2,7 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="android:colorBackground">@color/emoncms_pale</item>
+        <item name="android:colorBackground">@drawable/app_background</item>
 
     </style>
 

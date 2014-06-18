@@ -1,12 +1,14 @@
 package com.doublep.emoncms.app.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.doublep.emoncms.app.MainActivity;
 import com.doublep.emoncms.app.R;
 import com.doublep.emoncms.app.Views.Summary;
 import com.doublep.emoncms.app.models.SummaryStatus;
@@ -33,12 +35,11 @@ public class AdapterSummary extends ArrayAdapter<SummaryStatus> {
         if (v == null) {
             LayoutInflater vi = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            v = vi.inflate(R.layout.summary, null);
+            v = vi.inflate(R.layout.summary, parent , false);
         }
         SummaryStatus o = items.get(0);
 
-        //SummaryStatus status = (SummaryStatus) summaryStatus.get(0);
-       // SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+
         //TODO LoadSummaryStatus needs to Check Preferences to see what should be checked.
         //TODO Views will be invisible or gone.
         String strEmoncmsURL = Summary.strEmoncmsURL;
@@ -58,6 +59,8 @@ public class AdapterSummary extends ArrayAdapter<SummaryStatus> {
 
         TextView tv10 = (TextView) v.findViewById(R.id.textView10);
         tv10.setText(strBadFeeds);
+
+        if (MainActivity.DEBUG) Log.i(TAG, "+++ getView() called! +++");
 
         return v;
     }

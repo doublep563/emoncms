@@ -10,7 +10,7 @@ import com.doublep.emoncms.app.GetEmonData;
 import com.doublep.emoncms.app.MainActivity;
 
 /**
- * Created by Paul Patchell on 02/06/2014.
+ * Loader to get Feed Chart Data
  */
 public class LoadFeedChart extends AsyncTaskLoader<Bundle> {
 
@@ -42,9 +42,9 @@ public class LoadFeedChart extends AsyncTaskLoader<Bundle> {
             e.printStackTrace();
         }
 
-        if (MainActivity.DEBUG) {
+
             if (MainActivity.DEBUG) Log.i(TAG, "+++ loadInBackground() called! +++");
-        }
+
         return mFeedData;
     }
 

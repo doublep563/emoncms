@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * Created by Paul Patchell on 02/06/2014.
+ * Parcelable for Feed Details
  */
 public class FeedDetails implements Parcelable {
 

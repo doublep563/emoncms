@@ -17,7 +17,7 @@ import com.doublep.emoncms.app.common;
 import com.doublep.emoncms.app.loaders.LoadFeedChart;
 
 /**
- * Created by Paul Patchell on 08/06/2014.
+ * Fragment to Manage retrieval of Feed Details
  */
 public class FeedChart extends Fragment implements
         LoaderManager.LoaderCallbacks<Bundle> {
@@ -31,17 +31,6 @@ public class FeedChart extends Fragment implements
     private Bundle feedData;
     private String strFeedTag;
     private String strFeedName;
-
-    public static FeedChart newInstance(int index) {
-        FeedChart f = new FeedChart();
-
-        // Supply index input as an argument.
-        Bundle args = new Bundle();
-        args.putInt("index", index);
-        f.setArguments(args);
-
-        return f;
-    }
 
 
     @Override

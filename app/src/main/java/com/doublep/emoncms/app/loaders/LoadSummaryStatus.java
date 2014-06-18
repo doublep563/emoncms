@@ -11,7 +11,7 @@ import com.doublep.emoncms.app.MainActivity;
 import java.util.ArrayList;
 
 /**
- * Created by Paul Patchell on 02/06/2014.
+ * Loader to get Summary Status
  */
 public class LoadSummaryStatus extends AsyncTaskLoader<ArrayList> {
 

@@ -28,18 +28,15 @@ import org.achartengine.renderer.XYSeriesRenderer;
 import java.util.ArrayList;
 
 /**
- * Created by Paul Patchell on 08/06/2014.
+ * Fragment for Displaying Feed Data
  */
 public class FeedChartDisplay extends Fragment {
     private static final String TAG = "FeedChartDisplay";
 
     private TimeSeries time_series;
 
-    private String strFeedID;
     private ArrayList<FeedData> feedData;
-    private String strFeedTag;
-    private String strFeedName;
-    private LinearLayout chartlayout;
+    private LinearLayout chartLayout;
     private TextView chartTitle;
 
     @Override
@@ -47,9 +44,9 @@ public class FeedChartDisplay extends Fragment {
         super.onActivityCreated(savedInstanceState);
         //TODO Need more info on the Feed to display in the chart i.e tag, name
         //TODO USe setTitle to include above info in title bar. In MainActivity?
-        strFeedID = getArguments().getString("strFeedID");
-        strFeedTag = getArguments().getString("strFeedTag");
-        strFeedName = getArguments().getString("strFeedName");
+        String strFeedID = getArguments().getString("strFeedID");
+        String strFeedTag = getArguments().getString("strFeedTag");
+        String strFeedName = getArguments().getString("strFeedName");
         feedData = getArguments().getParcelableArrayList("feedData");
 
         // create dataset and renderer
@@ -73,7 +70,7 @@ public class FeedChartDisplay extends Fragment {
 
         mRenderer.setYLabelsAlign(Paint.Align.RIGHT);
         mRenderer.setMarginsColor(Color.TRANSPARENT);
-        mRenderer.setMargins(new int[]{10, 100, 90, 0});
+        mRenderer.setMargins(new int[]{0, 100, 90, 50});
         mRenderer.setPointSize(5f);
         //TODO Min of 0 is not correct in all circumstances - negative temps
         //TODO Need to set min/max values based on data returned or just leave it!!!
@@ -106,9 +103,9 @@ public class FeedChartDisplay extends Fragment {
         LoadData();
 
         GraphicalView mChartView = ChartFactory.getTimeChartView(getActivity(), mDataset, mRenderer,
-                "H:mm:ss");
+                "HH:mm");
 
-        chartlayout.addView(mChartView);
+        chartLayout.addView(mChartView);
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onActivityCreated() called! +++");
     }
 
@@ -169,9 +166,9 @@ public class FeedChartDisplay extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        ViewGroup root = (ViewGroup) inflater.inflate(R.layout.feed_chart, null);
+        ViewGroup root = (ViewGroup) inflater.inflate(R.layout.feed_chart, container, false);
         assert root != null;
-        chartlayout = (LinearLayout) root.findViewById(R.id.chart);
+        chartLayout = (LinearLayout) root.findViewById(R.id.chart);
          chartTitle = (TextView) root.findViewById(R.id.chartTitle);
 
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onCreateView() called! +++");

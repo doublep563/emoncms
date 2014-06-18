@@ -10,7 +10,7 @@ import com.doublep.emoncms.app.GetEmonData;
 import com.doublep.emoncms.app.MainActivity;
 
 /**
- * Created by Paul Patchell on 02/06/2014.
+ * Loader to Validate URL and API fields in Preferences
  */
 public class LoadValidate extends AsyncTaskLoader<Bundle> {
 
