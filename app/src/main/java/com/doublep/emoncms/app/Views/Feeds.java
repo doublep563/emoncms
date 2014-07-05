@@ -8,6 +8,9 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 
@@ -84,6 +87,10 @@ public class Feeds extends ListFragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // We have an Action Bar
+        setHasOptionsMenu(true);
+
+
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onCreate() called! +++");
     }
 
@@ -114,6 +121,8 @@ public class Feeds extends ListFragment implements
         mAdapter = new AdapterFeeds(getActivity(), R.layout.feed_list, data);
 
         setListAdapter(mAdapter);
+
+        getActivity().setProgressBarIndeterminateVisibility(false);
     }
 
     @Override
@@ -139,6 +148,26 @@ public class Feeds extends ListFragment implements
 
         public void onFeedSelected(String feedID, String strFeedTag, String strFeedID);
 
+    }
+
+    @Override
+    public void onCreateOptionsMenu(
+            Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_refresh, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // handle item selection
+        switch (item.getItemId()) {
+            case R.id.action_refresh:
+                getActivity().setProgressBarIndeterminateVisibility(true);
+                getLoaderManager().restartLoader(LOADER_ID, null, this);
+                if (MainActivity.DEBUG) Log.i(TAG, "+++ onOptionsItemSelected() called! +++");
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
 }

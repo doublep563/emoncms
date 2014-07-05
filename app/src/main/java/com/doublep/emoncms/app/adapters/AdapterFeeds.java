@@ -1,6 +1,7 @@
 package com.doublep.emoncms.app.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,6 +44,8 @@ public class AdapterFeeds extends ArrayAdapter<FeedDetails> {
                     .findViewById(R.id.textView_tag);
             TextView tvfeed_value = (TextView) v
                     .findViewById(R.id.textView_value);
+            TextView tvupdated_value = (TextView) v
+                    .findViewById(R.id.lastUpdated);
 
             if (tvfeed_name != null) {
                 tvfeed_name.setText(o.getStrName());
@@ -52,6 +55,15 @@ public class AdapterFeeds extends ArrayAdapter<FeedDetails> {
             }
             if (tvfeed_value != null) {
                 tvfeed_value.setText(o.getStrValue());
+            }
+            if (tvupdated_value != null) {
+                tvupdated_value.setText("Updated " + o.getStrTime() + " Secs Ago");
+                //TODO Works but when scrolling through list all values become RED.
+                //TODO So doesn't really work!!!!
+               // int val = Integer.parseInt(o.getStrTime());
+               // if(val > 20) {
+               //     tvupdated_value.setBackgroundColor(Color.RED);
+               // }
             }
 
         }

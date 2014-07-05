@@ -24,6 +24,13 @@
             android:text="@string/feed_tag"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/emoncms_last_updated"
+            android:id="@+id/lastUpdated" />
+
     </LinearLayout>
 
     <LinearLayout

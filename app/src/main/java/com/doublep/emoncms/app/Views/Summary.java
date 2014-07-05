@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.Window;
 
 import com.doublep.emoncms.app.MainActivity;
 import com.doublep.emoncms.app.R;
@@ -130,7 +129,7 @@ public class Summary extends ListFragment implements
     @Override
     public void onCreateOptionsMenu(
             Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_summary, menu);
+        inflater.inflate(R.menu.menu_refresh, menu);
     }
 
     @Override

@@ -106,7 +106,7 @@ public class FeedDetails implements Parcelable {
     }
 
     public String getStrTime() {
-        return strTime + " Secs Ago";
+        return strTime;
     }
 
     public void setStrTime(String strTime) {
