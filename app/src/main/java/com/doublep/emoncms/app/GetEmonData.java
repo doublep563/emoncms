@@ -1,6 +1,11 @@
 package com.doublep.emoncms.app;
 
+import android.app.Fragment;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import com.doublep.emoncms.app.models.FeedData;
@@ -23,9 +28,11 @@ import java.util.Collections;
 import java.util.Comparator;
 
 
-public class GetEmonData {
+public class GetEmonData{
 
     private static final String TAG = "GetEmonData";
+    private static Context mContext ;
+
 
     public static ArrayList<FeedDetails> GetFeeds(String strURL, String strAPI) {
         // JSON Node names
@@ -41,12 +48,14 @@ public class GetEmonData {
         String FEED_VALUE = "value";
 
 
-
         strURL = strURL.replace("\n", "");
         String strFeedList = strURL + "/feed/list.json&apikey=" + strAPI;
         BufferedReader in;
         String result;
         JSONArray feeds;
+
+
+
 
 
         ArrayList<FeedDetails> feedList = new ArrayList<FeedDetails>();
@@ -112,10 +121,9 @@ public class GetEmonData {
         }
         Collections.sort(feedList, new Comparator<FeedDetails>() {
             @Override
-            public int compare(FeedDetails  fd1, FeedDetails  fd2)
-            {
+            public int compare(FeedDetails fd1, FeedDetails fd2) {
 
-                return  fd1.getStrName().compareTo(fd2.getStrName());
+                return fd1.getStrName().compareTo(fd2.getStrName());
             }
         });
 
@@ -123,12 +131,20 @@ public class GetEmonData {
         return feedList;
     }
 
-    public static ArrayList<SummaryStatus> GetStatus(String strURL, String strAPI) {
+    public static ArrayList<SummaryStatus> GetStatus(Context context) {
+
 
         //TODO LoadSummaryStatus needs to Check Preferences to see what should be checked.
 
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        String strURL = sharedPref.getString(common.PREF_KEY_EMONCMS_URL, context.getResources().getString(R.string.pref_default));
+        String strAPI = sharedPref.getString(common.PREF_KEY_EMONCMS_API, context.getResources().getString(R.string.pref_default));
+        boolean raspberryPI = sharedPref.getBoolean(common.PREF_KEY_RASPBERRYPI, false);
+
+
         ArrayList<SummaryStatus> summaryList = new ArrayList<SummaryStatus>();
-        String RASPBERRY_PI_STATUS = null;
+
+        String RASPBERRY_PI_STATUS = context.getResources().getString(R.string.pref_default);
         int FEEDS_GOOD = 0;
         int FEEDS_BAD = 0;
 
@@ -141,33 +157,40 @@ public class GetEmonData {
 
         //TODO LoadSummaryStatus needs to Check Preferences to see what should be checked.
 
-        try {
-            //TODO LoadSummaryStatus needs to Check Preferences to see what should be checked.
-            HttpClient client = new DefaultHttpClient();
-            HttpGet request = new HttpGet();
-            request.setURI(new URI(strRaspURL));
+        if (raspberryPI) {
 
 
-            HttpResponse response = client.execute(request);
+            try {
+                //TODO LoadSummaryStatus needs to Check Preferences to see what should be checked.
+                HttpClient client = new DefaultHttpClient();
+                HttpGet request = new HttpGet();
+                request.setURI(new URI(strRaspURL));
 
-            BufferedReader in = new BufferedReader(new InputStreamReader(response.getEntity()
-                    .getContent()));
-            StringBuilder sb = new StringBuilder("");
-            String line;
-            String NL = System.getProperty("line.separator");
-            while ((line = in.readLine()) != null) {
-                sb.append(line).append(NL);
+
+                HttpResponse response = client.execute(request);
+
+                BufferedReader in = new BufferedReader(new InputStreamReader(response.getEntity()
+                        .getContent()));
+                StringBuilder sb = new StringBuilder("");
+                String line;
+                String NL = System.getProperty("line.separator");
+                while ((line = in.readLine()) != null) {
+                    sb.append(line).append(NL);
+                }
+                in.close();
+                String result = sb.toString();
+                result = result.replace("\n", "");
+                RASPBERRY_PI_STATUS = result;
+
+
+            } catch (Exception e) {
+                //TODO Handle Error with Dialog to User Immediately
+                //TODO Many errors occur because of this
+                Log.d("InputStream", e.getLocalizedMessage());
             }
-            in.close();
-            String result = sb.toString();
-            result = result.replace("\n", "");
-            RASPBERRY_PI_STATUS = result;
 
-
-        } catch (Exception e) {
-            //TODO Handle Error with Dialog to User Immediately
-            //TODO Many errors occur because of this
-            Log.d("InputStream", e.getLocalizedMessage());
+            if (MainActivity.DEBUG)
+                Log.i(TAG, "+++ GetStatus() raspberryPI called! +++");
         }
 
         try {
@@ -181,7 +204,7 @@ public class GetEmonData {
             BufferedReader in = new BufferedReader(new InputStreamReader(response.getEntity()
                     .getContent()));
             StringBuilder sb = new StringBuilder("");
-            String line ;
+            String line;
             String NL = System.getProperty("line.separator");
             while ((line = in.readLine()) != null) {
                 sb.append(line).append(NL);
@@ -212,6 +235,8 @@ public class GetEmonData {
             Log.d("InputStream", e.getLocalizedMessage());
         }
 
+        if (MainActivity.DEBUG)
+            Log.i(TAG, "+++ GetStatus() Summary called! +++");
 
         SummaryStatus summaryStatus = new SummaryStatus();
         summaryStatus.setStrRaspPiStatus(RASPBERRY_PI_STATUS);
@@ -229,7 +254,7 @@ public class GetEmonData {
         String strFeedList = strURL + "/feed/list.json&apikey=" + strAPI;
 
 
-        Bundle mBundle = null ;
+        Bundle mBundle = null;
         try {
             mBundle = new Bundle();
             HttpClient client = new DefaultHttpClient();
@@ -292,17 +317,17 @@ public class GetEmonData {
             }
             in.close();
             String result = sb.toString();
-            //TODO Need to handle hull data in here in cases where the query to database returns
+            //TODO Need to handle null data in here in cases where the query to database returns
             //TODO no values
             feedArray = new JSONArray(result);
             for (int i = 0; i < feedArray.length(); i++) {
                 //JSONObject c = feedArray.getJSONObject(i);
                 long mTime = feedArray.getJSONArray(i).getLong(0);
-                double mdata = feedArray.getJSONArray(i).getDouble(1);
+                double mData = feedArray.getJSONArray(i).getDouble(1);
                 FeedData fData = new FeedData();
 
                 fData.setFeedTime(mTime);
-                fData.setFeedData(mdata);
+                fData.setFeedData(mData);
                 feedData.add(fData);
 
             }

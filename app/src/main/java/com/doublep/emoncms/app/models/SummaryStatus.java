@@ -43,6 +43,10 @@ public class SummaryStatus implements Parcelable {
         if (strRaspPiStatus.equalsIgnoreCase("true")) {
             this.strRaspPiStatus = "RFM12 to Pi interface script is up and running";
         }
+
+        else if (strRaspPiStatus.equalsIgnoreCase("Not Set")) {
+            this.strRaspPiStatus = "Not Set";
+        }
         else {
             this.strRaspPiStatus = "RFM12 to Pi interface script is DOWN!!!";
         }
@@ -67,7 +71,7 @@ public class SummaryStatus implements Parcelable {
 
     @Override
     public int describeContents() {
-        // TODO Auto-generated method stub
+
         return 0;
     }
 

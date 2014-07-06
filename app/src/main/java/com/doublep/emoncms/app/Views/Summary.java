@@ -28,8 +28,6 @@ public class Summary extends ListFragment implements
 
     private static final String TAG = "Summary";
     private static final int LOADER_ID = 1;
-    public static String strEmoncmsURL = "";
-    private String strEmoncmsAPI;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -44,12 +42,6 @@ public class Summary extends ListFragment implements
         //TODO Add API field to Summary.xml
         //TODO OnCreate does not refresh preferences when fragment is reused.. Need to move to another methhod
         //TODO check other fragments for this behaviour
-
-
-        //if (MainActivity.DEBUG) Log.i(TAG, "URL is " + strEmoncmsURL);
-        //if (MainActivity.DEBUG) Log.i(TAG, "API is " + strEmoncmsAPI);
-
-
 
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onCreate() called! +++");
     }
@@ -70,9 +62,6 @@ public class Summary extends ListFragment implements
     @Override
     public void onResume() {
         super.onResume();
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        strEmoncmsURL = sharedPref.getString(common.PREF_KEY_EMONCMS_URL, getResources().getString(R.string.pref_default));
-        strEmoncmsAPI = sharedPref.getString(common.PREF_KEY_EMONCMS_API, getResources().getString(R.string.pref_default));
         getLoaderManager().initLoader(LOADER_ID, null, this);
         getActivity().setProgressBarIndeterminateVisibility(true);
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onResume() called! +++");
@@ -106,7 +95,7 @@ public class Summary extends ListFragment implements
     public Loader<ArrayList> onCreateLoader(int id, Bundle args) {
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onCreateLoader() called! +++");
         //TODO LoadSummaryStatus needs to Check Preferences to see what should be checked.
-        return new LoadSummaryStatus(getActivity(), strEmoncmsURL, strEmoncmsAPI);
+        return new LoadSummaryStatus(getActivity());
     }
 
     @Override

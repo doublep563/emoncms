@@ -102,7 +102,7 @@
             android:layout_height="wrap_content"
             android:text="@string/emoncms_raspberry_pi_status"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:visibility="visible" />
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/textView5"
@@ -110,7 +110,7 @@
             android:layout_height="wrap_content"
             android:text="@string/emoncms_raspberry_pi_status"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:visibility="visible" />
+            android:visibility="gone" />
     </LinearLayout>
 
 </LinearLayout>

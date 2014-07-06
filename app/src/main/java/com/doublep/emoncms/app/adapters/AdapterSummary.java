@@ -1,6 +1,8 @@
 package com.doublep.emoncms.app.adapters;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +13,7 @@ import android.widget.TextView;
 import com.doublep.emoncms.app.MainActivity;
 import com.doublep.emoncms.app.R;
 import com.doublep.emoncms.app.Views.Summary;
+import com.doublep.emoncms.app.common;
 import com.doublep.emoncms.app.models.SummaryStatus;
 
 import java.util.ArrayList;
@@ -42,7 +45,8 @@ public class AdapterSummary extends ArrayAdapter<SummaryStatus> {
 
         //TODO LoadSummaryStatus needs to Check Preferences to see what should be checked.
         //TODO Views will be invisible or gone.
-        String strEmoncmsURL = Summary.strEmoncmsURL;
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
+        String strEmoncmsURL = sharedPref.getString(common.PREF_KEY_EMONCMS_URL, getContext().getResources().getString(R.string.pref_default));
         String strRaspPiStatus = o.getStrRaspPiStatus();
         String strGoodFeeds = o.getStrFeedsGood();
         String strBadFeeds = o.getStrFeedsBad();
@@ -51,8 +55,15 @@ public class AdapterSummary extends ArrayAdapter<SummaryStatus> {
         TextView t = (TextView) v.findViewById(R.id.txtErrorText);
         t.setText(strEmoncmsURL);
 
-        TextView tv5 = (TextView) v.findViewById(R.id.textView5);
-        tv5.setText(strRaspPiStatus);
+        //TODO make these visible if Raspberry PI status is checked
+        if (!strRaspPiStatus.equalsIgnoreCase("Not Set")) {
+            TextView tv3 = (TextView) v.findViewById(R.id.textView3);
+            TextView tv5 = (TextView) v.findViewById(R.id.textView5);
+            tv5.setText(strRaspPiStatus);
+            tv3.setVisibility(View.VISIBLE);
+            tv5.setVisibility(View.VISIBLE);
+        }
+
 
         TextView tv8 = (TextView) v.findViewById(R.id.textView8);
         tv8.setText(strGoodFeeds);

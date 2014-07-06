@@ -19,7 +19,6 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.doublep.emoncms.app.Views.FeedChart;
 import com.doublep.emoncms.app.Views.FeedChartDisplay;
@@ -52,7 +51,6 @@ public class MainActivity extends ActionBarActivity implements
         setContentView(R.layout.activity_main);
 
         mTitle = mDrawerTitle = getTitle();
-        //TODO mNavTitles calls all the default values
         //TODO Need to Check Preferences to see what other options are set
         mNavTitles = getResources().getStringArray(R.array.nav_titles);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -93,6 +91,9 @@ public class MainActivity extends ActionBarActivity implements
         getSupportActionBar().setHomeButtonEnabled(true);
 
 
+        // Are the URL and API Preferences set?
+        // If so. show the Summary Fragment
+        // Else, show the StartUp fragment.
         if (CheckPreferences()) {
             if (savedInstanceState == null) {
                 Fragment sumFrag = new Summary();
@@ -199,10 +200,10 @@ public class MainActivity extends ActionBarActivity implements
         if (MainActivity.DEBUG) Log.i(TAG, "API is " + strEmoncmsAPI);
         //TODO Protect against empty string in these fields
         if (strEmoncmsURL.equalsIgnoreCase(getResources().getString(R.string.pref_default))) {
-            //showDialog();
+
             return false;
         } else if (strEmoncmsAPI.equalsIgnoreCase(getResources().getString(R.string.pref_default))) {
-            //showDialog();
+
             return false;
         } else {
             return true;
@@ -210,25 +211,6 @@ public class MainActivity extends ActionBarActivity implements
 
     }
 
-    void doSaveSettings(String strURL, String strAPI) {
-        //TODO This needs to be moved to Preferences class or use method from class to standardise
-        //TODO updating of preferences e.g. removing /n from text
-        //TODO Validate input and test. What happens with no "http://"? Invalid URL or API Key?
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(common.PREF_KEY_EMONCMS_URL, strURL);
-        editor.putString(common.PREF_KEY_EMONCMS_API, strAPI);
-        editor.commit();
-        //TODO Test the URL and API provided
-        //TODO Create StartActivityforResult
-        //TODo
-        Intent i = new Intent(this, Preferences.class);
-        startActivity(i);
-    }
-
-    /**
-     * Swaps fragments in the main content view
-     */
     private void selectItem(int position) {
         // 0 = Summary
         if (position == 0) {

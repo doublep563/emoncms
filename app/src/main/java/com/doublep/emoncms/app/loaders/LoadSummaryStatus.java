@@ -16,13 +16,10 @@ import java.util.ArrayList;
 public class LoadSummaryStatus extends AsyncTaskLoader<ArrayList> {
 
 
-    private final String strURL;
-    private final String strAPI;
 
-    public LoadSummaryStatus(Context context, String strURL, String strAPI) {
+    public LoadSummaryStatus(Context context) {
         super(context);
-        this.strURL = strURL;
-        this.strAPI = strAPI;
+
 
     }
 
@@ -31,10 +28,12 @@ public class LoadSummaryStatus extends AsyncTaskLoader<ArrayList> {
     public ArrayList loadInBackground() {
 
         ArrayList SUMMARY_STATUS = null;
+        Context mContext ;
+        mContext = getContext();
 
         try {
             //TODO LoadSummaryStatus needs to Check Preferences to see what should be checked.
-            SUMMARY_STATUS = GetEmonData.GetStatus(strURL, strAPI);
+            SUMMARY_STATUS = GetEmonData.GetStatus(mContext);
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
