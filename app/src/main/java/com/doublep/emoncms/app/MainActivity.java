@@ -51,7 +51,7 @@ public class MainActivity extends ActionBarActivity implements
         setContentView(R.layout.activity_main);
 
         mTitle = mDrawerTitle = getTitle();
-        //TODO Need to Check Preferences to see what other options are set
+
         mNavTitles = getResources().getStringArray(R.array.nav_titles);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);

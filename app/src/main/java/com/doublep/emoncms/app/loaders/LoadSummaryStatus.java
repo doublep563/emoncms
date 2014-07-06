@@ -32,7 +32,7 @@ public class LoadSummaryStatus extends AsyncTaskLoader<ArrayList> {
         mContext = getContext();
 
         try {
-            //TODO LoadSummaryStatus needs to Check Preferences to see what should be checked.
+
             SUMMARY_STATUS = GetEmonData.GetStatus(mContext);
         } catch (Exception e) {
             // TODO Auto-generated catch block

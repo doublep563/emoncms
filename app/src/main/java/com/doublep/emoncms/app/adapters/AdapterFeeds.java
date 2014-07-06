@@ -20,7 +20,7 @@ public class AdapterFeeds extends ArrayAdapter<FeedDetails> {
     private final Context context;
 
     public AdapterFeeds(Context context, int textViewResourceId,
-                            ArrayList<FeedDetails> items) {
+                        ArrayList<FeedDetails> items) {
         super(context, textViewResourceId, items);
         this.items = items;
         this.context = context;
@@ -28,45 +28,43 @@ public class AdapterFeeds extends ArrayAdapter<FeedDetails> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View v = convertView;
-        if (v == null) {
+        View row = convertView;
+        FeedHolder holder = null;
+        if (row == null) {
             LayoutInflater vi = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            v = vi.inflate(R.layout.feed_list_detail, parent, false);
+            row = vi.inflate(R.layout.feed_list_detail, parent, false);
+
+            FeedHolder feedHolder = new FeedHolder();
+            feedHolder.txtFeedName = (TextView) row.findViewById(R.id.textView_name);
+            feedHolder.txtFeedTag = (TextView) row.findViewById(R.id.textView_tag);
+            feedHolder.txtFeedValue = (TextView) row.findViewById(R.id.textView_value);
+            feedHolder.txtFeedUpdated = (TextView) row.findViewById(R.id.lastUpdated);
+            row.setTag(feedHolder);
         }
-        FeedDetails o = items.get(position);
-        if (o != null) {
-            assert v != null;
 
-            TextView tvfeed_name = (TextView) v
-                    .findViewById(R.id.textView_name);
-            TextView tvfeed_tag = (TextView) v
-                    .findViewById(R.id.textView_tag);
-            TextView tvfeed_value = (TextView) v
-                    .findViewById(R.id.textView_value);
-            TextView tvupdated_value = (TextView) v
-                    .findViewById(R.id.lastUpdated);
+        FeedDetails feedDetails = items.get(position);
+        FeedHolder feedHolder = (FeedHolder) row.getTag();
+        feedHolder.txtFeedName.setText(feedDetails.getStrName());
+        feedHolder.txtFeedTag.setText(feedDetails.getStrTag());
+        feedHolder.txtFeedValue.setText(feedDetails.getStrValue());
+        feedHolder.txtFeedUpdated.setText("Updated " + feedDetails.getStrTime() + " Secs Ago");
 
-            if (tvfeed_name != null) {
-                tvfeed_name.setText(o.getStrName());
-            }
-            if (tvfeed_tag != null) {
-                tvfeed_tag.setText(o.getStrTag());
-            }
-            if (tvfeed_value != null) {
-                tvfeed_value.setText(o.getStrValue());
-            }
-            if (tvupdated_value != null) {
-                tvupdated_value.setText("Updated " + o.getStrTime() + " Secs Ago");
-                //TODO Works but when scrolling through list all values become RED.
-                //TODO So doesn't really work!!!!
-               // int val = Integer.parseInt(o.getStrTime());
-               // if(val > 20) {
-               //     tvupdated_value.setBackgroundColor(Color.RED);
-               // }
-            }
-
+        int val = Integer.parseInt(feedDetails.getStrTime());
+        if (val > 120) {
+            feedHolder.txtFeedUpdated.setTextColor(context.getResources().getColor(R.color.holo_orange_light));
         }
-        return v;
+        else {
+            feedHolder.txtFeedUpdated.setTextColor(Color.BLACK);
+        }
+
+        return row;
+    }
+
+    static class FeedHolder {
+        TextView txtFeedName;
+        TextView txtFeedTag;
+        TextView txtFeedValue;
+        TextView txtFeedUpdated;
     }
 }

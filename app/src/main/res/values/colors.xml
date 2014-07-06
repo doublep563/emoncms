@@ -55,4 +55,5 @@
     <color name="accessibility_focus_highlight">#80ffff00</color>
     <color name="emoncms_pale">#fbeed5</color>
     <color name="emoncms_btn_Color">#49afcd</color>
+    <color name="emoncms_pale_blue">#49afcd</color>
 </resources>

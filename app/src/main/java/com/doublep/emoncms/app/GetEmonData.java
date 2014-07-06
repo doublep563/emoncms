@@ -133,9 +133,6 @@ public class GetEmonData{
 
     public static ArrayList<SummaryStatus> GetStatus(Context context) {
 
-
-        //TODO LoadSummaryStatus needs to Check Preferences to see what should be checked.
-
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         String strURL = sharedPref.getString(common.PREF_KEY_EMONCMS_URL, context.getResources().getString(R.string.pref_default));
         String strAPI = sharedPref.getString(common.PREF_KEY_EMONCMS_API, context.getResources().getString(R.string.pref_default));
@@ -155,13 +152,13 @@ public class GetEmonData{
         String strRaspURL = strURL + "/raspberrypi/getrunning.json&apikey=" + strAPI;
         String strFeedList = strURL + "/feed/list.json&apikey=" + strAPI;
 
-        //TODO LoadSummaryStatus needs to Check Preferences to see what should be checked.
+
 
         if (raspberryPI) {
 
 
             try {
-                //TODO LoadSummaryStatus needs to Check Preferences to see what should be checked.
+
                 HttpClient client = new DefaultHttpClient();
                 HttpGet request = new HttpGet();
                 request.setURI(new URI(strRaspURL));
