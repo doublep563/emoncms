@@ -27,6 +27,7 @@ import java.util.ArrayList;
  * Fragment to manage feeds
  */
 public class Feeds extends ListFragment implements
+        AdapterFeeds.BtnChartListener,
         LoaderManager.LoaderCallbacks<ArrayList> {
 
     // The Loader's id (this id is specific to the ListFragment's LoaderManager)
@@ -118,7 +119,17 @@ public class Feeds extends ListFragment implements
     public void onLoadFinished(Loader<ArrayList> loader, ArrayList data) {
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onLoadFinished() called! +++");
         AdapterFeeds mAdapter;
-        mAdapter = new AdapterFeeds(getActivity(), R.layout.feed_list, data);
+        mAdapter = new AdapterFeeds(getActivity(), R.layout.feed_list, data,  new AdapterFeeds.BtnChartListener()
+        {
+
+            public void onBtnClick(int position) {
+                // TODO Auto-generated method stub
+                // Call your function which creates and shows the dialog here
+                if (MainActivity.DEBUG) Log.i(TAG, "+++ onLoadFinished() onBtnClick called! +++");
+            }
+
+        }
+        );
 
         setListAdapter(mAdapter);
 
@@ -141,6 +152,11 @@ public class Feeds extends ListFragment implements
             mListener.onFeedSelected(strFeedID, strFeedTag, strFeedName);
         }
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onListItemClick() called! +++  " + strFeedID);
+
+    }
+
+    @Override
+    public void onBtnClick(int position) {
 
     }
 

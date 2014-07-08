@@ -84,5 +84,6 @@
     <string name="btnTest">Test</string>
     <string name="txtErrorText">Text of the Error</string>
     <string name="chartTtile">Chart Title</string>
+    <string name="traffic_color">COL</string>
 
 </resources>

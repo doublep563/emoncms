@@ -25,13 +25,29 @@
             android:summary="@string/pref_emoncms_rasppi_summary"
             android:title="@string/pref_emoncms_rasppi" />
 
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="pref_key_feeds"
-            android:summary="@string/pref_emoncms_feeds_summary"
-            android:title="@string/pref_emoncms_feeds" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Feed Preferences">
+
+        <EditTextPreference
+            android:defaultValue="@string/pref_default"
+            android:dialogTitle="@string/pref_emoncms_url_dialog"
+            android:key="pref_key_emoncms_url"
+            android:summary="@string/pref_emoncms_url_summary"
+            android:title="@string/pref_emoncms_url" />
+
+        <EditTextPreference
+            android:defaultValue="@string/pref_default"
+            android:dialogTitle="@string/pref_emoncms_api_dialog"
+            android:key="pref_key_emoncms_api"
+            android:summary="@string/pref_emoncms_api_summary"
+            android:title="@string/pref_emoncms_api" />
+
+
 
 
     </PreferenceCategory>
+
 
 </PreferenceScreen>
