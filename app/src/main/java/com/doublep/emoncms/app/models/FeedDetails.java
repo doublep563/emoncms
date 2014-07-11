@@ -31,6 +31,7 @@ public class FeedDetails implements Parcelable {
     private String strSize = "";
     private String strEngine = "";
     private String strTime = "";
+    private String strUpdated = "";
     private String strValue = "";
 
     public FeedDetails() {
@@ -70,7 +71,15 @@ public class FeedDetails implements Parcelable {
     }
 
     public void setStrDataType(String strDataType) {
-        this.strDataType = strDataType;
+        if(strDataType.equalsIgnoreCase("1")) {
+            this.strDataType = "REALTIME";
+        }
+        else if(strDataType.equalsIgnoreCase("2")){
+            this.strDataType = "DAILY";
+        }
+        else if(strDataType.equalsIgnoreCase("3")){
+            this.strDataType = "HISTOGRAM";
+        }
     }
 
     public String getStrTag() {
@@ -86,7 +95,12 @@ public class FeedDetails implements Parcelable {
     }
 
     public void setStrPublic(String strPublic) {
-        this.strPublic = strPublic;
+        if(strPublic.equalsIgnoreCase("1")) {
+            this.strPublic = "Yes";
+        }
+        else {
+            this.strPublic = "No";
+        }
     }
 
     public String getStrSize() {
@@ -102,7 +116,27 @@ public class FeedDetails implements Parcelable {
     }
 
     public void setStrEngine(String strEngine) {
-        this.strEngine = strEngine;
+        if(strEngine.equalsIgnoreCase("0")) {
+            this.strEngine = "MYSQL";
+        }
+        else if(strEngine.equalsIgnoreCase("1")) {
+            this.strEngine = "TIMESTORE";
+        }
+        else if(strEngine.equalsIgnoreCase("2")) {
+            this.strEngine = "PHPTIMESERIES";
+        }
+        else if(strEngine.equalsIgnoreCase("3")) {
+            this.strEngine = "GRAPHITE";
+        }
+        else if(strEngine.equalsIgnoreCase("4")) {
+            this.strEngine = "PHPTIMESTORE";
+        }
+        else if(strEngine.equalsIgnoreCase("5")) {
+            this.strEngine = "PHPFINA";
+        }
+        else if(strEngine.equalsIgnoreCase("6")) {
+            this.strEngine = "PHPFIWA";
+        }
     }
 
     public String getStrTime() {
@@ -111,6 +145,15 @@ public class FeedDetails implements Parcelable {
 
     public void setStrTime(String strTime) {
         this.strTime = strTime;
+    }
+
+
+    public String getStrUpdated() {
+        return strUpdated;
+    }
+
+    public void setStrUpdated(String strUpdated) {
+        this.strUpdated = strUpdated;
     }
 
     public String getStrValue() {
@@ -138,6 +181,7 @@ public class FeedDetails implements Parcelable {
         dest.writeString(strSize);
         dest.writeString(strEngine);
         dest.writeString(strTime);
+        dest.writeString(strUpdated);
         dest.writeString(strValue);
 
     }
@@ -156,6 +200,7 @@ public class FeedDetails implements Parcelable {
         strSize = in.readString();
         strEngine = in.readString();
         strTime = in.readString();
+        strUpdated = in.readString();
         strValue = in.readString();
 
     }

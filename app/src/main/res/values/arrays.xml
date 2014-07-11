@@ -6,5 +6,8 @@
         <item>Summary</item>
         <item>Feeds</item>
     </string-array>
-
+    <string-array name="datatype">
+        <item>Summary</item>
+        <item>Feeds</item>
+    </string-array>
 </resources>

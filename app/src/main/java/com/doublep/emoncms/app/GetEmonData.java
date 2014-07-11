@@ -23,15 +23,18 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URI;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 
 
 public class GetEmonData{
 
     private static final String TAG = "GetEmonData";
     private static Context mContext ;
+    public static ArrayList<FeedDetails> feedList = null;
 
 
     public static ArrayList<FeedDetails> GetFeeds(String strURL, String strAPI) {
@@ -58,7 +61,8 @@ public class GetEmonData{
 
 
 
-        ArrayList<FeedDetails> feedList = new ArrayList<FeedDetails>();
+
+        feedList = new ArrayList<FeedDetails>();
         try {
             HttpClient client = new DefaultHttpClient();
             HttpGet request = new HttpGet();
@@ -96,7 +100,9 @@ public class GetEmonData{
                 int intTime = Integer.parseInt(time);
                 long unixTime = System.currentTimeMillis() / 1000L;
                 int myTime = (int) unixTime - intTime;
-
+                Date date = new Date(intTime*1000L);
+                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss dd-MM-yyyy");
+                String formattedDate = sdf.format(date);
 
                 // tmp hashmap for feed details
                 FeedDetails feed = new FeedDetails();
@@ -108,6 +114,7 @@ public class GetEmonData{
                 feed.setStrSize(size);
                 feed.setStrTag(tag);
                 feed.setStrTime(Integer.toString(myTime));
+                feed.setStrUpdated(formattedDate);
                 feed.setStrUserID(userid);
                 feed.setStrValue(value);
                 // adding each child node to HashMap key => value

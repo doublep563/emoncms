@@ -10,9 +10,9 @@
     <string name="title_activity_loaddata">LoadData</string>
     <string name="title_activity_main_activity2">MainActivity2</string>
     <string name="title_activity_adapter_feeds">Feeds</string>
-    <string name="feed_id">id</string>
-    <string name="feed_userid">userid</string>
-    <string name="feed_name">name</string>
+    <string name="feed_id">ID</string>
+    <string name="feed_userid">Userid</string>
+    <string name="feed_name">Name</string>
     <string name="feed_updated">Updated</string>
     <string name="feed_value">Value</string>
     <string name="feed_tag">Tag</string>
@@ -85,5 +85,9 @@
     <string name="txtErrorText">Text of the Error</string>
     <string name="chartTtile">Chart Title</string>
     <string name="traffic_color">COL</string>
+    <string name="feed_datatype">Datatype</string>
+    <string name="feed_engine">Engine</string>
+    <string name="feed_public">Public</string>
+    <string name="feed_size">Size</string>
 
 </resources>

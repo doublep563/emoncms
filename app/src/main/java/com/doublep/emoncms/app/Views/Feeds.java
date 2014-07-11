@@ -1,22 +1,30 @@
 package com.doublep.emoncms.app.Views;
 
 import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.app.ListFragment;
 import android.app.LoaderManager;
 import android.content.Loader;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.doublep.emoncms.app.MainActivity;
 import com.doublep.emoncms.app.R;
 import com.doublep.emoncms.app.adapters.AdapterFeeds;
+import com.doublep.emoncms.app.adapters.AdapterFeedsExpand;
 import com.doublep.emoncms.app.common;
 import com.doublep.emoncms.app.loaders.LoadFeeds;
 import com.doublep.emoncms.app.models.FeedDetails;
@@ -33,9 +41,10 @@ public class Feeds extends ListFragment implements
     // The Loader's id (this id is specific to the ListFragment's LoaderManager)
     private static final int LOADER_ID = 1;
     private static final String TAG = "Feeds";
-    private OnFeedListener mListener;
+    private OnFeedLoad mListener;
     private String strEmoncmsURL;
     private String strEmoncmsAPI;
+    private ArrayList abc;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -102,7 +111,7 @@ public class Feeds extends ListFragment implements
         // This makes sure that the container activity has implemented
         // the callback interface. If not, it throws an exception
         try {
-            mListener = (OnFeedListener) activity;
+            mListener = (OnFeedLoad) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement OnHeadlineSelectedListener");
@@ -116,22 +125,31 @@ public class Feeds extends ListFragment implements
     }
 
     @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        if (MainActivity.DEBUG) Log.i(TAG, "+++ onCreateView()  called! +++");
+        return super.onCreateView(inflater, container, savedInstanceState);
+    }
+
+    @Override
     public void onLoadFinished(Loader<ArrayList> loader, ArrayList data) {
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onLoadFinished() called! +++");
-        AdapterFeeds mAdapter;
-        mAdapter = new AdapterFeeds(getActivity(), R.layout.feed_list, data,  new AdapterFeeds.BtnChartListener()
-        {
+        
+         abc = data;
+        //AdapterFeeds mAdapter;
+        //mAdapter = new AdapterFeeds(getActivity(), R.layout.feed_list, data,  new AdapterFeeds.BtnChartListener()
+        //{
 
-            public void onBtnClick(int position) {
-                // TODO Auto-generated method stub
-                // Call your function which creates and shows the dialog here
-                if (MainActivity.DEBUG) Log.i(TAG, "+++ onLoadFinished() onBtnClick called! +++");
-            }
+        //    public void onBtnClick(int position) {
+        //        // TODO Auto-generated method stub
+        //        // Call your function which creates and shows the dialog here
+        //        if (MainActivity.DEBUG) Log.i(TAG, "+++ onLoadFinished() onBtnClick called! +++");
+        //    }
 
-        }
-        );
+        //}
+        //);
 
-        setListAdapter(mAdapter);
+        handler.sendEmptyMessage(2);
+
 
         getActivity().setProgressBarIndeterminateVisibility(false);
     }
@@ -142,29 +160,12 @@ public class Feeds extends ListFragment implements
 
     }
 
-    @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-        FeedDetails feedDetails = (FeedDetails) getListAdapter().getItem(position);
-        String strFeedID = feedDetails.getStrID();
-        String strFeedTag = feedDetails.getStrTag();
-        String strFeedName = feedDetails.getStrName();
-        if (mListener != null) {
-            mListener.onFeedSelected(strFeedID, strFeedTag, strFeedName);
-        }
-        if (MainActivity.DEBUG) Log.i(TAG, "+++ onListItemClick() called! +++  " + strFeedID);
-
-    }
 
     @Override
     public void onBtnClick(int position) {
 
     }
 
-    public interface OnFeedListener {
-
-        public void onFeedSelected(String feedID, String strFeedTag, String strFeedID);
-
-    }
 
     @Override
     public void onCreateOptionsMenu(
@@ -185,5 +186,27 @@ public class Feeds extends ListFragment implements
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    public interface OnFeedLoad {
+
+        public void OnFeedLoadComplete(ArrayList data);
+
+    }
+
+    private final Handler handler = new Handler()  // handler for commiting fragment after data is loaded
+    {
+        @Override
+        public void handleMessage(Message msg)
+        {
+            if(msg.what == 2)
+            {
+                if (mListener != null) {
+                    mListener.OnFeedLoadComplete(abc);
+                }
+                if (MainActivity.DEBUG) Log.i(TAG, "+++ Handler() called! +++");
+                // commit the fragment
+            }
+        }
+    };
 
 }

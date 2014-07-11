@@ -25,12 +25,13 @@ import com.doublep.emoncms.app.Views.FeedChartDisplay;
 import com.doublep.emoncms.app.Views.Feeds;
 import com.doublep.emoncms.app.Views.StartUp;
 import com.doublep.emoncms.app.Views.Summary;
+import com.doublep.emoncms.app.adapters.AdapterFeedsExpand;
 
 import java.util.ArrayList;
 
 
-public class MainActivity extends ActionBarActivity implements
-        Feeds.OnFeedListener, FeedChart.OnFeedChartListener, StartUp.OnStartupListener {
+public class MainActivity extends ActionBarActivity implements AdapterFeedsExpand.OnFeedListener,
+       FeedChart.OnFeedChartListener, StartUp.OnStartupListener, Feeds.OnFeedLoad {
 
     //Check out for start up implementation http://www.informit.com/articles/article.aspx?p=2066699
     public static final boolean DEBUG = true;
@@ -266,27 +267,6 @@ public class MainActivity extends ActionBarActivity implements
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onConfigurationChanged() called! +++");
     }
 
-    @Override
-    public void onFeedSelected(String strFeedID, String strFeedTag, String strFeedName) {
-
-        Fragment fragment = new FeedChart();
-        Bundle args = new Bundle();
-        args.putString("strFeedID", strFeedID);
-        args.putString("strFeedTag", strFeedTag);
-        args.putString("strFeedName", strFeedName);
-        fragment.setArguments(args);
-
-        FragmentManager fragmentManager = getFragmentManager();
-        // getFragmentManager().popBackStack();
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-
-        transaction.replace(R.id.content_frame, fragment)
-                .addToBackStack(null)
-                .commit();
-
-        if (MainActivity.DEBUG) Log.i(TAG, "+++ onFeedSelected() called! +++");
-
-    }
 
     public void onFeedChartSelected(String strFeedID, String strFeedTag, String strFeedName, Bundle feedData) {
         mTitle = "Feed Chart";
@@ -371,6 +351,19 @@ public class MainActivity extends ActionBarActivity implements
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onStartUpCompleted() called! +++");
     }
 
+    @Override
+    public void OnFeedLoadComplete(ArrayList data) {
+
+        Fragment AdapterFeeds = new AdapterFeedsExpand();
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.content_frame, AdapterFeeds)
+                .addToBackStack(null)
+                .commit();
+
+        if (MainActivity.DEBUG) Log.i(TAG, "+++ OnFeedLoadComplete() called! +++");
+    }
+
 
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
@@ -378,4 +371,27 @@ public class MainActivity extends ActionBarActivity implements
             selectItem(position);
         }
     }
+
+
+    public void onFeedSelected(String strFeedID, String strFeedTag, String strFeedName) {
+
+        Fragment fragment = new FeedChart();
+        Bundle args = new Bundle();
+        args.putString("strFeedID", strFeedID);
+        args.putString("strFeedTag", strFeedTag);
+        args.putString("strFeedName", strFeedName);
+        fragment.setArguments(args);
+
+        FragmentManager fragmentManager = getFragmentManager();
+        // getFragmentManager().popBackStack();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+
+        transaction.replace(R.id.content_frame, fragment)
+                .addToBackStack(null)
+                .commit();
+
+        if (MainActivity.DEBUG) Log.i(TAG, "+++ onFeedSelected() called! +++");
+
+    }
+
 }
