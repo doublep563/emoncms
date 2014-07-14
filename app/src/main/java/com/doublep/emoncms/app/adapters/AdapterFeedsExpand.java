@@ -35,6 +35,7 @@ public class AdapterFeedsExpand extends Fragment {
         super.onCreate(savedInstanceState);
 
         items = GetEmonData.feedList;
+        if (MainActivity.DEBUG) Log.i(TAG, "+++ onCreate() called! +++");
     }
 
 
@@ -49,6 +50,36 @@ public class AdapterFeedsExpand extends Fragment {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        if (MainActivity.DEBUG) Log.i(TAG, "+++ onStart() called! +++");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (MainActivity.DEBUG) Log.i(TAG, "+++ onResume() called! +++");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (MainActivity.DEBUG) Log.i(TAG, "+++ onPause() called! +++");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (MainActivity.DEBUG) Log.i(TAG, "+++ onStop() called! +++");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (MainActivity.DEBUG) Log.i(TAG, "+++ onDestroy() called! +++");
+    }
+
+    @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
@@ -60,6 +91,7 @@ public class AdapterFeedsExpand extends Fragment {
             throw new ClassCastException(activity.toString()
                     + " must implement OnHeadlineSelectedListener");
         }
+        if (MainActivity.DEBUG) Log.i(TAG, "+++ onAttach() called! +++");
     }
 
 

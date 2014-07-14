@@ -2,9 +2,6 @@ package com.doublep.emoncms.app.Views;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
-import android.app.ListFragment;
 import android.app.LoaderManager;
 import android.content.Loader;
 import android.content.SharedPreferences;
@@ -14,28 +11,21 @@ import android.os.Message;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 
 import com.doublep.emoncms.app.MainActivity;
 import com.doublep.emoncms.app.R;
-import com.doublep.emoncms.app.adapters.AdapterFeeds;
-import com.doublep.emoncms.app.adapters.AdapterFeedsExpand;
 import com.doublep.emoncms.app.common;
 import com.doublep.emoncms.app.loaders.LoadFeeds;
-import com.doublep.emoncms.app.models.FeedDetails;
 
 import java.util.ArrayList;
 
 /**
  * Fragment to manage feeds
  */
-public class Feeds extends ListFragment implements
-        AdapterFeeds.BtnChartListener,
+public class Feeds extends Fragment implements
+
         LoaderManager.LoaderCallbacks<ArrayList> {
 
     // The Loader's id (this id is specific to the ListFragment's LoaderManager)
@@ -45,6 +35,19 @@ public class Feeds extends ListFragment implements
     private String strEmoncmsURL;
     private String strEmoncmsAPI;
     private ArrayList abc;
+    private final Handler handler = new Handler()  // handler for commiting fragment after data is loaded
+    {
+        @Override
+        public void handleMessage(Message msg) {
+            if (msg.what == 2) {
+                if (mListener != null) {
+                    mListener.OnFeedLoadComplete(abc);
+                }
+                if (MainActivity.DEBUG) Log.i(TAG, "+++ Handler() called! +++");
+                // commit the fragment
+            }
+        }
+    };
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -133,8 +136,8 @@ public class Feeds extends ListFragment implements
     @Override
     public void onLoadFinished(Loader<ArrayList> loader, ArrayList data) {
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onLoadFinished() called! +++");
-        
-         abc = data;
+
+        abc = data;
         //AdapterFeeds mAdapter;
         //mAdapter = new AdapterFeeds(getActivity(), R.layout.feed_list, data,  new AdapterFeeds.BtnChartListener()
         //{
@@ -160,53 +163,10 @@ public class Feeds extends ListFragment implements
 
     }
 
-
-    @Override
-    public void onBtnClick(int position) {
-
-    }
-
-
-    @Override
-    public void onCreateOptionsMenu(
-            Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_refresh, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // handle item selection
-        switch (item.getItemId()) {
-            case R.id.action_refresh:
-                getActivity().setProgressBarIndeterminateVisibility(true);
-                getLoaderManager().restartLoader(LOADER_ID, null, this);
-                if (MainActivity.DEBUG) Log.i(TAG, "+++ onOptionsItemSelected() called! +++");
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
     public interface OnFeedLoad {
 
         public void OnFeedLoadComplete(ArrayList data);
 
     }
-
-    private final Handler handler = new Handler()  // handler for commiting fragment after data is loaded
-    {
-        @Override
-        public void handleMessage(Message msg)
-        {
-            if(msg.what == 2)
-            {
-                if (mListener != null) {
-                    mListener.OnFeedLoadComplete(abc);
-                }
-                if (MainActivity.DEBUG) Log.i(TAG, "+++ Handler() called! +++");
-                // commit the fragment
-            }
-        }
-    };
 
 }

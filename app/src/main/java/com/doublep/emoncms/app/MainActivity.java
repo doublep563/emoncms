@@ -30,8 +30,11 @@ import com.doublep.emoncms.app.adapters.AdapterFeedsExpand;
 import java.util.ArrayList;
 
 
-public class MainActivity extends ActionBarActivity implements AdapterFeedsExpand.OnFeedListener,
-       FeedChart.OnFeedChartListener, StartUp.OnStartupListener, Feeds.OnFeedLoad {
+public class MainActivity extends ActionBarActivity implements
+        AdapterFeedsExpand.OnFeedListener,
+        FeedChart.OnFeedChartListener,
+        StartUp.OnStartupListener,
+        Feeds.OnFeedLoad {
 
     //Check out for start up implementation http://www.informit.com/articles/article.aspx?p=2066699
     public static final boolean DEBUG = true;
@@ -91,17 +94,31 @@ public class MainActivity extends ActionBarActivity implements AdapterFeedsExpan
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
+        getFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+
+            @Override
+            public void onBackStackChanged() {
+                Fragment f = getFragmentManager().findFragmentById(R.id.content_frame);
+                if (f != null) {
+                    if (MainActivity.DEBUG)
+                        Log.i(TAG, "+++ onCreate() onBackStackChanged called! +++");
+                }
+
+            }
+        });
+
 
         // Are the URL and API Preferences set?
         // If so. show the Summary Fragment
         // Else, show the StartUp fragment.
         if (CheckPreferences()) {
             if (savedInstanceState == null) {
-                Fragment sumFrag = new Summary();
-                FragmentManager fragmentManager = getFragmentManager();
-                FragmentTransaction transaction = fragmentManager.beginTransaction();
-                transaction.replace(R.id.content_frame, sumFrag)
-                        .addToBackStack(null)
+                Fragment Summary = new Summary();
+                String strFragmentTag = Summary.getClass().getName();
+
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(R.id.content_frame, Summary)
+                        .addToBackStack(strFragmentTag)
                         .commit();
                 if (MainActivity.DEBUG)
                     Log.i(TAG, "+++ CheckPreferences() New Fragment called! +++");
@@ -113,11 +130,12 @@ public class MainActivity extends ActionBarActivity implements AdapterFeedsExpan
             }
 
         } else {
-            Fragment StartupFrag = new StartUp();
-            FragmentManager fragmentManager = getFragmentManager();
-            FragmentTransaction transaction = fragmentManager.beginTransaction();
-            transaction.replace(R.id.content_frame, StartupFrag)
-                    .addToBackStack(null)
+            Fragment StartUp = new StartUp();
+            String strFragmentTag = StartUp.getClass().getName();
+
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+            transaction.replace(R.id.content_frame, StartUp)
+                    .addToBackStack(strFragmentTag)
                     .commit();
 
 
@@ -215,28 +233,36 @@ public class MainActivity extends ActionBarActivity implements AdapterFeedsExpan
     private void selectItem(int position) {
         // 0 = Summary
         if (position == 0) {
-            Fragment fragment = new Summary();
+            Fragment Summary = new Summary();
+            String strFragmentTag = Summary.getClass().getName();
 
-
-            FragmentManager fragmentManager = getFragmentManager();
-            // getFragmentManager().popBackStack();
-            FragmentTransaction transaction = fragmentManager.beginTransaction();
-            transaction.replace(R.id.content_frame, fragment)
-                    .addToBackStack(null)
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+            transaction.replace(R.id.content_frame, Summary, strFragmentTag)
+                    .addToBackStack(strFragmentTag)
                     .commit();
             if (MainActivity.DEBUG) Log.i(TAG, "+++ selectItem() Summary called! +++");
         }
         // 1 = Feeds
         else if (position == 1) {
-            Fragment feeds = new Feeds();
 
-            FragmentManager fragmentManager = getFragmentManager();
-            //getFragmentManager().popBackStack();
-            FragmentTransaction transaction = fragmentManager.beginTransaction();
+            Fragment fragment = getFragmentManager().findFragmentByTag("com.doublep.emoncms.app.Views.Feeds");
+            if (fragment == null) {
+                if (MainActivity.DEBUG)
+                    Log.i(TAG, "+++ selectItems() feeds fragment does not exist called! +++");
+            } else {
+                if (MainActivity.DEBUG)
+                    Log.i(TAG, "+++ selectItems() feeds fragment does exist called! +++");
+            }
+            Fragment Feeds = new Feeds();
+            String strFragmentTag = Feeds.getClass().getName();
 
-            transaction.replace(R.id.content_frame, feeds)
-                    .addToBackStack(null)
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+
+            // Don't add to BackStack. This has no UI
+            transaction.add(Feeds, strFragmentTag)
+                    //.addToBackStack(strFragmentTag)
                     .commit();
+
         }
         // Highlight the selected item, update the title, and close the drawer
         mDrawerList.setItemChecked(position, true);
@@ -274,23 +300,20 @@ public class MainActivity extends ActionBarActivity implements AdapterFeedsExpan
         ArrayList mFeedData;
         mFeedData = (ArrayList) feedData.getParcelableArrayList("feedData");
 
-        Fragment feedChart = new FeedChartDisplay();
+        Fragment FeedChartDisplay = new FeedChartDisplay();
+        String strFragmentTag = FeedChartDisplay.getClass().getName();
         Bundle args = new Bundle();
         args.putString("strFeedID", strFeedID);
         args.putString("strFeedTag", strFeedTag);
         args.putString("strFeedName", strFeedName);
         args.putParcelableArrayList("feedData", mFeedData);
 
-        feedChart.setArguments(args);
+        FeedChartDisplay.setArguments(args);
 
-        FragmentManager fragmentManager = getFragmentManager();
-        // getFragmentManager().popBackStack();
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        //Custom Animation
-        transaction.setCustomAnimations(R.anim.fadein, R.anim.fadeout);
 
-        transaction.replace(R.id.content_frame, feedChart, "abcd")
-                //.addToBackStack("abcd")
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.replace(R.id.content_frame, FeedChartDisplay)
+                //.addToBackStack(strFragmentTag)
                 .commit();
 
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onFeedChartSelected() called! +++");
@@ -299,21 +322,21 @@ public class MainActivity extends ActionBarActivity implements AdapterFeedsExpan
 
     @Override
     public void onBackPressed() {
-        if (getFragmentManager().getBackStackEntryCount() == 0) {
+        if (getFragmentManager().getBackStackEntryCount() == 1) {
             this.finish();
         } else {
 
-            Fragment fragments = getFragmentManager().findFragmentByTag("abcd");
+            Fragment fragments = getFragmentManager().findFragmentByTag("com.doublep.emoncms.app.Views.FeedChart");
             if (fragments == null) {
 
                 getFragmentManager().popBackStack();
                 if (MainActivity.DEBUG) Log.i(TAG, "+++ popbackstack! +++");
             } else {
-                getFragmentManager().beginTransaction().remove(getFragmentManager().findFragmentByTag("abcd")).commit();
+                // getFragmentManager().beginTransaction().remove(getFragmentManager().findFragmentByTag("com.doublep.emoncms.app.Views.FeedChart")).commit();
                 getFragmentManager().popBackStack();
 
                 if (MainActivity.DEBUG)
-                    Log.i(TAG, "+++ Remove the abcd fragment and popbackstack! +++");
+                    Log.i(TAG, "+++ Remove the FeedChart fragment and popbackstack! +++");
             }
 
         }
@@ -326,22 +349,24 @@ public class MainActivity extends ActionBarActivity implements AdapterFeedsExpan
         //TODO this won't work!!!!!!!!!!
         if (CheckPreferences()) {
 
-            Fragment sumFrag = new Summary();
-            FragmentManager fragmentManager = getFragmentManager();
-            FragmentTransaction transaction = fragmentManager.beginTransaction();
-            transaction.replace(R.id.content_frame, sumFrag)
-                    .addToBackStack(null)
+            Fragment Summary = new Summary();
+            String strFragmentTag = Summary.getClass().getName();
+
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+            transaction.replace(R.id.content_frame, Summary)
+                    .addToBackStack(strFragmentTag)
                     .commit();
             if (MainActivity.DEBUG)
                 Log.i(TAG, "+++ CheckPreferences() New Fragment called! +++");
 
 
         } else {
-            Fragment StartupFrag = new StartUp();
-            FragmentManager fragmentManager = getFragmentManager();
-            FragmentTransaction transaction = fragmentManager.beginTransaction();
-            transaction.replace(R.id.content_frame, StartupFrag)
-                    .addToBackStack(null)
+            Fragment Startup = new StartUp();
+            String strFragmentTag = Startup.getClass().getName();
+
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+            transaction.replace(R.id.content_frame, Startup)
+                    .addToBackStack(strFragmentTag)
                     .commit();
 
 
@@ -354,44 +379,62 @@ public class MainActivity extends ActionBarActivity implements AdapterFeedsExpan
     @Override
     public void OnFeedLoadComplete(ArrayList data) {
 
-        Fragment AdapterFeeds = new AdapterFeedsExpand();
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.replace(R.id.content_frame, AdapterFeeds)
-                .addToBackStack(null)
-                .commit();
+        Fragment fragment = getFragmentManager().findFragmentByTag("com.doublep.emoncms.app.adapters.AdapterFeedsExpand");
+        if (fragment == null) {
+            Fragment AdapterFeedsExpand = new AdapterFeedsExpand();
+            String strFragmentTag = AdapterFeedsExpand.getClass().getName();
+
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+            transaction.add(R.id.content_frame, AdapterFeedsExpand, strFragmentTag)
+                    .addToBackStack(strFragmentTag)
+                    .commit();
+
+            if (MainActivity.DEBUG)
+                Log.i(TAG, "+++ OnFeedLoadComplete() AdapterFeedsExpand fragment does not exist called! +++");
+        } else {
+
+            boolean fragmentPopped = getFragmentManager().popBackStackImmediate("AdapterFeedsExpand", 0);
+
+            Fragment AdapterFeedsExpand = new AdapterFeedsExpand();
+            String strFragmentTag = AdapterFeedsExpand.getClass().getName();
+
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+            transaction.replace(R.id.content_frame, AdapterFeedsExpand, strFragmentTag)
+                    .addToBackStack(strFragmentTag)
+                    .commit();
+
+            if (MainActivity.DEBUG)
+                Log.i(TAG, "+++ OnFeedLoadComplete() AdapterFeedsExpand fragment does exist called! +++");
+        }
 
         if (MainActivity.DEBUG) Log.i(TAG, "+++ OnFeedLoadComplete() called! +++");
     }
 
+    public void onFeedSelected(String strFeedID, String strFeedTag, String strFeedName) {
+
+        Fragment FeedChart = new FeedChart();
+        String strFragmentTag = FeedChart.getClass().getName();
+        Bundle args = new Bundle();
+        args.putString("strFeedID", strFeedID);
+        args.putString("strFeedTag", strFeedTag);
+        args.putString("strFeedName", strFeedName);
+        FeedChart.setArguments(args);
+
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+
+        transaction.replace(R.id.content_frame, FeedChart, strFragmentTag)
+                .addToBackStack(strFragmentTag)
+                .commit();
+
+        if (MainActivity.DEBUG) Log.i(TAG, "+++ onFeedSelected() called! +++");
+
+    }
 
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView parent, View view, int position, long id) {
             selectItem(position);
         }
-    }
-
-
-    public void onFeedSelected(String strFeedID, String strFeedTag, String strFeedName) {
-
-        Fragment fragment = new FeedChart();
-        Bundle args = new Bundle();
-        args.putString("strFeedID", strFeedID);
-        args.putString("strFeedTag", strFeedTag);
-        args.putString("strFeedName", strFeedName);
-        fragment.setArguments(args);
-
-        FragmentManager fragmentManager = getFragmentManager();
-        // getFragmentManager().popBackStack();
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-
-        transaction.replace(R.id.content_frame, fragment)
-                .addToBackStack(null)
-                .commit();
-
-        if (MainActivity.DEBUG) Log.i(TAG, "+++ onFeedSelected() called! +++");
-
     }
 
 }

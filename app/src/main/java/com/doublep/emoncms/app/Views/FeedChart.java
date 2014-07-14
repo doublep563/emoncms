@@ -31,7 +31,19 @@ public class FeedChart extends Fragment implements
     private Bundle feedData;
     private String strFeedTag;
     private String strFeedName;
-
+    private final Handler handler = new Handler()  // handler for commiting fragment after data is loaded
+    {
+        @Override
+        public void handleMessage(Message msg) {
+            if (msg.what == 2) {
+                if (mListener != null) {
+                    mListener.onFeedChartSelected(strFeedID, strFeedTag, strFeedName, feedData);
+                }
+                if (MainActivity.DEBUG) Log.i(TAG, "+++ Handler() called! +++");
+                // commit the fragment
+            }
+        }
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,7 +77,7 @@ public class FeedChart extends Fragment implements
         //TODO Add API field to Summary.xml
         strEmoncmsURL = sharedPref.getString(common.PREF_KEY_EMONCMS_URL, getResources().getString(R.string.pref_default));
         strEmoncmsAPI = sharedPref.getString(common.PREF_KEY_EMONCMS_API, getResources().getString(R.string.pref_default));
-        setRetainInstance(true);
+        //setRetainInstance(true);
         getLoaderManager().initLoader(LOADER_ID, null, this);
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onResume() called! +++");
     }
@@ -129,26 +141,10 @@ public class FeedChart extends Fragment implements
 
     }
 
+
     public interface OnFeedChartListener {
 
         public void onFeedChartSelected(String strFeedID, String strFeedTag, String strFeedName, Bundle feedData);
 
     }
-
-
-    private final Handler handler = new Handler()  // handler for commiting fragment after data is loaded
-    {
-        @Override
-        public void handleMessage(Message msg)
-        {
-            if(msg.what == 2)
-            {
-                if (mListener != null) {
-                    mListener.onFeedChartSelected(strFeedID, strFeedTag, strFeedName, feedData);
-                }
-                if (MainActivity.DEBUG) Log.i(TAG, "+++ Handler() called! +++");
-                // commit the fragment
-            }
-        }
-    };
 }

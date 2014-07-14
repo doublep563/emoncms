@@ -1,11 +1,9 @@
 package com.doublep.emoncms.app;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import com.doublep.emoncms.app.models.FeedData;
@@ -30,12 +28,11 @@ import java.util.Comparator;
 import java.util.Date;
 
 
-public class GetEmonData{
+public class GetEmonData {
 
     private static final String TAG = "GetEmonData";
-    private static Context mContext ;
     public static ArrayList<FeedDetails> feedList = null;
-
+    private static Context mContext;
 
     public static ArrayList<FeedDetails> GetFeeds(String strURL, String strAPI) {
         // JSON Node names
@@ -56,10 +53,6 @@ public class GetEmonData{
         BufferedReader in;
         String result;
         JSONArray feeds;
-
-
-
-
 
 
         feedList = new ArrayList<FeedDetails>();
@@ -100,7 +93,7 @@ public class GetEmonData{
                 int intTime = Integer.parseInt(time);
                 long unixTime = System.currentTimeMillis() / 1000L;
                 int myTime = (int) unixTime - intTime;
-                Date date = new Date(intTime*1000L);
+                Date date = new Date(intTime * 1000L);
                 SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss dd-MM-yyyy");
                 String formattedDate = sdf.format(date);
 
@@ -158,7 +151,6 @@ public class GetEmonData{
 
         String strRaspURL = strURL + "/raspberrypi/getrunning.json&apikey=" + strAPI;
         String strFeedList = strURL + "/feed/list.json&apikey=" + strAPI;
-
 
 
         if (raspberryPI) {

@@ -3,9 +3,7 @@ package com.doublep.emoncms.app.Views;
 import android.app.ListFragment;
 import android.app.LoaderManager;
 import android.content.Loader;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -14,7 +12,6 @@ import android.view.MenuItem;
 import com.doublep.emoncms.app.MainActivity;
 import com.doublep.emoncms.app.R;
 import com.doublep.emoncms.app.adapters.AdapterSummary;
-import com.doublep.emoncms.app.common;
 import com.doublep.emoncms.app.loaders.LoadSummaryStatus;
 
 import java.util.ArrayList;
@@ -35,8 +32,6 @@ public class Summary extends ListFragment implements
 
         // We have an Action Bar
         setHasOptionsMenu(true);
-
-
 
 
         //TODO Add API field to Summary.xml
@@ -64,6 +59,7 @@ public class Summary extends ListFragment implements
         super.onResume();
         getLoaderManager().initLoader(LOADER_ID, null, this);
         getActivity().setProgressBarIndeterminateVisibility(true);
+
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onResume() called! +++");
     }
 
@@ -134,7 +130,6 @@ public class Summary extends ListFragment implements
                 return super.onOptionsItemSelected(item);
         }
     }
-
 
 
 }
