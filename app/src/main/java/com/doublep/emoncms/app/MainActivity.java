@@ -312,7 +312,7 @@ public class MainActivity extends ActionBarActivity implements
 
 
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.replace(R.id.content_frame, FeedChartDisplay)
+        transaction.add(R.id.content_frame, FeedChartDisplay, strFragmentTag)
                 //.addToBackStack(strFragmentTag)
                 .commit();
 
@@ -332,7 +332,7 @@ public class MainActivity extends ActionBarActivity implements
                 getFragmentManager().popBackStack();
                 if (MainActivity.DEBUG) Log.i(TAG, "+++ popbackstack! +++");
             } else {
-                // getFragmentManager().beginTransaction().remove(getFragmentManager().findFragmentByTag("com.doublep.emoncms.app.Views.FeedChart")).commit();
+                getFragmentManager().beginTransaction().remove(getFragmentManager().findFragmentByTag("com.doublep.emoncms.app.Views.FeedChartDisplay")).commit();
                 getFragmentManager().popBackStack();
 
                 if (MainActivity.DEBUG)
