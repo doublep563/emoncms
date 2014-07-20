@@ -1,6 +1,5 @@
 package com.doublep.emoncms.app.Views;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.LoaderManager;
 import android.content.Loader;
@@ -31,12 +30,12 @@ public class Feeds extends Fragment implements
     // The Loader's id (this id is specific to the ListFragment's LoaderManager)
     private static final int LOADER_ID = 1;
     private static final String TAG = "Feeds";
-    private OnFeedLoad mListener;
+
     private String strEmoncmsURL;
     private String strEmoncmsAPI;
-    private ArrayList abc;
 
     private ExpandableListView elv;
+
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -96,19 +95,6 @@ public class Feeds extends Fragment implements
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onCreate() called! +++");
     }
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-
-        // This makes sure that the container activity has implemented
-        // the callback interface. If not, it throws an exception
-        try {
-            mListener = (OnFeedLoad) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnHeadlineSelectedListener");
-        }
-    }
 
     @Override
     public Loader<ArrayList> onCreateLoader(int id, Bundle args) {
@@ -120,8 +106,9 @@ public class Feeds extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.feed_list, null);
         elv = (ExpandableListView) v.findViewById(R.id.listView);
-        // elv.setAdapter(new AdapterFeedsExpandable());
+
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onCreateView() called! +++");
+
         return v;
 
     }
@@ -130,21 +117,6 @@ public class Feeds extends Fragment implements
     public void onLoadFinished(Loader<ArrayList> loader, ArrayList data) {
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onLoadFinished() called! +++");
 
-        //abc = data;
-        //AdapterFeeds mAdapter;
-        //mAdapter = new AdapterFeeds(getActivity(), R.layout.feed_list, data,  new AdapterFeeds.BtnChartListener()
-        //{
-
-        //    public void onBtnClick(int position) {
-        //        // TODO Auto-generated method stub
-        //        // Call your function which creates and shows the dialog here
-        //        if (MainActivity.DEBUG) Log.i(TAG, "+++ onLoadFinished() onBtnClick called! +++");
-        //    }
-
-        //}
-        //);
-
-        //handler.sendEmptyMessage(2);
         elv.setAdapter(new AdapterFeedsExpand(getActivity()));
 
         getActivity().setProgressBarIndeterminateVisibility(false);
@@ -156,17 +128,9 @@ public class Feeds extends Fragment implements
 
     }
 
-    public interface OnFeedLoad {
 
-        public void OnFeedLoadComplete(ArrayList data);
 
-    }
 
-    public interface OnFeedListener {
-
-        public void onFeedSelected(String feedID, String strFeedTag, String strFeedID);
-
-    }
 
 
 

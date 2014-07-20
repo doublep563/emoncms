@@ -30,10 +30,10 @@ import java.util.ArrayList;
 
 
 public class MainActivity extends ActionBarActivity implements
-        Feeds.OnFeedListener,
+
         FeedChart.OnFeedChartListener,
-        StartUp.OnStartupListener,
-        Feeds.OnFeedLoad {
+        StartUp.OnStartupListener {
+
 
     //Check out for start up implementation http://www.informit.com/articles/article.aspx?p=2066699
     public static final boolean DEBUG = true;
@@ -347,11 +347,6 @@ public class MainActivity extends ActionBarActivity implements
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onStartUpCompleted() called! +++");
     }
 
-    @Override
-    public void OnFeedLoadComplete(ArrayList data) {
-
-        if (MainActivity.DEBUG) Log.i(TAG, "+++ OnFeedLoadComplete() called! +++");
-    }
 
     public void onFeedSelected(String strFeedID, String strFeedTag, String strFeedName) {
 

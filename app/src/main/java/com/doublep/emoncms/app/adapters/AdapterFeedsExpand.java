@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.doublep.emoncms.app.GetEmonData;
 import com.doublep.emoncms.app.MainActivity;
 import com.doublep.emoncms.app.R;
-import com.doublep.emoncms.app.Views.Feeds;
 import com.doublep.emoncms.app.models.FeedDetails;
 
 import java.util.ArrayList;
@@ -26,7 +25,6 @@ public class AdapterFeedsExpand extends BaseExpandableListAdapter {
     private final ArrayList<FeedDetails> items;
     Context mContext;
 
-    Feeds.OnFeedListener mListener;
 
     public AdapterFeedsExpand(Context context) {
         items = GetEmonData.feedList;
@@ -160,19 +158,17 @@ public class AdapterFeedsExpand extends BaseExpandableListAdapter {
 
             feedHolder.btn.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View arg0) {
+                public void onClick(View v) {
                     String btnTag = feedHolder.btn.getTag().toString();
                     int intTag = Integer.parseInt(btnTag);
                     FeedDetails feedDetails = items.get(intTag);
                     String strFeedID = feedDetails.getStrID();
                     String strFeedTag = feedDetails.getStrTag();
                     String strFeedName = feedDetails.getStrName();
-                    if (mListener != null) {
-                        mListener.onFeedSelected(strFeedID, strFeedTag, strFeedName);
-                    }
 
                 }
             });
+
             row.setTag(feedHolder);
 
             if (MainActivity.DEBUG) Log.i(TAG, "+++ getGroupView() row == null called! +++");
