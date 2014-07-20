@@ -17,7 +17,10 @@ import com.doublep.emoncms.app.loaders.LoadSummaryStatus;
 import java.util.ArrayList;
 
 /**
- * Fragment to display Summary Information
+ * Fragment to Manage Summary Information
+ *
+ * Load data from web page
+ * Populate in custom adapter
  */
 public class Summary extends ListFragment implements
         LoaderManager.LoaderCallbacks<ArrayList> {
@@ -33,10 +36,14 @@ public class Summary extends ListFragment implements
         // We have an Action Bar
         setHasOptionsMenu(true);
 
+        getLoaderManager().initLoader(LOADER_ID, null, this);
+        getActivity().setProgressBarIndeterminateVisibility(true);
 
         //TODO Add API field to Summary.xml
         //TODO OnCreate does not refresh preferences when fragment is reused.. Need to move to another methhod
         //TODO check other fragments for this behaviour
+        //TODO Tried using onResume but this causes the data to be loaded again. Need to avoid this behaviour.
+        //TODO Refresh button should handle all web calls after initial web call
 
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onCreate() called! +++");
     }
@@ -57,9 +64,6 @@ public class Summary extends ListFragment implements
     @Override
     public void onResume() {
         super.onResume();
-        getLoaderManager().initLoader(LOADER_ID, null, this);
-        getActivity().setProgressBarIndeterminateVisibility(true);
-
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onResume() called! +++");
     }
 

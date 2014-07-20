@@ -6,16 +6,16 @@ import android.app.LoaderManager;
 import android.content.Loader;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ExpandableListView;
 
 import com.doublep.emoncms.app.MainActivity;
 import com.doublep.emoncms.app.R;
+import com.doublep.emoncms.app.adapters.AdapterFeedsExpand;
 import com.doublep.emoncms.app.common;
 import com.doublep.emoncms.app.loaders.LoadFeeds;
 
@@ -35,19 +35,8 @@ public class Feeds extends Fragment implements
     private String strEmoncmsURL;
     private String strEmoncmsAPI;
     private ArrayList abc;
-    private final Handler handler = new Handler()  // handler for commiting fragment after data is loaded
-    {
-        @Override
-        public void handleMessage(Message msg) {
-            if (msg.what == 2) {
-                if (mListener != null) {
-                    mListener.OnFeedLoadComplete(abc);
-                }
-                if (MainActivity.DEBUG) Log.i(TAG, "+++ Handler() called! +++");
-                // commit the fragment
-            }
-        }
-    };
+
+    private ExpandableListView elv;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -65,11 +54,7 @@ public class Feeds extends Fragment implements
     @Override
     public void onResume() {
         super.onResume();
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        //TODO Add API field to Summary.xml
-        strEmoncmsURL = sharedPref.getString(common.PREF_KEY_EMONCMS_URL, getResources().getString(R.string.pref_default));
-        strEmoncmsAPI = sharedPref.getString(common.PREF_KEY_EMONCMS_API, getResources().getString(R.string.pref_default));
-        getLoaderManager().initLoader(LOADER_ID, null, this);
+
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onResume() called! +++");
     }
 
@@ -102,7 +87,11 @@ public class Feeds extends Fragment implements
 
         // We have an Action Bar
         setHasOptionsMenu(true);
-
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        //TODO Add API field to Summary.xml
+        strEmoncmsURL = sharedPref.getString(common.PREF_KEY_EMONCMS_URL, getResources().getString(R.string.pref_default));
+        strEmoncmsAPI = sharedPref.getString(common.PREF_KEY_EMONCMS_API, getResources().getString(R.string.pref_default));
+        getLoaderManager().initLoader(LOADER_ID, null, this);
 
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onCreate() called! +++");
     }
@@ -129,15 +118,19 @@ public class Feeds extends Fragment implements
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if (MainActivity.DEBUG) Log.i(TAG, "+++ onCreateView()  called! +++");
-        return super.onCreateView(inflater, container, savedInstanceState);
+        View v = inflater.inflate(R.layout.feed_list, null);
+        elv = (ExpandableListView) v.findViewById(R.id.listView);
+        // elv.setAdapter(new AdapterFeedsExpandable());
+        if (MainActivity.DEBUG) Log.i(TAG, "+++ onCreateView() called! +++");
+        return v;
+
     }
 
     @Override
     public void onLoadFinished(Loader<ArrayList> loader, ArrayList data) {
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onLoadFinished() called! +++");
 
-        abc = data;
+        //abc = data;
         //AdapterFeeds mAdapter;
         //mAdapter = new AdapterFeeds(getActivity(), R.layout.feed_list, data,  new AdapterFeeds.BtnChartListener()
         //{
@@ -151,8 +144,8 @@ public class Feeds extends Fragment implements
         //}
         //);
 
-        handler.sendEmptyMessage(2);
-
+        //handler.sendEmptyMessage(2);
+        elv.setAdapter(new AdapterFeedsExpand(getActivity()));
 
         getActivity().setProgressBarIndeterminateVisibility(false);
     }
@@ -168,5 +161,13 @@ public class Feeds extends Fragment implements
         public void OnFeedLoadComplete(ArrayList data);
 
     }
+
+    public interface OnFeedListener {
+
+        public void onFeedSelected(String feedID, String strFeedTag, String strFeedID);
+
+    }
+
+
 
 }
