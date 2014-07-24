@@ -1,7 +1,6 @@
 package com.doublep.emoncms.app;
 
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -93,48 +92,48 @@ public class MainActivity extends ActionBarActivity implements
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
-        getFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
 
-            @Override
-            public void onBackStackChanged() {
-                Fragment f = getFragmentManager().findFragmentById(R.id.content_frame);
-                if (f != null) {
-                    if (MainActivity.DEBUG)
-                        Log.i(TAG, "+++ onCreate() onBackStackChanged called! +++");
-                }
-
-            }
-        });
+        // Configuration Change or other system restore of Activity
+        if (savedInstanceState == null) {
+            if (MainActivity.DEBUG) Log.i(TAG, "+++ savedInstanceState() null called +++");
 
 
-        // Are the URL and API Preferences set?
-        // If so. show the Summary Fragment
-        // Else, show the StartUp fragment.
-        Fragment mFragment = null;
-        String strFragmentTag = "";
+            // Are the URL and API Preferences set?
+            // If so. show the Summary Fragment
+            // Else, show the StartUp fragment.
+            Fragment mFragment = null;
+            String strFragmentTag = "";
 
-        if (CheckPreferences()) {
-            mFragment = new Summary();
-            strFragmentTag = mFragment.getClass().getName();
+            if (CheckPreferences()) {
+                mFragment = new Summary();
+                strFragmentTag = mFragment.getClass().getName();
+                mDrawerList.setItemChecked(0, true);
+                setTitle(mNavTitles[0]);
 
                 if (MainActivity.DEBUG)
                     Log.i(TAG, "+++ CheckPreferences() New Summary called! +++");
 
 
-        } else {
-            mFragment = new StartUp();
-            strFragmentTag = mFragment.getClass().getName();
+            } else {
+                mFragment = new StartUp();
+                strFragmentTag = mFragment.getClass().getName();
 
-            if (MainActivity.DEBUG)
-                Log.i(TAG, "+++ CheckPreferences() StartUp Fragment called! +++");
+                if (MainActivity.DEBUG)
+                    Log.i(TAG, "+++ CheckPreferences() StartUp Fragment called! +++");
+            }
+
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+            transaction.add(R.id.content_frame, mFragment, strFragmentTag)
+                    //.addToBackStack(strFragmentTag)
+                    .commit();
+            if (MainActivity.DEBUG) Log.i(TAG, "+++ OnCreate() called! +++");
         }
+    }
 
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.replace(R.id.content_frame, mFragment, strFragmentTag)
-                .addToBackStack(strFragmentTag)
-                .commit();
-        if (MainActivity.DEBUG) Log.i(TAG, "+++ OnCreate() called! +++");
-
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if (MainActivity.DEBUG) Log.i(TAG, "+++ onRestoreInstanceState() called! +++");
     }
 
     @Override
@@ -147,6 +146,12 @@ public class MainActivity extends ActionBarActivity implements
     public void onResume() {
         super.onResume();
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onResume() called! +++");
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (MainActivity.DEBUG) Log.i(TAG, "+++ onSaveInstanceState() called! +++");
     }
 
     @Override
@@ -201,32 +206,66 @@ public class MainActivity extends ActionBarActivity implements
 
         Fragment mFragment = null;
         String strFragmentTag = "";
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
 
         switch (position) {
             // Summary
             case 0:
-                mFragment = new Summary();
-                strFragmentTag = mFragment.getClass().getName();
+                //Have we a Feeds Fragment. Yes - Hide it.
+                Fragment oFeeds = getFragmentManager().findFragmentById(R.id.content_frame);
+                if (oFeeds.getTag().toString().equalsIgnoreCase("com.doublep.emoncms.app.Views.Feeds")) {
+                    getFragmentManager().beginTransaction().hide(oFeeds).commit();
+                    if (MainActivity.DEBUG)
+                        Log.i(TAG, "+++ selectItem() Summary! +++ Feed Fragment exists. Let's hide it");
+
+                }
+                Fragment oSummary = getFragmentManager().findFragmentByTag("com.doublep.emoncms.app.Views.Summary");
+                if (oSummary == null) {
+                    mFragment = new Summary();
+                    strFragmentTag = mFragment.getClass().getName();
+
+                    transaction.add(R.id.content_frame, mFragment, strFragmentTag)
+                            //.addToBackStack(strFragmentTag)
+                            .commit();
+                    if (MainActivity.DEBUG) Log.i(TAG, "+++ selectItems() oSummary is null! +++ ");
+                } else {
+                    getFragmentManager().beginTransaction().show(oSummary).commit();
+                    if (MainActivity.DEBUG) Log.i(TAG, "+++ selectItems() oSummary show! +++ ");
+                }
                 break;
             // Feeds
             case 1:
-                mFragment = new Feeds();
-                strFragmentTag = mFragment.getClass().getName();
+                //Have we a Summary Fragment. Yes - hide it
+                Fragment xSummary = getFragmentManager().findFragmentByTag("com.doublep.emoncms.app.Views.Summary");
+                if (!(xSummary == null)) {
+                    getFragmentManager().beginTransaction().hide(xSummary).commit();
+                    if (MainActivity.DEBUG)
+                        Log.i(TAG, "+++ selectItem() Feeds! +++ Summary Fragment exists. Let's hide it");
+                }
+                Fragment xFeeds = getFragmentManager().findFragmentByTag("com.doublep.emoncms.app.Views.Feeds");
+                if (xFeeds == null) {
+                    mFragment = new Feeds();
+                    strFragmentTag = mFragment.getClass().getName();
+                    transaction.add(R.id.content_frame, mFragment, strFragmentTag)
+                            //.addToBackStack(strFragmentTag)
+                            .commit();
+                    if (MainActivity.DEBUG) Log.i(TAG, "+++ selectItems() xFeeds is null! +++ ");
+                } else {
+                    getFragmentManager().beginTransaction().show(xFeeds).commit();
+                    if (MainActivity.DEBUG) Log.i(TAG, "+++ selectItems() xFeeds show! +++ ");
+                }
+
                 break;
             default:
                 break;
         }
 
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.replace(R.id.content_frame, mFragment, strFragmentTag)
-                .addToBackStack(strFragmentTag)
-                .commit();
 
         // Highlight the selected item, update the title, and close the drawer
         mDrawerList.setItemChecked(position, true);
         setTitle(mNavTitles[position]);
         mDrawerLayout.closeDrawer(mDrawerList);
-        if (MainActivity.DEBUG) Log.i(TAG, "+++ selectItems() called! +++ Fragment=" + mFragment);
+        if (MainActivity.DEBUG) Log.i(TAG, "+++ selectItems() called! +++ ");
     }
 
     @Override
@@ -251,13 +290,39 @@ public class MainActivity extends ActionBarActivity implements
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onConfigurationChanged() called! +++");
     }
 
+
     @Override
     public void onBackPressed() {
-        if (getFragmentManager().getBackStackEntryCount() == 1) {
-            this.finish();
-        } else {
-            getFragmentManager().popBackStack();
+
+
+        Fragment f = getFragmentManager().findFragmentById(R.id.content_frame);
+
+        //This is a back key form the Feeds Fragment. Go back to the Summary fragment
+        // and set Navigation properties.
+        if (f.getTag().toString().equalsIgnoreCase("com.doublep.emoncms.app.Views.Feeds")) {
+            getFragmentManager().beginTransaction()
+                    .hide(f)
+                    .commit();
+            Fragment oSummary = getFragmentManager().findFragmentByTag("com.doublep.emoncms.app.Views.Summary");
+            String strFragmentTag = oSummary.getTag().toString();
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.content_frame, oSummary, strFragmentTag)
+                    .show(oSummary)
+                    .commit();
+
+
+            mDrawerList.setItemChecked(0, true);
+            setTitle(mNavTitles[0]);
+
+            if (MainActivity.DEBUG)
+                Log.i(TAG, "+++ onBackPressed() Feeds Fragment Check called! +++");
+
         }
+        // Exit App from the Summary View when Back Key Pressed
+        else if (f.getTag().toString().equalsIgnoreCase("com.doublep.emoncms.app.Views.Summary")) {
+            this.finish();
+        }
+
 
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onBackPressed() called! +++");
 
@@ -314,7 +379,6 @@ public class MainActivity extends ActionBarActivity implements
     }
 
 
-
     @Override
     public void onStartUpCompleted() {
         //TODO this won't work!!!!!!!!!!
@@ -325,7 +389,7 @@ public class MainActivity extends ActionBarActivity implements
 
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
             transaction.replace(R.id.content_frame, Summary)
-                    .addToBackStack(strFragmentTag)
+                    //.addToBackStack(strFragmentTag)
                     .commit();
             if (MainActivity.DEBUG)
                 Log.i(TAG, "+++ CheckPreferences() New Fragment called! +++");
@@ -337,7 +401,7 @@ public class MainActivity extends ActionBarActivity implements
 
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
             transaction.replace(R.id.content_frame, Startup)
-                    .addToBackStack(strFragmentTag)
+                    //.addToBackStack(strFragmentTag)
                     .commit();
 
 
@@ -361,7 +425,7 @@ public class MainActivity extends ActionBarActivity implements
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
 
         transaction.replace(R.id.content_frame, FeedChart, strFragmentTag)
-                .addToBackStack(strFragmentTag)
+                //.addToBackStack(strFragmentTag)
                 .commit();
 
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onFeedSelected() called! +++");
@@ -374,5 +438,6 @@ public class MainActivity extends ActionBarActivity implements
             selectItem(position);
         }
     }
+
 
 }

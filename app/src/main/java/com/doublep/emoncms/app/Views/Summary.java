@@ -30,11 +30,25 @@ public class Summary extends ListFragment implements
     private static final int LOADER_ID = 1;
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (MainActivity.DEBUG) Log.i(TAG, "+++ onSaveInstanceState() called! +++");
+    }
+
+    @Override
+    public void setRetainInstance(boolean retain) {
+        super.setRetainInstance(retain);
+        if (MainActivity.DEBUG) Log.i(TAG, "+++ setRetainInstance() called! +++");
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         // We have an Action Bar
         setHasOptionsMenu(true);
+
+        setRetainInstance(true);
 
         getLoaderManager().initLoader(LOADER_ID, null, this);
         getActivity().setProgressBarIndeterminateVisibility(true);
@@ -97,6 +111,7 @@ public class Summary extends ListFragment implements
         //TODO LoadSummaryStatus needs to Check Preferences to see what should be checked.
         return new LoadSummaryStatus(getActivity());
     }
+
 
     @Override
     public void onLoadFinished(Loader<ArrayList> loader, ArrayList data) {

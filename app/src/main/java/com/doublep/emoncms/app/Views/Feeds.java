@@ -81,11 +81,13 @@ public class Feeds extends Fragment implements
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onDetach() called! +++");
     }
 
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         // We have an Action Bar
         setHasOptionsMenu(true);
+        setRetainInstance(true);
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
         //TODO Add API field to Summary.xml
         strEmoncmsURL = sharedPref.getString(common.PREF_KEY_EMONCMS_URL, getResources().getString(R.string.pref_default));
