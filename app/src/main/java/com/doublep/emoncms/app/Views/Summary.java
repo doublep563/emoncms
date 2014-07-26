@@ -18,7 +18,7 @@ import java.util.ArrayList;
 
 /**
  * Fragment to Manage Summary Information
- *
+ * <p/>
  * Load data from web page
  * Populate in custom adapter
  */
@@ -29,17 +29,6 @@ public class Summary extends ListFragment implements
     private static final String TAG = "Summary";
     private static final int LOADER_ID = 1;
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        if (MainActivity.DEBUG) Log.i(TAG, "+++ onSaveInstanceState() called! +++");
-    }
-
-    @Override
-    public void setRetainInstance(boolean retain) {
-        super.setRetainInstance(retain);
-        if (MainActivity.DEBUG) Log.i(TAG, "+++ setRetainInstance() called! +++");
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

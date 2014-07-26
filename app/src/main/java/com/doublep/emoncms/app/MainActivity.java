@@ -20,17 +20,13 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.doublep.emoncms.app.Views.FeedChart;
-import com.doublep.emoncms.app.Views.FeedChartDisplay;
 import com.doublep.emoncms.app.Views.Feeds;
 import com.doublep.emoncms.app.Views.StartUp;
 import com.doublep.emoncms.app.Views.Summary;
 
-import java.util.ArrayList;
-
 
 public class MainActivity extends ActionBarActivity implements
-
-        FeedChart.OnFeedChartListener,
+        Feeds.OnFeedSelected,
         StartUp.OnStartupListener {
 
 
@@ -101,8 +97,8 @@ public class MainActivity extends ActionBarActivity implements
             // Are the URL and API Preferences set?
             // If so. show the Summary Fragment
             // Else, show the StartUp fragment.
-            Fragment mFragment = null;
-            String strFragmentTag = "";
+            Fragment mFragment;
+            String strFragmentTag;
 
             if (CheckPreferences()) {
                 Fragment oSummary = getFragmentManager().findFragmentByTag("com.doublep.emoncms.app.Views.Summary");
@@ -165,12 +161,6 @@ public class MainActivity extends ActionBarActivity implements
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        if (MainActivity.DEBUG) Log.i(TAG, "+++ onSaveInstanceState() called! +++");
-    }
-
-    @Override
     public void onPause() {
         super.onPause();
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onPause() called! +++");
@@ -220,8 +210,8 @@ public class MainActivity extends ActionBarActivity implements
 
     private void selectItem(int position) {
 
-        Fragment mFragment = null;
-        String strFragmentTag = "";
+        Fragment mFragment;
+        String strFragmentTag;
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
 
         switch (position) {
@@ -229,7 +219,7 @@ public class MainActivity extends ActionBarActivity implements
             case 0:
                 //Have we a Feeds Fragment. Yes - Hide it.
                 Fragment oFeeds = getFragmentManager().findFragmentById(R.id.content_frame);
-                if (oFeeds.getTag().toString().equalsIgnoreCase("com.doublep.emoncms.app.Views.Feeds")) {
+                if (oFeeds.getTag().equalsIgnoreCase("com.doublep.emoncms.app.Views.Feeds")) {
                     //getFragmentManager().beginTransaction().hide(oFeeds).commit();
                     if (MainActivity.DEBUG)
                         Log.i(TAG, "+++ selectItem() Summary! +++ Feed Fragment exists. Let's hide it");
@@ -325,12 +315,12 @@ public class MainActivity extends ActionBarActivity implements
 
         //This is a back key form the Feeds Fragment. Go back to the Summary fragment
         // and set Navigation properties.
-        if (f.getTag().toString().equalsIgnoreCase("com.doublep.emoncms.app.Views.Feeds")) {
+        if (f.getTag().equalsIgnoreCase("com.doublep.emoncms.app.Views.Feeds")) {
             // getFragmentManager().beginTransaction()
             //        .hide(f)
             //       .commit();
             Fragment oSummary = getFragmentManager().findFragmentByTag("com.doublep.emoncms.app.Views.Summary");
-            String strFragmentTag = oSummary.getTag().toString();
+            String strFragmentTag = oSummary.getTag();
             getFragmentManager().beginTransaction()
                     .replace(R.id.content_frame, oSummary, strFragmentTag)
                     .show(oSummary)
@@ -343,9 +333,25 @@ public class MainActivity extends ActionBarActivity implements
             if (MainActivity.DEBUG)
                 Log.i(TAG, "+++ onBackPressed() Feeds Fragment Check called! +++");
 
+        } else if (f.getTag().equalsIgnoreCase("com.doublep.emoncms.app.Views.FeedChart")) {
+
+            Fragment oFeeds = getFragmentManager().findFragmentByTag("com.doublep.emoncms.app.Views.Feeds");
+            String strFragmentTag = oFeeds.getTag();
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.content_frame, oFeeds, strFragmentTag)
+                    .show(oFeeds)
+                    .commit();
+
+
+            mDrawerList.setItemChecked(0, true);
+            setTitle(mNavTitles[0]);
+
+            if (MainActivity.DEBUG)
+                Log.i(TAG, "+++ onBackPressed() Feeds Fragment Check called! +++");
+
         }
         // Exit App from the Summary View when Back Key Pressed
-        else if (f.getTag().toString().equalsIgnoreCase("com.doublep.emoncms.app.Views.Summary")) {
+        else if (f.getTag().equalsIgnoreCase("com.doublep.emoncms.app.Views.Summary")) {
             this.finish();
         }
 
@@ -376,34 +382,6 @@ public class MainActivity extends ActionBarActivity implements
         }
 
     }
-
-
-    public void onFeedChartSelected(String strFeedID, String strFeedTag, String strFeedName, Bundle feedData) {
-        mTitle = "Feed Chart";
-        setTitle((mTitle));
-        ArrayList mFeedData;
-        mFeedData = (ArrayList) feedData.getParcelableArrayList("feedData");
-
-        Fragment FeedChartDisplay = new FeedChartDisplay();
-        String strFragmentTag = FeedChartDisplay.getClass().getName();
-        Bundle args = new Bundle();
-        args.putString("strFeedID", strFeedID);
-        args.putString("strFeedTag", strFeedTag);
-        args.putString("strFeedName", strFeedName);
-        args.putParcelableArrayList("feedData", mFeedData);
-
-        FeedChartDisplay.setArguments(args);
-
-
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.add(R.id.content_frame, FeedChartDisplay, strFragmentTag)
-                //.addToBackStack(strFragmentTag)
-                .commit();
-
-        if (MainActivity.DEBUG) Log.i(TAG, "+++ onFeedChartSelected() called! +++");
-
-    }
-
 
     @Override
     public void onStartUpCompleted() {
@@ -457,6 +435,7 @@ public class MainActivity extends ActionBarActivity implements
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onFeedSelected() called! +++");
 
     }
+
 
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override

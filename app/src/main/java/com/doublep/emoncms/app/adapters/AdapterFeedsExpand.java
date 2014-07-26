@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.doublep.emoncms.app.GetEmonData;
 import com.doublep.emoncms.app.MainActivity;
 import com.doublep.emoncms.app.R;
+import com.doublep.emoncms.app.Views.Feeds;
 import com.doublep.emoncms.app.models.FeedDetails;
 
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ public class AdapterFeedsExpand extends BaseExpandableListAdapter {
 
     private static final String TAG = "AdapterFeedsExpand";
     private final ArrayList<FeedDetails> items;
-    Context mContext;
+    private final Context mContext;
 
 
     public AdapterFeedsExpand(Context context) {
@@ -156,17 +157,8 @@ public class AdapterFeedsExpand extends BaseExpandableListAdapter {
             feedHolder.btn.setTag(groupPosition);
 
 
-            feedHolder.btn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String btnTag = feedHolder.btn.getTag().toString();
-                    int intTag = Integer.parseInt(btnTag);
-                    FeedDetails feedDetails = items.get(intTag);
-                    String strFeedID = feedDetails.getStrID();
-                    String strFeedTag = feedDetails.getStrTag();
-                    String strFeedName = feedDetails.getStrName();
+            feedHolder.btn.setOnClickListener(new Feeds.OnClickListener() {
 
-                }
             });
 
             row.setTag(feedHolder);

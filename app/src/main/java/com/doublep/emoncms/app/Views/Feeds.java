@@ -1,5 +1,6 @@
 package com.doublep.emoncms.app.Views;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.LoaderManager;
 import android.content.Loader;
@@ -15,11 +16,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 
+import com.doublep.emoncms.app.GetEmonData;
 import com.doublep.emoncms.app.MainActivity;
 import com.doublep.emoncms.app.R;
 import com.doublep.emoncms.app.adapters.AdapterFeedsExpand;
 import com.doublep.emoncms.app.common;
 import com.doublep.emoncms.app.loaders.LoadFeeds;
+import com.doublep.emoncms.app.models.FeedDetails;
 
 import java.util.ArrayList;
 
@@ -33,14 +36,10 @@ public class Feeds extends Fragment implements
     // The Loader's id (this id is specific to the ListFragment's LoaderManager)
     private static final int LOADER_ID = 2;
     private static final String TAG = "Feeds";
+    private static OnFeedSelected mCallback;
     private String strEmoncmsURL;
     private String strEmoncmsAPI;
     private ExpandableListView elv;
-
-    @Override
-    public void setRetainInstance(boolean retain) {
-        super.setRetainInstance(retain);
-    }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -101,9 +100,11 @@ public class Feeds extends Fragment implements
 
         }
 
+        getActivity().setProgressBarIndeterminateVisibility(true);
+
         // We have an Action Bar
         setHasOptionsMenu(true);
-        setRetainInstance(true);
+
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
         //TODO Add API field to Summary.xml
         strEmoncmsURL = sharedPref.getString(common.PREF_KEY_EMONCMS_URL, getResources().getString(R.string.pref_default));
@@ -166,11 +167,32 @@ public class Feeds extends Fragment implements
         }
     }
 
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            mCallback = (OnFeedSelected) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnHeadlineSelectedListener");
+        }
+    }
 
+    public interface OnFeedSelected {
+        public void onFeedSelected(String strFeedID, String strFeedTag, String strFeedName);
+    }
 
-
-
-
-
-
+    public static class OnClickListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            int position = Integer.parseInt(v.getTag().toString());
+            ArrayList<FeedDetails> items = GetEmonData.feedList;
+            FeedDetails feedDetails = items.get(position);
+            String strFeedID = feedDetails.getStrID();
+            String strFeedTag = feedDetails.getStrTag();
+            String strFeedName = feedDetails.getStrName();
+            mCallback.onFeedSelected(strFeedID, strFeedTag, strFeedName);
+            if (MainActivity.DEBUG) Log.i(TAG, "+++ OnClickListener() called! +++");
+        }
+    }
 }
