@@ -45,6 +45,12 @@ public class Summary extends ListFragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        if (savedInstanceState == null) {
+            if (MainActivity.DEBUG)
+                Log.i(TAG, "+++ onCreate() savedInstanceState is null called! +++");
+
+        }
+
         // We have an Action Bar
         setHasOptionsMenu(true);
 

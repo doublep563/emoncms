@@ -105,8 +105,20 @@ public class MainActivity extends ActionBarActivity implements
             String strFragmentTag = "";
 
             if (CheckPreferences()) {
-                mFragment = new Summary();
-                strFragmentTag = mFragment.getClass().getName();
+                Fragment oSummary = getFragmentManager().findFragmentByTag("com.doublep.emoncms.app.Views.Summary");
+
+                if (oSummary == null) {
+                    mFragment = new Summary();
+                    strFragmentTag = mFragment.getClass().getName();
+
+                    getFragmentManager().beginTransaction().add(R.id.content_frame, mFragment, strFragmentTag)
+                            .addToBackStack(null)
+                            .commit();
+                    if (MainActivity.DEBUG) Log.i(TAG, "+++ selectItems() oSummary is null! +++ ");
+                } else {
+                    if (MainActivity.DEBUG)
+                        Log.i(TAG, "+++ selectItems() oSummary is not  null! +++ ");
+                }
                 mDrawerList.setItemChecked(0, true);
                 setTitle(mNavTitles[0]);
 
@@ -117,17 +129,21 @@ public class MainActivity extends ActionBarActivity implements
             } else {
                 mFragment = new StartUp();
                 strFragmentTag = mFragment.getClass().getName();
-
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.add(R.id.content_frame, mFragment, strFragmentTag)
+                        //.addToBackStack(strFragmentTag)
+                        .commit();
                 if (MainActivity.DEBUG)
                     Log.i(TAG, "+++ CheckPreferences() StartUp Fragment called! +++");
+
             }
 
-            FragmentTransaction transaction = getFragmentManager().beginTransaction();
-            transaction.add(R.id.content_frame, mFragment, strFragmentTag)
-                    //.addToBackStack(strFragmentTag)
-                    .commit();
-            if (MainActivity.DEBUG) Log.i(TAG, "+++ OnCreate() called! +++");
+
+        } else {
+
+            if (MainActivity.DEBUG) Log.i(TAG, "+++ savedInstanceState() is not null called! +++");
         }
+        if (MainActivity.DEBUG) Log.i(TAG, "+++ OnCreate() called! +++");
     }
 
     @Override
@@ -214,22 +230,27 @@ public class MainActivity extends ActionBarActivity implements
                 //Have we a Feeds Fragment. Yes - Hide it.
                 Fragment oFeeds = getFragmentManager().findFragmentById(R.id.content_frame);
                 if (oFeeds.getTag().toString().equalsIgnoreCase("com.doublep.emoncms.app.Views.Feeds")) {
-                    getFragmentManager().beginTransaction().hide(oFeeds).commit();
+                    //getFragmentManager().beginTransaction().hide(oFeeds).commit();
                     if (MainActivity.DEBUG)
                         Log.i(TAG, "+++ selectItem() Summary! +++ Feed Fragment exists. Let's hide it");
 
                 }
+                // Do we have an existing instance of the Summary Fragment
                 Fragment oSummary = getFragmentManager().findFragmentByTag("com.doublep.emoncms.app.Views.Summary");
                 if (oSummary == null) {
                     mFragment = new Summary();
                     strFragmentTag = mFragment.getClass().getName();
 
-                    transaction.add(R.id.content_frame, mFragment, strFragmentTag)
-                            //.addToBackStack(strFragmentTag)
+                    getFragmentManager().beginTransaction()
+                            .add(R.id.content_frame, mFragment, strFragmentTag)
+                            .addToBackStack(null)
                             .commit();
                     if (MainActivity.DEBUG) Log.i(TAG, "+++ selectItems() oSummary is null! +++ ");
                 } else {
-                    getFragmentManager().beginTransaction().show(oSummary).commit();
+                    getFragmentManager().beginTransaction()
+                            .replace(R.id.content_frame, oSummary)
+                            .show(oSummary)
+                            .commit();
                     if (MainActivity.DEBUG) Log.i(TAG, "+++ selectItems() oSummary show! +++ ");
                 }
                 break;
@@ -246,12 +267,17 @@ public class MainActivity extends ActionBarActivity implements
                 if (xFeeds == null) {
                     mFragment = new Feeds();
                     strFragmentTag = mFragment.getClass().getName();
-                    transaction.add(R.id.content_frame, mFragment, strFragmentTag)
-                            //.addToBackStack(strFragmentTag)
+                    transaction
+                            .add(R.id.content_frame, mFragment, strFragmentTag)
+                            .addToBackStack(null)
                             .commit();
                     if (MainActivity.DEBUG) Log.i(TAG, "+++ selectItems() xFeeds is null! +++ ");
                 } else {
-                    getFragmentManager().beginTransaction().show(xFeeds).commit();
+                    strFragmentTag = xFeeds.getClass().getName();
+                    getFragmentManager().beginTransaction()
+                            .replace(R.id.content_frame, xFeeds, strFragmentTag)
+                                    // .show(xFeeds)
+                            .commit();
                     if (MainActivity.DEBUG) Log.i(TAG, "+++ selectItems() xFeeds show! +++ ");
                 }
 
@@ -300,9 +326,9 @@ public class MainActivity extends ActionBarActivity implements
         //This is a back key form the Feeds Fragment. Go back to the Summary fragment
         // and set Navigation properties.
         if (f.getTag().toString().equalsIgnoreCase("com.doublep.emoncms.app.Views.Feeds")) {
-            getFragmentManager().beginTransaction()
-                    .hide(f)
-                    .commit();
+            // getFragmentManager().beginTransaction()
+            //        .hide(f)
+            //       .commit();
             Fragment oSummary = getFragmentManager().findFragmentByTag("com.doublep.emoncms.app.Views.Summary");
             String strFragmentTag = oSummary.getTag().toString();
             getFragmentManager().beginTransaction()

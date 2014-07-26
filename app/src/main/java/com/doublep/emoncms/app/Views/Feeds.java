@@ -8,6 +8,9 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
@@ -28,19 +31,26 @@ public class Feeds extends Fragment implements
         LoaderManager.LoaderCallbacks<ArrayList> {
 
     // The Loader's id (this id is specific to the ListFragment's LoaderManager)
-    private static final int LOADER_ID = 1;
+    private static final int LOADER_ID = 2;
     private static final String TAG = "Feeds";
-
     private String strEmoncmsURL;
     private String strEmoncmsAPI;
-
     private ExpandableListView elv;
 
+    @Override
+    public void setRetainInstance(boolean retain) {
+        super.setRetainInstance(retain);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
+        getLoaderManager().initLoader(LOADER_ID, null, this);
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onActivityCreated() called! +++");
     }
 
@@ -85,6 +95,12 @@ public class Feeds extends Fragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        if (savedInstanceState == null) {
+            if (MainActivity.DEBUG)
+                Log.i(TAG, "+++ onCreate() savedInstanceState is null called! +++");
+
+        }
+
         // We have an Action Bar
         setHasOptionsMenu(true);
         setRetainInstance(true);
@@ -92,7 +108,7 @@ public class Feeds extends Fragment implements
         //TODO Add API field to Summary.xml
         strEmoncmsURL = sharedPref.getString(common.PREF_KEY_EMONCMS_URL, getResources().getString(R.string.pref_default));
         strEmoncmsAPI = sharedPref.getString(common.PREF_KEY_EMONCMS_API, getResources().getString(R.string.pref_default));
-        getLoaderManager().initLoader(LOADER_ID, null, this);
+
 
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onCreate() called! +++");
     }
@@ -129,6 +145,27 @@ public class Feeds extends Fragment implements
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onLoadReset() called! +++");
 
     }
+
+    @Override
+    public void onCreateOptionsMenu(
+            Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_refresh, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // handle item selection
+        switch (item.getItemId()) {
+            case R.id.action_refresh:
+                getActivity().setProgressBarIndeterminateVisibility(true);
+                getLoaderManager().restartLoader(LOADER_ID, null, this);
+                if (MainActivity.DEBUG) Log.i(TAG, "+++ onOptionsItemSelected() called! +++");
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
 
 
 
