@@ -224,9 +224,4 @@ public class FeedChart extends Fragment implements
         if (MainActivity.DEBUG) Log.i(TAG, "+++ LoadData() called! +++");
     }
 
-    private interface OnFeedChartListener {
-
-        public void onFeedChartSelected(String strFeedID, String strFeedTag, String strFeedName, Bundle feedData);
-
-    }
 }

@@ -29,6 +29,7 @@ public class StartUp extends Fragment implements
         LoaderManager.LoaderCallbacks<Bundle> {
 
     private static final String TAG = "StartUp";
+    private static final int LOADER_ID = 1;
     private String strURL;
     private String strAPI;
     private EditText mURL;
@@ -36,7 +37,19 @@ public class StartUp extends Fragment implements
     private TextView mErrorDescription;
     private TextView mErrorText;
     private OnStartupListener mListener;
-
+    private final Handler handler = new Handler()  // handler for commiting fragment after data is loaded
+    {
+        @Override
+        public void handleMessage(Message msg) {
+            if (msg.what == 2) {
+                if (mListener != null) {
+                    mListener.onStartUpCompleted();
+                }
+                if (MainActivity.DEBUG) Log.i(TAG, "+++ Handler() called! +++");
+                // commit the fragment
+            }
+        }
+    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -46,9 +59,9 @@ public class StartUp extends Fragment implements
 
         assert rootView != null;
         mURL = (EditText) rootView.findViewById(R.id.url);
-         mAPI = (EditText) rootView.findViewById(R.id.api);
-         mErrorDescription  = (TextView) rootView.findViewById(R.id.txtErrorDescription);
-         mErrorText  = (TextView) rootView.findViewById(R.id.txtErrorText);
+        mAPI = (EditText) rootView.findViewById(R.id.api);
+        mErrorDescription = (TextView) rootView.findViewById(R.id.txtErrorDescription);
+        mErrorText = (TextView) rootView.findViewById(R.id.txtErrorText);
 
         Button btnCancel = (Button) rootView.findViewById(R.id.btnCancel);
         btnCancel.setOnClickListener((new View.OnClickListener() {
@@ -73,16 +86,16 @@ public class StartUp extends Fragment implements
 
                 if (MainActivity.DEBUG) Log.i(TAG, "URL is " + strURL);
                 if (MainActivity.DEBUG) Log.i(TAG, "API is " + strAPI);
-                if (MainActivity.DEBUG) Log.i(TAG, "+++ btnSave() onClick called! +++" + strURL + strAPI);
+                if (MainActivity.DEBUG)
+                    Log.i(TAG, "+++ btnSave() onClick called! +++" + strURL + strAPI);
 
                 Loader<Object> mLoader = getLoaderManager().getLoader(LOADER_ID);
-                if(mLoader == null ){
+                if (mLoader == null) {
 
-                    if (MainActivity.DEBUG) Log.i(TAG, "+++ btnSave() initLoader called! +++" );
+                    if (MainActivity.DEBUG) Log.i(TAG, "+++ btnSave() initLoader called! +++");
                     getLoaderManager().initLoader(LOADER_ID, null, StartUp.this);
-                }
-                else {
-                    if (MainActivity.DEBUG) Log.i(TAG, "+++ btnSave() restartLoader called! +++" );
+                } else {
+                    if (MainActivity.DEBUG) Log.i(TAG, "+++ btnSave() restartLoader called! +++");
                     getLoaderManager().restartLoader(LOADER_ID, null, StartUp.this);
                 }
 
@@ -93,9 +106,6 @@ public class StartUp extends Fragment implements
 
         return rootView;
     }
-
-    private static final int LOADER_ID = 1;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -173,17 +183,16 @@ public class StartUp extends Fragment implements
     public void onLoadFinished(Loader<Bundle> loader, Bundle data) {
         Bundle mBundle;
         mBundle = data;
-        if (mBundle.containsKey("Exception")){
+        if (mBundle.containsKey("Exception")) {
             mErrorDescription.setVisibility(View.VISIBLE);
             mErrorText.setText(mBundle.getString("Exception"));
             mErrorText.setVisibility(View.VISIBLE);
-            if (MainActivity.DEBUG) Log.i(TAG, "+++ onLoadFinished() mBundle Exception called! +++");
-        }
-
-        else {
+            if (MainActivity.DEBUG)
+                Log.i(TAG, "+++ onLoadFinished() mBundle Exception called! +++");
+        } else {
             //TODO This needs to be moved to Preferences class or use method from class to standardise
             //TODO updating of preferences e.g. removing /n from text
-            //TODO Validate input and test. What happens with no "http://"? Invalid URL or API Key?
+            //TODO Validate input and expandable_sign. What happens with no "http://"? Invalid URL or API Key?
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
             SharedPreferences.Editor editor = prefs.edit();
             editor.putString(common.PREF_KEY_EMONCMS_URL, strURL);
@@ -191,7 +200,8 @@ public class StartUp extends Fragment implements
             editor.commit();
             handler.sendEmptyMessage(2);
 
-            if (MainActivity.DEBUG) Log.i(TAG, "+++ onLoadFinished() mBundle No Exception called! +++");
+            if (MainActivity.DEBUG)
+                Log.i(TAG, "+++ onLoadFinished() mBundle No Exception called! +++");
         }
 
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onLoadFinished() called! +++");
@@ -208,20 +218,4 @@ public class StartUp extends Fragment implements
         public void onStartUpCompleted();
 
     }
-
-    private final Handler handler = new Handler()  // handler for commiting fragment after data is loaded
-    {
-        @Override
-        public void handleMessage(Message msg)
-        {
-            if(msg.what == 2)
-            {
-                if (mListener != null) {
-                    mListener.onStartUpCompleted();
-                }
-                if (MainActivity.DEBUG) Log.i(TAG, "+++ Handler() called! +++");
-                // commit the fragment
-            }
-        }
-    };
 }

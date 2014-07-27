@@ -371,15 +371,7 @@ public class MainActivity extends ActionBarActivity implements
         if (MainActivity.DEBUG) Log.i(TAG, "URL is " + strEmoncmsURL);
         if (MainActivity.DEBUG) Log.i(TAG, "API is " + strEmoncmsAPI);
         //TODO Protect against empty string in these fields
-        if (strEmoncmsURL.equalsIgnoreCase(getResources().getString(R.string.pref_default))) {
-
-            return false;
-        } else if (strEmoncmsAPI.equalsIgnoreCase(getResources().getString(R.string.pref_default))) {
-
-            return false;
-        } else {
-            return true;
-        }
+        return !strEmoncmsURL.equalsIgnoreCase(getResources().getString(R.string.pref_default)) && !strEmoncmsAPI.equalsIgnoreCase(getResources().getString(R.string.pref_default));
 
     }
 

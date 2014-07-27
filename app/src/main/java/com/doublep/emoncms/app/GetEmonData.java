@@ -32,7 +32,6 @@ public class GetEmonData {
 
     private static final String TAG = "GetEmonData";
     public static ArrayList<FeedDetails> feedList = null;
-    private static Context mContext;
 
     public static ArrayList<FeedDetails> GetFeeds(String strURL, String strAPI) {
         // JSON Node names
@@ -127,7 +126,8 @@ public class GetEmonData {
             }
         });
 
-
+        if (MainActivity.DEBUG)
+            Log.i(TAG, "+++ GetFeeds() called! +++");
         return feedList;
     }
 

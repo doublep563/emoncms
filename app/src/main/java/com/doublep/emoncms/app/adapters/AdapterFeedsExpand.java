@@ -122,7 +122,9 @@ public class AdapterFeedsExpand extends BaseExpandableListAdapter {
 
     @Override
     public void onGroupExpanded(int groupPosition) {
+
         super.onGroupExpanded(groupPosition);
+
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onGroupExpanded() called! +++");
     }
 
@@ -143,21 +145,19 @@ public class AdapterFeedsExpand extends BaseExpandableListAdapter {
 
             LayoutInflater view = (LayoutInflater) mContext.getSystemService
                     (Context.LAYOUT_INFLATER_SERVICE);
-            //LayoutInflater view = MainActiv.getLayoutInflater();
+
 
             row = view.inflate(R.layout.feed_list_detail, parent, false);
 
             feedHolder = new FeedHolder();
             feedHolder.txtFeedName = (TextView) row.findViewById(R.id.textView_name);
             feedHolder.txtFeedTag = (TextView) row.findViewById(R.id.textView_tag);
-            feedHolder.txtFeedValue = (TextView) row.findViewById(R.id.textView_value);
-            feedHolder.txtFeedUpdated = (TextView) row.findViewById(R.id.lastUpdated);
-            feedHolder.txtFeedLight = (TextView) row.findViewById(R.id.traffic_light);
-            feedHolder.btn = (Button) row.findViewById(R.id.btnChart);
-            feedHolder.btn.setTag(groupPosition);
+            feedHolder.btnFeedValue = (Button) row.findViewById(R.id.button_value);
+            feedHolder.btnFeedValue.setTag(groupPosition);
+            //feedHolder.viewPlusSign =  row.findViewById(R.id.plus_sign);
+            feedHolder.viewVerticalLine = row.findViewById(R.id.vertical_line);
 
-
-            feedHolder.btn.setOnClickListener(new Feeds.OnClickListener() {
+            feedHolder.btnFeedValue.setOnClickListener(new Feeds.OnClickListener() {
 
             });
 
@@ -166,7 +166,7 @@ public class AdapterFeedsExpand extends BaseExpandableListAdapter {
             if (MainActivity.DEBUG) Log.i(TAG, "+++ getGroupView() row == null called! +++");
         } else {
             feedHolder = (FeedHolder) convertView.getTag();
-            feedHolder.btn.setTag(groupPosition);
+            feedHolder.btnFeedValue.setTag(groupPosition);
 
             if (MainActivity.DEBUG) Log.i(TAG, "+++ getGroupView() row not null called! +++");
         }
@@ -174,18 +174,23 @@ public class AdapterFeedsExpand extends BaseExpandableListAdapter {
 
         feedHolder.txtFeedName.setText(feedDetails.getStrName());
         feedHolder.txtFeedTag.setText(feedDetails.getStrTag());
-        feedHolder.txtFeedValue.setText(feedDetails.getStrValue());
-        feedHolder.txtFeedUpdated.setText("Updated " + feedDetails.getStrTime() + " Secs Ago");
+        feedHolder.btnFeedValue.setText(feedDetails.getStrValue());
 
         int val = Integer.parseInt(feedDetails.getStrTime());
-        if (val > 40) {
-            feedHolder.txtFeedLight.setBackgroundResource(R.drawable.traffic_light_red);
-        } else if (val > 20) {
-            feedHolder.txtFeedLight.setBackgroundResource(R.drawable.traffic_light_amber);
+        if (val > 120) {
+            feedHolder.btnFeedValue.setBackgroundResource(R.drawable.traffic_light_red);
+        } else if (val > 60) {
+            feedHolder.btnFeedValue.setBackgroundResource(R.drawable.traffic_light_amber);
         } else {
-            feedHolder.txtFeedLight.setBackgroundResource(R.drawable.traffic_light_green);
+            feedHolder.btnFeedValue.setBackgroundResource(R.drawable.traffic_light_green);
         }
         if (MainActivity.DEBUG) Log.i(TAG, "+++ getGroupView() called! +++");
+
+        if (isExpanded) {
+            feedHolder.viewVerticalLine.setVisibility(View.INVISIBLE);
+        } else {
+            feedHolder.viewVerticalLine.setVisibility(View.VISIBLE);
+        }
         return row;
     }
 
@@ -202,10 +207,12 @@ public class AdapterFeedsExpand extends BaseExpandableListAdapter {
     class FeedHolder {
         TextView txtFeedName;
         TextView txtFeedTag;
-        TextView txtFeedValue;
-        TextView txtFeedUpdated;
-        TextView txtFeedLight;
-        Button btn;
+        Button btnFeedValue;
+        //View viewPlusSign;
+        View viewVerticalLine;
+        //TextView txtFeedUpdated;
+        //TextView txtFeedLight;
+        //Button btn;
 
 
     }

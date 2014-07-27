@@ -1,9 +1,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
+    android:baselineAligned="false"
     android:orientation="horizontal"
-    android:padding="24dp"
-    android:background="@drawable/feed_list_background">
+    android:padding="24dp">
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -22,55 +22,40 @@
             android:id="@+id/textView_tag"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             android:text="@string/feed_tag"
-            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <include
+            android:id="@+id/plus_sign"
+            layout="@layout/expandable_sign"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:layout_marginTop="16dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/emoncms_last_updated"
-            android:id="@+id/lastUpdated"
-            android:layout_marginTop="32dp" />
-
-        <include layout="@layout/traffic_light"/>
 
     </LinearLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="match_parent"
         android:layout_weight="3"
-        android:orientation="vertical">
-        <TextView
-            android:id="@+id/textView_value"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:text="@string/feed_value"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:background="@drawable/value_background"
-            android:textColor="@android:color/white"
-            android:layout_gravity="center"
-            android:gravity="center_vertical|center_horizontal"
-            android:layout_alignParentLeft="false"
-            android:layout_marginLeft="21dp"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="0dp"
-            android:layout_alignParentRight="true" />
+        android:orientation="horizontal">
 
         <Button
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="32dp"
-            android:text="Chart"
-            android:id="@+id/btnChart"
+            android:id="@+id/button_value"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_gravity="center"
+            android:background="@drawable/traffic_light_red"
             android:focusable="false"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/graph1"
-            android:layout_below="@+id/textView_value" />
+            android:shadowColor="#A8A8A8"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="5"
+            android:text="@string/feed_value"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@android:color/black" />
 
 
-    </RelativeLayout>
+    </LinearLayout>
 </LinearLayout>

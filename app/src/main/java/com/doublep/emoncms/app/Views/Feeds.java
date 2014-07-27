@@ -42,11 +42,6 @@ public class Feeds extends Fragment implements
     private ExpandableListView elv;
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-    }
-
-    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         getLoaderManager().initLoader(LOADER_ID, null, this);
@@ -126,6 +121,7 @@ public class Feeds extends Fragment implements
         View v = inflater.inflate(R.layout.feed_list, null);
         elv = (ExpandableListView) v.findViewById(R.id.listView);
 
+
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onCreateView() called! +++");
 
         return v;
@@ -195,4 +191,5 @@ public class Feeds extends Fragment implements
             if (MainActivity.DEBUG) Log.i(TAG, "+++ OnClickListener() called! +++");
         }
     }
+
 }
