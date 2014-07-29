@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:divider="@color/Black">
+
+
+    <TableRow
+        android:id="@+id/trURL"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/table_border"
+        android:clickable="true"
+        android:minHeight="96dp">
+
+        <TextView
+            android:id="@+id/txtErrorText"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="6"
+            android:gravity="center_vertical|center_horizontal"
+            android:paddingRight="24dp"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/URLStatus"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center_vertical|right"
+                android:background="@drawable/traffic_light_green" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight=".5">
+
+            <Button
+                android:id="@+id/btnArrow"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center_vertical|right"
+                android:background="@drawable/arrow"
+                android:clickable="false"
+                android:rotation="90" />
+        </LinearLayout>
+
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/trFeeds"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/table_border"
+        android:clickable="true"
+        android:minHeight="96dp">
+
+        <TextView
+            android:id="@+id/txtFeedText"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="6"
+            android:gravity="center_vertical|center_horizontal"
+            android:paddingRight="24dp"
+            android:text="@string/emoncms_feed_summary"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/FeedStatus"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center_vertical|right"
+                android:background="@drawable/traffic_light_green" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight=".5">
+
+            <Button
+                android:id="@+id/btnArrow1"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center_vertical|right"
+                android:background="@drawable/arrow"
+                android:clickable="false"
+                android:rotation="90" />
+        </LinearLayout>
+
+    </TableRow>
+</TableLayout>
+

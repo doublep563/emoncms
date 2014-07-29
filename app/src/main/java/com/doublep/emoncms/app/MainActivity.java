@@ -14,7 +14,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -23,9 +22,11 @@ import com.doublep.emoncms.app.Views.FeedChart;
 import com.doublep.emoncms.app.Views.Feeds;
 import com.doublep.emoncms.app.Views.StartUp;
 import com.doublep.emoncms.app.Views.Summary;
+import com.doublep.emoncms.app.Views.WebPage;
 
 
 public class MainActivity extends ActionBarActivity implements
+        Summary.OnTableRowClicked,
         Feeds.OnFeedSelected,
         StartUp.OnStartupListener {
 
@@ -44,7 +45,7 @@ public class MainActivity extends ActionBarActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+        //requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
         setContentView(R.layout.activity_main);
 
@@ -343,11 +344,30 @@ public class MainActivity extends ActionBarActivity implements
                     .commit();
 
 
+            mDrawerList.setItemChecked(1, true);
+            setTitle(mNavTitles[1]);
+
+            if (MainActivity.DEBUG)
+                Log.i(TAG, "+++ onBackPressed() Feeds Fragment Check called! +++");
+
+        }
+        if (f.getTag().equalsIgnoreCase("com.doublep.emoncms.app.Views.WebPage")) {
+            // getFragmentManager().beginTransaction()
+            //        .hide(f)
+            //       .commit();
+            Fragment oSummary = getFragmentManager().findFragmentByTag("com.doublep.emoncms.app.Views.Summary");
+            String strFragmentTag = oSummary.getTag();
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.content_frame, oSummary, strFragmentTag)
+                    .show(oSummary)
+                    .commit();
+
+
             mDrawerList.setItemChecked(0, true);
             setTitle(mNavTitles[0]);
 
             if (MainActivity.DEBUG)
-                Log.i(TAG, "+++ onBackPressed() Feeds Fragment Check called! +++");
+                Log.i(TAG, "+++ onBackPressed() WebPage Fragment Check called! +++");
 
         }
         // Exit App from the Summary View when Back Key Pressed
@@ -426,6 +446,51 @@ public class MainActivity extends ActionBarActivity implements
 
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onFeedSelected() called! +++");
 
+    }
+
+    @Override
+    public void onURLSelected() {
+        Fragment mFragment;
+        String strFragmentTag;
+        mFragment = new WebPage();
+        strFragmentTag = mFragment.getClass().getName();
+        getFragmentManager().beginTransaction()
+                .add(R.id.content_frame, mFragment, strFragmentTag)
+                .addToBackStack(null)
+                .commit();
+
+        if (MainActivity.DEBUG) Log.i(TAG, "+++ onURLSelected() called! +++");
+    }
+
+    @Override
+    public void onFeedsSelected() {
+        Fragment mFragment;
+        String strFragmentTag;
+        //Have we a Summary Fragment. Yes - hide it
+        Fragment xSummary = getFragmentManager().findFragmentByTag("com.doublep.emoncms.app.Views.Summary");
+        if (!(xSummary == null)) {
+            getFragmentManager().beginTransaction().hide(xSummary).commit();
+            if (MainActivity.DEBUG)
+                Log.i(TAG, "+++ selectItem() Feeds! +++ Summary Fragment exists. Let's hide it");
+        }
+        Fragment xFeeds = getFragmentManager().findFragmentByTag("com.doublep.emoncms.app.Views.Feeds");
+        if (xFeeds == null) {
+            mFragment = new Feeds();
+            strFragmentTag = mFragment.getClass().getName();
+            getFragmentManager().beginTransaction()
+                    .add(R.id.content_frame, mFragment, strFragmentTag)
+                    .addToBackStack(null)
+                    .commit();
+            if (MainActivity.DEBUG) Log.i(TAG, "+++ selectItems() xFeeds is null! +++ ");
+        } else {
+            strFragmentTag = xFeeds.getClass().getName();
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.content_frame, xFeeds, strFragmentTag)
+                            // .show(xFeeds)
+                    .commit();
+            if (MainActivity.DEBUG) Log.i(TAG, "+++ selectItems() xFeeds show! +++ ");
+        }
+        if (MainActivity.DEBUG) Log.i(TAG, "+++ onFeedsSelected() called! +++");
     }
 
 

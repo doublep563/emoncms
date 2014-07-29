@@ -8,10 +8,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.doublep.emoncms.app.MainActivity;
 import com.doublep.emoncms.app.R;
+import com.doublep.emoncms.app.Views.Summary;
 import com.doublep.emoncms.app.common;
 import com.doublep.emoncms.app.models.SummaryStatus;
 
@@ -37,8 +39,22 @@ public class AdapterSummary extends ArrayAdapter<SummaryStatus> {
         if (v == null) {
             LayoutInflater vi = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            v = vi.inflate(R.layout.summary, parent, false);
+            v = vi.inflate(R.layout.summary_new, parent, false);
         }
+        // URL Table Row
+        TableRow trURL = (TableRow) v.findViewById(R.id.trURL);
+        trURL.setTag(0);
+        trURL.setOnClickListener(new Summary.TableRowClickListener() {
+        });
+        // Feeds Table Row
+        TableRow trFeeds = (TableRow) v.findViewById(R.id.trFeeds);
+        trFeeds.setTag(1);
+        trFeeds.setOnClickListener(new Summary.TableRowClickListener() {
+        });
+
+
+
+
         SummaryStatus o = items.get(0);
 
 
@@ -62,14 +78,16 @@ public class AdapterSummary extends ArrayAdapter<SummaryStatus> {
         }
 
 
-        TextView tv8 = (TextView) v.findViewById(R.id.textView8);
-        tv8.setText(strGoodFeeds);
+        //TextView tv8 = (TextView) v.findViewById(R.id.textView8);
+        //tv8.setText(strGoodFeeds);
 
-        TextView tv10 = (TextView) v.findViewById(R.id.textView10);
-        tv10.setText(strBadFeeds);
+        //TextView tv10 = (TextView) v.findViewById(R.id.textView10);
+        //tv10.setText(strBadFeeds);
 
         if (MainActivity.DEBUG) Log.i(TAG, "+++ getView() called! +++");
 
         return v;
     }
+
+
 }

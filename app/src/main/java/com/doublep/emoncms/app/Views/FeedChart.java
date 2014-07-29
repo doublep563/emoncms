@@ -2,6 +2,7 @@ package com.doublep.emoncms.app.Views;
 
 import android.app.Fragment;
 import android.app.LoaderManager;
+import android.content.Context;
 import android.content.Loader;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -12,9 +13,12 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
+import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.doublep.emoncms.app.MainActivity;
@@ -50,7 +54,8 @@ public class FeedChart extends Fragment implements
     private LinearLayout chartLayout;
     private TextView chartTitle;
     private ArrayList<FeedData> feedData;
-    //private Bundle zfeedData = null;
+    private ProgressBar mProgressBar;
+    private TextView mTxtViewLoading;
 
 
     @Override
@@ -67,6 +72,8 @@ public class FeedChart extends Fragment implements
         assert root != null;
         chartLayout = (LinearLayout) root.findViewById(R.id.chart);
         chartTitle = (TextView) root.findViewById(R.id.chartTitle);
+        mProgressBar = (ProgressBar) root.findViewById(R.id.progress_bar);
+        mTxtViewLoading = (TextView) root.findViewById(R.id.txtLoading);
 
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onCreateView() called! +++");
         return root;
@@ -136,6 +143,11 @@ public class FeedChart extends Fragment implements
     @Override
     public void onLoadFinished(Loader<Bundle> loader, Bundle data) {
         DisplayChart(data);
+        mProgressBar.setVisibility(View.GONE);
+        mTxtViewLoading.setVisibility(View.GONE);
+        chartTitle.setVisibility(View.VISIBLE);
+        chartLayout.setVisibility(View.VISIBLE);
+
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onLoadFinished() called! +++");
     }
 
@@ -156,36 +168,31 @@ public class FeedChart extends Fragment implements
         // create dataset and renderer
         XYMultipleSeriesDataset mDataset = new XYMultipleSeriesDataset();
         XYMultipleSeriesRenderer mRenderer = new XYMultipleSeriesRenderer();
-        //Text Size
-        //mRenderer.setAxisTitleTextSize(60);
-        //mRenderer.setChartTitleTextSize(60);
-
-        //mRenderer.setLegendTextSize(45);
 
         DisplayMetrics metrics = getActivity().getResources().getDisplayMetrics();
         float val = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 18, metrics);
         mRenderer.setLabelsTextSize(val);
+
         //Text Colors
-        mRenderer.setLabelsColor(Color.BLACK);
-        mRenderer.setAxesColor(Color.BLACK);
+        mRenderer.setYLabelsColor(0, getResources().getColor(R.color.Black));
+        mRenderer.setXLabelsColor(getResources().getColor(R.color.Black));
 
         //Chart Title
         chartTitle.setText(strFeedName + " " + strFeedTag);
 
         mRenderer.setYLabelsAlign(Paint.Align.RIGHT);
-        mRenderer.setMarginsColor(Color.TRANSPARENT);
-        mRenderer.setMargins(new int[]{0, 100, 90, 50});
+        mRenderer.setMarginsColor(getResources().getColor(R.color.emoncms_pale));
+        //mRenderer.setMargins(new int[]{0, 100, 90, 50});
+        if (getRotation().equalsIgnoreCase("portrait")) {
+            mRenderer.setMargins(new int[]{-30, 120, -120, 30});
+        } else {
+            mRenderer.setMargins(new int[]{-30, 120, 0, 30});
+        }
+
         mRenderer.setPointSize(5f);
-        //TODO Min of 0 is not correct in all circumstances - negative temps
-        //TODO Need to set min/max values based on data returned or just leave it!!!
-        //mRenderer.setYAxisMin(0);
 
-
-        //mRenderer.setMarginsColor(getResources().getColor(R.color.emoncms_btn_Color));
         mRenderer.setApplyBackgroundColor(true);
-        mRenderer.setBackgroundColor(Color.TRANSPARENT);
-        //mRenderer.setChartTitle(strFeedName);
-
+        mRenderer.setBackgroundColor(getResources().getColor(R.color.emoncms_pale_blue));
 
         XYSeriesRenderer r = new XYSeriesRenderer();
         r.setColor(Color.BLUE);
@@ -199,7 +206,6 @@ public class FeedChart extends Fragment implements
         mRenderer.setPanEnabled(true);
 
         time_series = new TimeSeries("");
-
 
         mDataset.addSeries(time_series);
 
@@ -222,6 +228,20 @@ public class FeedChart extends Fragment implements
 
 
         if (MainActivity.DEBUG) Log.i(TAG, "+++ LoadData() called! +++");
+    }
+
+    public String getRotation() {
+        final int rotation = ((WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getOrientation();
+        switch (rotation) {
+            case Surface.ROTATION_0:
+                return "portrait";
+            case Surface.ROTATION_90:
+                return "landscape";
+            case Surface.ROTATION_180:
+                return "reverse portrait";
+            default:
+                return "reverse landscape";
+        }
     }
 
 }

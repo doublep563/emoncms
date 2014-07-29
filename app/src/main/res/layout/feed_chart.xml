@@ -1,32 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:background="@color/emoncms_pale"
     android:orientation="vertical">
 
     <LinearLayout
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/black"
-        android:gravity="center_vertical|center_horizontal"
-        android:orientation="horizontal"
-        android:padding="24dp">
+        android:layout_gravity="center"
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/chartTitle"
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            style="@android:style/Widget.Holo.ProgressBar.Large"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/chartTtile"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@android:color/white" />
+            android:layout_gravity="center"
+            android:visibility="visible" />
+
+        <TextView
+            android:id="@+id/txtLoading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="Loading" />
+
 
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/chart"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/emoncms_pale_blue"
-        android:orientation="horizontal" />
 
-</LinearLayout>
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical|center_horizontal"
+            android:orientation="horizontal"
+            android:padding="24dp">
+
+            <TextView
+                android:id="@+id/chartTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/chartTtile"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@android:color/black"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/chart"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/emoncms_pale_blue"
+            android:orientation="horizontal" />
+
+    </LinearLayout>
+
+</FrameLayout>

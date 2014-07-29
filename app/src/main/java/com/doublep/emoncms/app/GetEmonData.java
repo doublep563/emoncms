@@ -243,8 +243,9 @@ public class GetEmonData {
     }
 
     public static Bundle Validate(String strURL, String strAPI) {
-        if (MainActivity.DEBUG) Log.i(TAG, "Before white space URL is " + strURL);
         //TODO Fix in Preferences Setup
+
+        if (MainActivity.DEBUG) Log.i(TAG, "Before white space URL is " + strURL);
         strURL = strURL.replace("\n", "");
         if (MainActivity.DEBUG) Log.i(TAG, "After white space URL is " + strURL);
         String strFeedList = strURL + "/feed/list.json&apikey=" + strAPI;
@@ -292,9 +293,6 @@ public class GetEmonData {
         strURL = strURL.replace("\n", "");
 
         String strFeedURL = strURL + "/feed/data.json&apikey=" + strAPI + "?id=" + strFeedID + "&start=" + startTime + "&end=" + endTime + "&dp=800";
-
-        if (MainActivity.DEBUG) Log.i(TAG, "+++ GetFeedData() strFeedURL is " + strFeedURL);
-
 
         try {
             HttpClient client = new DefaultHttpClient();

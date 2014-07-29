@@ -1,5 +1,6 @@
 package com.doublep.emoncms.app.Views;
 
+import android.app.Activity;
 import android.app.ListFragment;
 import android.app.LoaderManager;
 import android.content.Loader;
@@ -8,6 +9,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.doublep.emoncms.app.MainActivity;
 import com.doublep.emoncms.app.R;
@@ -28,6 +30,7 @@ public class Summary extends ListFragment implements
 
     private static final String TAG = "Summary";
     private static final int LOADER_ID = 1;
+    private static OnTableRowClicked mCallback;
 
 
     @Override
@@ -46,7 +49,8 @@ public class Summary extends ListFragment implements
         setRetainInstance(true);
 
         getLoaderManager().initLoader(LOADER_ID, null, this);
-        getActivity().setProgressBarIndeterminateVisibility(true);
+
+        //getActivity().setProgressBarIndeterminateVisibility(true);
 
         //TODO Add API field to Summary.xml
         //TODO OnCreate does not refresh preferences when fragment is reused.. Need to move to another methhod
@@ -101,6 +105,17 @@ public class Summary extends ListFragment implements
     }
 
     @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            mCallback = (OnTableRowClicked) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnHeadlineSelectedListener");
+        }
+    }
+
+    @Override
     public Loader<ArrayList> onCreateLoader(int id, Bundle args) {
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onCreateLoader() called! +++");
         //TODO LoadSummaryStatus needs to Check Preferences to see what should be checked.
@@ -110,11 +125,9 @@ public class Summary extends ListFragment implements
 
     @Override
     public void onLoadFinished(Loader<ArrayList> loader, ArrayList data) {
-
-
-        AdapterSummary mAdapter = new AdapterSummary(getActivity(), R.layout.summary, data);
+        AdapterSummary mAdapter = new AdapterSummary(getActivity(), R.layout.summary_old, data);
         setListAdapter(mAdapter);
-        getActivity().setProgressBarIndeterminateVisibility(false);
+        // getActivity().setProgressBarIndeterminateVisibility(false);
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onLoadFinished() called! +++");
 
     }
@@ -136,7 +149,7 @@ public class Summary extends ListFragment implements
         // handle item selection
         switch (item.getItemId()) {
             case R.id.action_refresh:
-                getActivity().setProgressBarIndeterminateVisibility(true);
+                //getActivity().setSupportProgressBarIndeterminateVisibility(true);
                 getLoaderManager().restartLoader(LOADER_ID, null, this);
                 if (MainActivity.DEBUG) Log.i(TAG, "+++ onOptionsItemSelected() called! +++");
                 return true;
@@ -145,5 +158,34 @@ public class Summary extends ListFragment implements
         }
     }
 
+    public interface OnTableRowClicked {
+        public void onURLSelected();
+
+        public void onFeedsSelected();
+    }
+
+    public static class TableRowClickListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            switch (Integer.parseInt(v.getTag().toString())) {
+
+                case 0:
+                    mCallback.onURLSelected();
+                    if (MainActivity.DEBUG) Log.i(TAG, "+++ TableRowClickListener() trURL ! +++");
+                    break;
+                case 1:
+                    mCallback.onFeedsSelected();
+                    if (MainActivity.DEBUG) Log.i(TAG, "+++ TableRowClickListener() reFeeds ! +++");
+                    break;
+
+                default:
+                    break;
+
+            }
+
+
+            if (MainActivity.DEBUG) Log.i(TAG, "+++ TableRowClickListener() called! +++");
+        }
+    }
 
 }

@@ -15,6 +15,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.doublep.emoncms.app.GetEmonData;
 import com.doublep.emoncms.app.MainActivity;
@@ -40,11 +42,15 @@ public class Feeds extends Fragment implements
     private String strEmoncmsURL;
     private String strEmoncmsAPI;
     private ExpandableListView elv;
+    private ProgressBar mProgressBar;
+    private TextView mTxtViewLoading;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         getLoaderManager().initLoader(LOADER_ID, null, this);
+
+
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onActivityCreated() called! +++");
     }
 
@@ -95,7 +101,6 @@ public class Feeds extends Fragment implements
 
         }
 
-        getActivity().setProgressBarIndeterminateVisibility(true);
 
         // We have an Action Bar
         setHasOptionsMenu(true);
@@ -119,7 +124,9 @@ public class Feeds extends Fragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.feed_list, null);
-        elv = (ExpandableListView) v.findViewById(R.id.listView);
+        elv = (ExpandableListView) v.findViewById(R.id.list);
+        mProgressBar = (ProgressBar) v.findViewById(R.id.progress_bar);
+        mTxtViewLoading = (TextView) v.findViewById(R.id.txtLoading);
 
 
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onCreateView() called! +++");
@@ -133,8 +140,11 @@ public class Feeds extends Fragment implements
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onLoadFinished() called! +++");
 
         elv.setAdapter(new AdapterFeedsExpand(getActivity()));
+        mProgressBar.setVisibility(View.GONE);
+        mTxtViewLoading.setVisibility(View.GONE);
+        elv.setVisibility(View.VISIBLE);
 
-        getActivity().setProgressBarIndeterminateVisibility(false);
+
     }
 
     @Override
