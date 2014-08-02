@@ -56,12 +56,15 @@ public class FeedChart extends Fragment implements
     private ArrayList<FeedData> feedData;
     private ProgressBar mProgressBar;
     private TextView mTxtViewLoading;
+    private LinearLayout myLayout;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
 
+        //getActivity().getActionBar().setTitle("Feed Chart");
+
+        super.onCreate(savedInstanceState);
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onCreate() called! +++");
 
     }
@@ -71,6 +74,7 @@ public class FeedChart extends Fragment implements
         ViewGroup root = (ViewGroup) inflater.inflate(R.layout.feed_chart, container, false);
         assert root != null;
         chartLayout = (LinearLayout) root.findViewById(R.id.chart);
+        myLayout = (LinearLayout) root.findViewById(R.id.ll1);
         chartTitle = (TextView) root.findViewById(R.id.chartTitle);
         mProgressBar = (ProgressBar) root.findViewById(R.id.progress_bar);
         mTxtViewLoading = (TextView) root.findViewById(R.id.txtLoading);
@@ -83,7 +87,7 @@ public class FeedChart extends Fragment implements
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
+        getActivity().getActionBar().setTitle("Feed Chart");
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onActivityCreated() called! +++");
     }
 
@@ -145,6 +149,7 @@ public class FeedChart extends Fragment implements
         DisplayChart(data);
         mProgressBar.setVisibility(View.GONE);
         mTxtViewLoading.setVisibility(View.GONE);
+        myLayout.setVisibility(View.VISIBLE);
         chartTitle.setVisibility(View.VISIBLE);
         chartLayout.setVisibility(View.VISIBLE);
 
@@ -189,14 +194,16 @@ public class FeedChart extends Fragment implements
             mRenderer.setMargins(new int[]{-30, 120, 0, 30});
         }
 
-        mRenderer.setPointSize(5f);
+        mRenderer.setPointSize(5.0f);
 
         mRenderer.setApplyBackgroundColor(true);
-        mRenderer.setBackgroundColor(getResources().getColor(R.color.emoncms_pale_blue));
+        mRenderer.setBackgroundColor(getResources().getColor(R.color.White));
 
         XYSeriesRenderer r = new XYSeriesRenderer();
         r.setColor(Color.BLUE);
-        r.setPointStyle(PointStyle.CIRCLE);
+        r.setPointStyle(PointStyle.POINT);
+        r.setPointStrokeWidth(10.0f);
+
         r.setShowLegendItem(false);
 
         r.setFillPoints(true);

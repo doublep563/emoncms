@@ -43,9 +43,8 @@ public class MainActivity extends ActionBarActivity implements
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
 
-        //requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+        super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
 
@@ -354,28 +353,7 @@ public class MainActivity extends ActionBarActivity implements
                 Log.i(TAG, "+++ onBackPressed() Feeds Fragment Check called! +++");
 
         }
-        if (f.getTag().equalsIgnoreCase("com.doublep.emoncms.app.Views.WebPage")) {
-            // getFragmentManager().beginTransaction()
-            //        .hide(f)
-            //       .commit();
-            Fragment oSummary = getFragmentManager().findFragmentByTag("com.doublep.emoncms.app.Views.Summary");
-            String strFragmentTag = oSummary.getTag();
-            getFragmentManager().beginTransaction()
-                    .replace(R.id.content_frame, oSummary, strFragmentTag)
-                    .show(oSummary)
-                    .commit();
 
-            getFragmentManager().beginTransaction()
-                    .remove(f)
-                    .commit();
-
-            mDrawerList.setItemChecked(0, true);
-            setTitle(mNavTitles[0]);
-
-            if (MainActivity.DEBUG)
-                Log.i(TAG, "+++ onBackPressed() WebPage Fragment Check called! +++");
-
-        }
         // Exit App from the Summary View when Back Key Pressed
         else if (f.getTag().equalsIgnoreCase("com.doublep.emoncms.app.Views.Summary")) {
             this.finish();
@@ -444,10 +422,13 @@ public class MainActivity extends ActionBarActivity implements
         args.putString("strFeedName", strFeedName);
         FeedChart.setArguments(args);
 
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        Fragment xFeeds = getFragmentManager().findFragmentByTag("com.doublep.emoncms.app.Views.Feeds");
+        getFragmentManager().beginTransaction()
+                .hide(xFeeds)
+                .commit();
 
-        transaction.replace(R.id.content_frame, FeedChart, strFragmentTag)
-                //.addToBackStack(strFragmentTag)
+        getFragmentManager().beginTransaction()
+                .replace(R.id.content_frame, FeedChart, strFragmentTag)
                 .commit();
 
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onFeedSelected() called! +++");
@@ -456,19 +437,9 @@ public class MainActivity extends ActionBarActivity implements
 
     @Override
     public void onURLSelected() {
-        //Fragment mFragment;
-        //String strFragmentTag;
-        //mFragment = new WebPage();
-        //strFragmentTag = mFragment.getClass().getName();
-        //getFragmentManager().beginTransaction()
-        //       .add(R.id.content_frame, mFragment, strFragmentTag)
-        //.addToBackStack(null)
-        //       .commit();
 
         Intent i = new Intent(this, WebPage.class);
         startActivity(i);
-        //setTitle("The Web Page");
-
 
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onURLSelected() called! +++");
     }
@@ -501,6 +472,11 @@ public class MainActivity extends ActionBarActivity implements
                     .commit();
             if (MainActivity.DEBUG) Log.i(TAG, "+++ selectItems() xFeeds show! +++ ");
         }
+
+        // Highlight the selected item, update the title, and close the drawer
+        mDrawerList.setItemChecked(1, true);
+        setTitle(mNavTitles[1]);
+
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onFeedsSelected() called! +++");
     }
 
