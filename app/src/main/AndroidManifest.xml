@@ -5,8 +5,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
-    <uses-sdk
-        tools:node="replace" />
+    <uses-sdk tools:node="replace" />
 
 
     <application
@@ -28,6 +27,9 @@
         <activity
             android:name=".Preferences"
             android:label="@string/title_activity_settings">
+
+        </activity>
+        <activity android:name=".Views.WebPage">
 
         </activity>
     </application>

@@ -108,7 +108,9 @@ public class MainActivity extends ActionBarActivity implements
                     mFragment = new Summary();
                     strFragmentTag = mFragment.getClass().getName();
 
-                    getFragmentManager().beginTransaction().add(R.id.content_frame, mFragment, strFragmentTag)
+                    getFragmentManager().beginTransaction()
+                            //.setCustomAnimations(R.anim.fragment_animation_fade_in, R.anim.fragment_animation_fade_out)
+                            .add(R.id.content_frame, mFragment, strFragmentTag)
                             .addToBackStack(null)
                             .commit();
                     if (MainActivity.DEBUG) Log.i(TAG, "+++ selectItems() oSummary is null! +++ ");
@@ -259,6 +261,7 @@ public class MainActivity extends ActionBarActivity implements
                     mFragment = new Feeds();
                     strFragmentTag = mFragment.getClass().getName();
                     transaction
+                            //.setCustomAnimations(R.anim.fragment_animation_fade_in, R.anim.fragment_animation_fade_out)
                             .add(R.id.content_frame, mFragment, strFragmentTag)
                             .addToBackStack(null)
                             .commit();
@@ -317,9 +320,9 @@ public class MainActivity extends ActionBarActivity implements
         //This is a back key form the Feeds Fragment. Go back to the Summary fragment
         // and set Navigation properties.
         if (f.getTag().equalsIgnoreCase("com.doublep.emoncms.app.Views.Feeds")) {
-            // getFragmentManager().beginTransaction()
-            //        .hide(f)
-            //       .commit();
+            //getFragmentManager().beginTransaction()
+            //      .hide(f)
+            //    .commit();
             Fragment oSummary = getFragmentManager().findFragmentByTag("com.doublep.emoncms.app.Views.Summary");
             String strFragmentTag = oSummary.getTag();
             getFragmentManager().beginTransaction()
@@ -362,6 +365,9 @@ public class MainActivity extends ActionBarActivity implements
                     .show(oSummary)
                     .commit();
 
+            getFragmentManager().beginTransaction()
+                    .remove(f)
+                    .commit();
 
             mDrawerList.setItemChecked(0, true);
             setTitle(mNavTitles[0]);
@@ -450,14 +456,19 @@ public class MainActivity extends ActionBarActivity implements
 
     @Override
     public void onURLSelected() {
-        Fragment mFragment;
-        String strFragmentTag;
-        mFragment = new WebPage();
-        strFragmentTag = mFragment.getClass().getName();
-        getFragmentManager().beginTransaction()
-                .add(R.id.content_frame, mFragment, strFragmentTag)
-                .addToBackStack(null)
-                .commit();
+        //Fragment mFragment;
+        //String strFragmentTag;
+        //mFragment = new WebPage();
+        //strFragmentTag = mFragment.getClass().getName();
+        //getFragmentManager().beginTransaction()
+        //       .add(R.id.content_frame, mFragment, strFragmentTag)
+        //.addToBackStack(null)
+        //       .commit();
+
+        Intent i = new Intent(this, WebPage.class);
+        startActivity(i);
+        //setTitle("The Web Page");
+
 
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onURLSelected() called! +++");
     }

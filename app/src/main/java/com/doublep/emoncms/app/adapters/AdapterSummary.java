@@ -21,6 +21,7 @@ import java.util.ArrayList;
 
 
 public class AdapterSummary extends ArrayAdapter<SummaryStatus> {
+    //TODO Change to SimpleAdapter. This class does nos use a real ListView.
 
     private static final String TAG = "AdapterSummary";
     private final ArrayList<SummaryStatus> items;
@@ -39,7 +40,7 @@ public class AdapterSummary extends ArrayAdapter<SummaryStatus> {
         if (v == null) {
             LayoutInflater vi = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            v = vi.inflate(R.layout.summary_new, parent, false);
+            v = vi.inflate(R.layout.summary, parent, false);
         }
         // URL Table Row
         TableRow trURL = (TableRow) v.findViewById(R.id.trURL);

@@ -164,7 +164,9 @@ public class Feeds extends Fragment implements
         // handle item selection
         switch (item.getItemId()) {
             case R.id.action_refresh:
-                getActivity().setProgressBarIndeterminateVisibility(true);
+                mProgressBar.setVisibility(View.VISIBLE);
+                mTxtViewLoading.setVisibility(View.VISIBLE);
+                elv.setVisibility(View.GONE);
                 getLoaderManager().restartLoader(LOADER_ID, null, this);
                 if (MainActivity.DEBUG) Log.i(TAG, "+++ onOptionsItemSelected() called! +++");
                 return true;

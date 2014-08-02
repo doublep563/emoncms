@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ListView;
 
 import com.doublep.emoncms.app.MainActivity;
 import com.doublep.emoncms.app.R;
@@ -27,10 +28,13 @@ import java.util.ArrayList;
 public class Summary extends ListFragment implements
         LoaderManager.LoaderCallbacks<ArrayList> {
 
+    //TODO Change AdapterSummary to SimpleAdapter. Change this class to extend Fragment.
+    // Change summary.xml. Add Progress layout.
 
     private static final String TAG = "Summary";
     private static final int LOADER_ID = 1;
     private static OnTableRowClicked mCallback;
+    private ListView listView;
 
 
     @Override
@@ -47,6 +51,7 @@ public class Summary extends ListFragment implements
         setHasOptionsMenu(true);
 
         setRetainInstance(true);
+
 
         getLoaderManager().initLoader(LOADER_ID, null, this);
 
@@ -125,7 +130,7 @@ public class Summary extends ListFragment implements
 
     @Override
     public void onLoadFinished(Loader<ArrayList> loader, ArrayList data) {
-        AdapterSummary mAdapter = new AdapterSummary(getActivity(), R.layout.summary_old, data);
+        AdapterSummary mAdapter = new AdapterSummary(getActivity(), R.layout.summary, data);
         setListAdapter(mAdapter);
         // getActivity().setProgressBarIndeterminateVisibility(false);
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onLoadFinished() called! +++");
