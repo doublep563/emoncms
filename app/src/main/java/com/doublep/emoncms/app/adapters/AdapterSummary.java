@@ -13,9 +13,9 @@ import android.widget.TextView;
 
 import com.doublep.emoncms.app.MainActivity;
 import com.doublep.emoncms.app.R;
-import com.doublep.emoncms.app.Views.Summary;
 import com.doublep.emoncms.app.common;
 import com.doublep.emoncms.app.models.SummaryStatus;
+import com.doublep.emoncms.app.views.Summary;
 
 import java.util.ArrayList;
 

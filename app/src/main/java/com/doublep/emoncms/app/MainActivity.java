@@ -18,11 +18,11 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.doublep.emoncms.app.Views.FeedChart;
-import com.doublep.emoncms.app.Views.Feeds;
-import com.doublep.emoncms.app.Views.StartUp;
-import com.doublep.emoncms.app.Views.Summary;
-import com.doublep.emoncms.app.Views.WebPage;
+import com.doublep.emoncms.app.views.FeedChart;
+import com.doublep.emoncms.app.views.Feeds;
+import com.doublep.emoncms.app.views.StartUp;
+import com.doublep.emoncms.app.views.Summary;
+import com.doublep.emoncms.app.views.WebPage;
 
 
 public class MainActivity extends ActionBarActivity implements

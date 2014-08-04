@@ -26,7 +26,7 @@
         jar="C:\Users\Paul Patchell\JavaGames\emoncms\app\build\intermediates\exploded-aar\com.android.support\support-v4\21.0.0-rc1\classes.jar"
         jumboMode="false" revision="20.0.0" sha1="7ae84435ebc95f67a3f5e511025e96caa8688da2" />
     <item
-        dex="C:\Users\Paul Patchell\JavaGames\emoncms\app\build\intermediates\pre-dexed\release\achartengine-1.1.0-8f4344a721ed8e2fdcbb2101fbac8277a5ebb377.jar"
+        dex="C:\Users\Paul Patchell\JavaGames\emoncms\app\build\intermediates\pre-dexed\debug\achartengine-1.1.0-8f4344a721ed8e2fdcbb2101fbac8277a5ebb377.jar"
         jar="C:\Users\Paul Patchell\JavaGames\emoncms\app\libs\achartengine-1.1.0.jar"
         jumboMode="false" revision="20.0.0" sha1="9932e3fb9fbe54e80873e77f72a99f79e33b3250" />
     <item

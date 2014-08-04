@@ -29,7 +29,7 @@
             android:label="@string/title_activity_settings">
 
         </activity>
-        <activity android:name=".Views.WebPage">
+        <activity android:name=".views.WebPage">
 
         </activity>
     </application>
