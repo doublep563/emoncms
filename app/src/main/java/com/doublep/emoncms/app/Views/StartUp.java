@@ -197,7 +197,7 @@ public class StartUp extends Fragment implements
             SharedPreferences.Editor editor = prefs.edit();
             editor.putString(common.PREF_KEY_EMONCMS_URL, strURL);
             editor.putString(common.PREF_KEY_EMONCMS_API, strAPI);
-            editor.commit();
+            editor.apply();
             handler.sendEmptyMessage(2);
 
             if (MainActivity.DEBUG)

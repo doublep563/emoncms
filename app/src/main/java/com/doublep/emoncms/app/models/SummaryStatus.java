@@ -25,6 +25,8 @@ public class SummaryStatus implements Parcelable {
     private String strRaspPiStatus = "";
     private String strFeedsGood = "";
     private String strFeedsBad = "";
+    private String strFeedsTotal = "";
+    private String strURLStatus = "";
 
 
     public SummaryStatus() {
@@ -42,12 +44,9 @@ public class SummaryStatus implements Parcelable {
     public void setStrRaspPiStatus(String strRaspPiStatus) {
         if (strRaspPiStatus.equalsIgnoreCase("true")) {
             this.strRaspPiStatus = "RFM12 to Pi interface script is up and running";
-        }
-
-        else if (strRaspPiStatus.equalsIgnoreCase("Not Set")) {
+        } else if (strRaspPiStatus.equalsIgnoreCase("Not Set")) {
             this.strRaspPiStatus = "Not Set";
-        }
-        else {
+        } else {
             this.strRaspPiStatus = "RFM12 to Pi interface script is DOWN!!!";
         }
     }
@@ -60,12 +59,28 @@ public class SummaryStatus implements Parcelable {
         this.strFeedsGood = strFeedsGood;
     }
 
+    public String getURLStatus() {
+        return strURLStatus;
+    }
+
+    public void setURLStatus(String strURLStatus) {
+        this.strURLStatus = strURLStatus;
+    }
+
     public String getStrFeedsBad() {
         return strFeedsBad;
     }
 
     public void setStrFeedsBad(String strFeedsBad) {
         this.strFeedsBad = strFeedsBad;
+    }
+
+    public String getStrFeedsTotal() {
+        return strFeedsTotal;
+    }
+
+    public void setStrFeedsTotal(String strFeedsTotal) {
+        this.strFeedsTotal = strFeedsTotal;
     }
 
 
@@ -80,6 +95,8 @@ public class SummaryStatus implements Parcelable {
         dest.writeString(strRaspPiStatus);
         dest.writeString(strFeedsGood);
         dest.writeString(strFeedsBad);
+        dest.writeString(strFeedsTotal);
+        dest.writeString(strURLStatus);
 
 
     }
@@ -92,6 +109,8 @@ public class SummaryStatus implements Parcelable {
         strRaspPiStatus = in.readString();
         strFeedsGood = in.readString();
         strFeedsBad = in.readString();
+        strFeedsTotal = in.readString();
+        strURLStatus = in.readString();
 
 
     }

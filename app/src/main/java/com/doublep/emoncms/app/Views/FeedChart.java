@@ -237,7 +237,7 @@ public class FeedChart extends Fragment implements
         if (MainActivity.DEBUG) Log.i(TAG, "+++ LoadData() called! +++");
     }
 
-    public String getRotation() {
+    String getRotation() {
         final int rotation = ((WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getOrientation();
         switch (rotation) {
             case Surface.ROTATION_0:

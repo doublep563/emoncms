@@ -66,7 +66,7 @@ public class AdapterFeedsExpand extends BaseExpandableListAdapter {
 
 
         if (convertView == null) {
-            convertView = view.inflate(R.layout.feed_list_detail_child, null);
+            convertView = view.inflate(R.layout.feed_list_detail_child, parent);
         }
         TextView tvFeedID = (TextView) convertView.findViewById(R.id.textView11);
         TextView tvFeedName = (TextView) convertView.findViewById(R.id.textView12);
@@ -188,9 +188,13 @@ public class AdapterFeedsExpand extends BaseExpandableListAdapter {
 
         if (isExpanded) {
             feedHolder.viewVerticalLine.setVisibility(View.INVISIBLE);
+            row.setBackgroundResource(R.color.emoncms_pale);
         } else {
             feedHolder.viewVerticalLine.setVisibility(View.VISIBLE);
+            row.setBackgroundResource(R.color.White);
         }
+
+
         return row;
     }
 

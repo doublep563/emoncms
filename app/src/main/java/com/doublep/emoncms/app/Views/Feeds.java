@@ -123,7 +123,7 @@ public class Feeds extends Fragment implements
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.feed_list, null);
+        View v = inflater.inflate(R.layout.feed_list, container, false);
         elv = (ExpandableListView) v.findViewById(R.id.list);
         mProgressBar = (ProgressBar) v.findViewById(R.id.progress_bar);
         mTxtViewLoading = (TextView) v.findViewById(R.id.txtLoading);
@@ -193,7 +193,12 @@ public class Feeds extends Fragment implements
     public static class OnClickListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
+            //TODO Get parent view and set drawable for click on this view
             int position = Integer.parseInt(v.getTag().toString());
+
+            //LinearLayout ll = (LinearLayout) v.getParent().getParent();
+            //ll.setBackgroundResource(R.drawable.listitem);
+
             ArrayList<FeedDetails> items = GetEmonData.feedList;
             FeedDetails feedDetails = items.get(position);
             String strFeedID = feedDetails.getStrID();
@@ -203,5 +208,6 @@ public class Feeds extends Fragment implements
             if (MainActivity.DEBUG) Log.i(TAG, "+++ OnClickListener() called! +++");
         }
     }
+
 
 }
