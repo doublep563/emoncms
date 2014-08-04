@@ -12,8 +12,8 @@ import android.widget.TextView;
 import com.doublep.emoncms.app.GetEmonData;
 import com.doublep.emoncms.app.MainActivity;
 import com.doublep.emoncms.app.R;
+import com.doublep.emoncms.app.Views.Feeds;
 import com.doublep.emoncms.app.models.FeedDetails;
-import com.doublep.emoncms.app.views.Feeds;
 
 import java.util.ArrayList;
 

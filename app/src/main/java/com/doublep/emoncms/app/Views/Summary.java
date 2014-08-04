@@ -10,7 +10,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ListView;
 
 import com.doublep.emoncms.app.MainActivity;
 import com.doublep.emoncms.app.R;
@@ -34,7 +33,6 @@ public class Summary extends ListFragment implements
     private static final String TAG = "Summary";
     private static final int LOADER_ID = 1;
     private static OnTableRowClicked mCallback;
-    private ListView listView;
 
 
     @Override

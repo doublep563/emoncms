@@ -123,7 +123,7 @@ public class Feeds extends Fragment implements
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.feed_list, null);
+        View v = inflater.inflate(R.layout.feed_list, container);
         elv = (ExpandableListView) v.findViewById(R.id.list);
         mProgressBar = (ProgressBar) v.findViewById(R.id.progress_bar);
         mTxtViewLoading = (TextView) v.findViewById(R.id.txtLoading);

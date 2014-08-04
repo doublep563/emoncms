@@ -2,7 +2,6 @@ package com.doublep.emoncms.app.Views;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -21,7 +20,6 @@ import com.doublep.emoncms.app.common;
 public class WebPage extends Activity {
 
     private static final String TAG = "WebPage";
-    private String currentURL;
 
     private WebView web;
 
@@ -36,7 +34,7 @@ public class WebPage extends Activity {
 
 
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        currentURL = sharedPref.getString(common.PREF_KEY_EMONCMS_URL, getResources().getString(R.string.pref_default));
+        String currentURL = sharedPref.getString(common.PREF_KEY_EMONCMS_URL, getResources().getString(R.string.pref_default));
 
         getActionBar().setTitle(currentURL);
 
@@ -99,12 +97,7 @@ public class WebPage extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    public class myWebClient extends WebViewClient {
-        @Override
-        public void onPageStarted(WebView view, String url, Bitmap favicon) {
-            // TODO Auto-generated method stub
-            super.onPageStarted(view, url, favicon);
-        }
+    private class myWebClient extends WebViewClient {
 
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
