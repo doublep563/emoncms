@@ -193,7 +193,12 @@ public class Feeds extends Fragment implements
     public static class OnClickListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
+            //TODO Get parent view and set drawable for click on this view
             int position = Integer.parseInt(v.getTag().toString());
+
+            //LinearLayout ll = (LinearLayout) v.getParent().getParent();
+            //ll.setBackgroundResource(R.drawable.listitem);
+
             ArrayList<FeedDetails> items = GetEmonData.feedList;
             FeedDetails feedDetails = items.get(position);
             String strFeedID = feedDetails.getStrID();
@@ -203,5 +208,6 @@ public class Feeds extends Fragment implements
             if (MainActivity.DEBUG) Log.i(TAG, "+++ OnClickListener() called! +++");
         }
     }
+
 
 }

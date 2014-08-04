@@ -12,8 +12,7 @@
         android:id="@+id/list"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-
-        android:divider="@color/Black"
+        android:divider="@color/emoncms_pale_blue"
         android:dividerHeight="2dp"
         android:groupIndicator="@null"
         android:visibility="gone"

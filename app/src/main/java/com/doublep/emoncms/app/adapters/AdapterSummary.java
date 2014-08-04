@@ -54,8 +54,6 @@ public class AdapterSummary extends ArrayAdapter<SummaryStatus> {
         });
 
 
-
-
         SummaryStatus o = items.get(0);
 
 
@@ -64,11 +62,28 @@ public class AdapterSummary extends ArrayAdapter<SummaryStatus> {
         String strRaspPiStatus = o.getStrRaspPiStatus();
         String strGoodFeeds = o.getStrFeedsGood();
         String strBadFeeds = o.getStrFeedsBad();
+        String strURLStatus = o.getURLStatus();
+        String strFeedsTotal = o.getStrFeedsTotal();
+
 
         assert v != null;
         TextView t = (TextView) v.findViewById(R.id.txtErrorText);
         t.setText(strEmoncmsURL);
 
+        TextView u = (TextView) v.findViewById(R.id.URLStatus);
+
+        if (!strURLStatus.equalsIgnoreCase("OK")) {
+            u.setBackgroundResource(R.drawable.traffic_light_red);
+        }
+
+        TextView f = (TextView) v.findViewById(R.id.FeedStatus);
+
+        if (strFeedsTotal.equalsIgnoreCase("0")) {
+            f.setBackgroundResource(R.drawable.traffic_light_red);
+        }
+        if (!strBadFeeds.equalsIgnoreCase("0")) {
+            f.setBackgroundResource(R.drawable.traffic_light_red);
+        }
 
         if (!strRaspPiStatus.equalsIgnoreCase("Not Set")) {
             TextView tv3 = (TextView) v.findViewById(R.id.textView3);

@@ -19,8 +19,11 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.URI;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,6 +35,7 @@ public class GetEmonData {
 
     private static final String TAG = "GetEmonData";
     public static ArrayList<FeedDetails> feedList = null;
+
 
     public static ArrayList<FeedDetails> GetFeeds(String strURL, String strAPI) {
         // JSON Node names
@@ -138,12 +142,15 @@ public class GetEmonData {
         String strAPI = sharedPref.getString(common.PREF_KEY_EMONCMS_API, context.getResources().getString(R.string.pref_default));
         boolean raspberryPI = sharedPref.getBoolean(common.PREF_KEY_RASPBERRYPI, false);
 
+        int responseCode = 0;
+
 
         ArrayList<SummaryStatus> summaryList = new ArrayList<SummaryStatus>();
 
         String RASPBERRY_PI_STATUS = context.getResources().getString(R.string.pref_default);
         int FEEDS_GOOD = 0;
         int FEEDS_BAD = 0;
+        String URLStatus = "OK";
 
         String FEED_TIME = "time";
         //TODO Fix in Preferences Setup
@@ -151,6 +158,26 @@ public class GetEmonData {
 
         String strRaspURL = strURL + "/raspberrypi/getrunning.json&apikey=" + strAPI;
         String strFeedList = strURL + "/feed/list.json&apikey=" + strAPI;
+
+        HttpURLConnection connection = null;
+        try {
+            connection = (HttpURLConnection) new URL(strURL).openConnection();
+            connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 (.NET CLR 3.5.30729)");
+            //Without this, getting EOFexceptions. No idea why it works.
+            connection.addRequestProperty("Accept-Encoding", "gzip");
+            connection.setRequestMethod("HEAD");
+
+            responseCode = connection.getResponseCode();
+        } catch (IOException e) {
+            URLStatus = "Not Available";
+            e.printStackTrace();
+        }
+
+        if (responseCode != 200) {
+            URLStatus = "Not Available";
+
+            // Not OK.
+        }
 
 
         if (raspberryPI) {
@@ -233,11 +260,13 @@ public class GetEmonData {
 
         if (MainActivity.DEBUG)
             Log.i(TAG, "+++ GetStatus() Summary called! +++");
-
+        int FEEDS_TOTAL = FEEDS_GOOD + FEEDS_BAD;
         SummaryStatus summaryStatus = new SummaryStatus();
         summaryStatus.setStrRaspPiStatus(RASPBERRY_PI_STATUS);
         summaryStatus.setStrFeedsGood(Integer.toString(FEEDS_GOOD));
         summaryStatus.setStrFeedsBad(Integer.toString(FEEDS_BAD));
+        summaryStatus.setStrFeedsTotal(Integer.toString(FEEDS_TOTAL));
+        summaryStatus.setURLStatus(URLStatus);
         summaryList.add(summaryStatus);
         return summaryList;
     }
