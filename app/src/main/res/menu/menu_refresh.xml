@@ -8,6 +8,6 @@
         android:icon="@drawable/ic_menu_refresh"
         android:orderInCategory="100"
         android:title="@string/refresh"
-        emoncms:showAsAction="never" />
+        emoncms:showAsAction="always" />
 
 </menu>
