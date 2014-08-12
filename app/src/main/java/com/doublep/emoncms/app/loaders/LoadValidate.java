@@ -6,8 +6,15 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.doublep.emoncms.app.GetEmonData;
 import com.doublep.emoncms.app.MainActivity;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+
+import java.net.URI;
 
 /**
  * Loader to Validate URL and API fields in Preferences
@@ -15,9 +22,9 @@ import com.doublep.emoncms.app.MainActivity;
 public class LoadValidate extends AsyncTaskLoader<Bundle> {
 
 
+    private static final String TAG = "LoadValidate";
     private final String strURL1;
     private final String strAPI1;
-    private static final String TAG = "LoadValidate";
 
     public LoadValidate(Context context, String strURL, String strAPI) {
         super(context);
@@ -26,14 +33,52 @@ public class LoadValidate extends AsyncTaskLoader<Bundle> {
 
     }
 
+    public static Bundle Validate(String strURL, String strAPI) {
+        //TODO Fix in Preferences Setup
+
+        if (MainActivity.DEBUG) Log.i(TAG, "Before white space URL is " + strURL);
+        strURL = strURL.replace("\n", "");
+        if (MainActivity.DEBUG) Log.i(TAG, "After white space URL is " + strURL);
+        String strFeedList = strURL + "/feed/list.json&apikey=" + strAPI;
+
+
+        Bundle mBundle = null;
+        try {
+            mBundle = new Bundle();
+            HttpClient client = new DefaultHttpClient();
+            HttpGet request = new HttpGet();
+            request.setURI(new URI(strFeedList));
+
+            HttpResponse response = client.execute(request);
+            //String responseBody = EntityUtils.toString(response.getEntity());
+
+            // If there is an error, catch it below and return in the bundle
+
+        } catch (ClientProtocolException e) {
+            mBundle.putString("ClientProtocolException", e.getLocalizedMessage());
+            if (MainActivity.DEBUG)
+                Log.i(TAG, "+++ Validate() ClientProtocolException called! +++" + e.getLocalizedMessage());
+        } catch (Exception e) {
+
+            assert mBundle != null;
+            mBundle.putString("Exception", e.getLocalizedMessage());
+            if (MainActivity.DEBUG)
+                Log.i(TAG, "+++ Validate() Exception called! +++" + e.getLocalizedMessage());
+        }
+
+        if (MainActivity.DEBUG) Log.i(TAG, "+++ Validate() called! +++");
+
+        return mBundle;
+
+    }
 
     @SuppressWarnings({})
     public Bundle loadInBackground() {
 
-       Bundle mValidate = null;
+        Bundle mValidate = null;
 
         try {
-            mValidate = GetEmonData.Validate(strURL1, strAPI1);
+            mValidate = Validate(strURL1, strAPI1);
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

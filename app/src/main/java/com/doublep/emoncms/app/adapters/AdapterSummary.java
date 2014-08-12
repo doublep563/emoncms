@@ -27,9 +27,9 @@ public class AdapterSummary extends ArrayAdapter<SummaryStatus> {
     private final ArrayList<SummaryStatus> items;
     private final Context context;
 
-    public AdapterSummary(Context context, int textViewResourceId,
+    public AdapterSummary(Context context,
                           ArrayList<SummaryStatus> items) {
-        super(context, textViewResourceId, items);
+        super(context, R.layout.summary, items);
         this.items = items;
         this.context = context;
     }

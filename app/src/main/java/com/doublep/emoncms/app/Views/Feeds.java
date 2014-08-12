@@ -18,7 +18,6 @@ import android.widget.ExpandableListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.doublep.emoncms.app.GetEmonData;
 import com.doublep.emoncms.app.MainActivity;
 import com.doublep.emoncms.app.R;
 import com.doublep.emoncms.app.adapters.AdapterFeedsExpand;
@@ -199,7 +198,7 @@ public class Feeds extends Fragment implements
             //LinearLayout ll = (LinearLayout) v.getParent().getParent();
             //ll.setBackgroundResource(R.drawable.listitem);
 
-            ArrayList<FeedDetails> items = GetEmonData.feedList;
+            ArrayList<FeedDetails> items = LoadFeeds.feedList;
             FeedDetails feedDetails = items.get(position);
             String strFeedID = feedDetails.getStrID();
             String strFeedTag = feedDetails.getStrTag();

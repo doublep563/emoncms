@@ -8,7 +8,6 @@ import android.os.Parcelable;
  */
 public class FeedData implements Parcelable {
 
-    // Basic Club Details
 
     @SuppressWarnings("rawtypes")
     public static final Parcelable.Creator<FeedData> CREATOR = new Parcelable.Creator<FeedData>() {

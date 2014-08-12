@@ -1,15 +1,21 @@
 package com.doublep.emoncms.app.Views;
 
 import android.app.Activity;
-import android.app.ListFragment;
+import android.app.Fragment;
 import android.app.LoaderManager;
 import android.content.Loader;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.doublep.emoncms.app.MainActivity;
 import com.doublep.emoncms.app.R;
@@ -24,7 +30,7 @@ import java.util.ArrayList;
  * Load data from web page
  * Populate in custom adapter
  */
-public class Summary extends ListFragment implements
+public class Summary extends Fragment implements
         LoaderManager.LoaderCallbacks<ArrayList> {
 
     //TODO Change AdapterSummary to SimpleAdapter. Change this class to extend Fragment.
@@ -33,6 +39,9 @@ public class Summary extends ListFragment implements
     private static final String TAG = "Summary";
     private static final int LOADER_ID = 1;
     private static OnTableRowClicked mCallback;
+    private ListView mListView;
+    private ProgressBar mProgressBar;
+    private TextView mTxtViewLoading;
 
 
     @Override
@@ -48,11 +57,6 @@ public class Summary extends ListFragment implements
         // We have an Action Bar
         setHasOptionsMenu(true);
 
-        setRetainInstance(true);
-
-
-        getLoaderManager().initLoader(LOADER_ID, null, this);
-
         //getActivity().setProgressBarIndeterminateVisibility(true);
 
         //TODO Add API field to Summary.xml
@@ -67,7 +71,7 @@ public class Summary extends ListFragment implements
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
+        getLoaderManager().initLoader(LOADER_ID, null, this);
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onActivityCreated() called! +++");
     }
 
@@ -126,10 +130,26 @@ public class Summary extends ListFragment implements
     }
 
 
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.summary_list, container, false);
+        mListView = (ListView) v.findViewById(R.id.list);
+        mProgressBar = (ProgressBar) v.findViewById(R.id.progress_bar);
+        mTxtViewLoading = (TextView) v.findViewById(R.id.txtLoading);
+        if (MainActivity.DEBUG) Log.i(TAG, "+++ onCreateView() called! +++");
+        return v;
+    }
+
     @Override
     public void onLoadFinished(Loader<ArrayList> loader, ArrayList data) {
-        AdapterSummary mAdapter = new AdapterSummary(getActivity(), R.layout.summary, data);
-        setListAdapter(mAdapter);
+        //AdapterSummary mAdapter = new AdapterSummary(getActivity(), data);
+        mListView.setAdapter(new AdapterSummary(getActivity(), data));
+        mProgressBar.setVisibility(View.GONE);
+        mTxtViewLoading.setVisibility(View.GONE);
+        mListView.setVisibility(View.VISIBLE);
+
+        //mListView.setAdapter(mAdapter);
         // getActivity().setProgressBarIndeterminateVisibility(false);
         if (MainActivity.DEBUG) Log.i(TAG, "+++ onLoadFinished() called! +++");
 
@@ -152,7 +172,9 @@ public class Summary extends ListFragment implements
         // handle item selection
         switch (item.getItemId()) {
             case R.id.action_refresh:
-                //getActivity().setSupportProgressBarIndeterminateVisibility(true);
+                mProgressBar.setVisibility(View.VISIBLE);
+                mTxtViewLoading.setVisibility(View.VISIBLE);
+                mListView.setVisibility(View.GONE);
                 getLoaderManager().restartLoader(LOADER_ID, null, this);
                 if (MainActivity.DEBUG) Log.i(TAG, "+++ onOptionsItemSelected() called! +++");
                 return true;

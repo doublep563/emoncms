@@ -9,10 +9,10 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.doublep.emoncms.app.GetEmonData;
 import com.doublep.emoncms.app.MainActivity;
 import com.doublep.emoncms.app.R;
 import com.doublep.emoncms.app.Views.Feeds;
+import com.doublep.emoncms.app.loaders.LoadFeeds;
 import com.doublep.emoncms.app.models.FeedDetails;
 
 import java.util.ArrayList;
@@ -28,7 +28,7 @@ public class AdapterFeedsExpand extends BaseExpandableListAdapter {
 
 
     public AdapterFeedsExpand(Context context) {
-        items = GetEmonData.feedList;
+        items = LoadFeeds.feedList;
         mContext = context;
 
     }
@@ -66,7 +66,7 @@ public class AdapterFeedsExpand extends BaseExpandableListAdapter {
 
 
         if (convertView == null) {
-            convertView = view.inflate(R.layout.feed_list_detail_child, parent);
+            convertView = view.inflate(R.layout.feed_list_detail_child, null);
         }
         TextView tvFeedID = (TextView) convertView.findViewById(R.id.textView11);
         TextView tvFeedName = (TextView) convertView.findViewById(R.id.textView12);
@@ -146,7 +146,6 @@ public class AdapterFeedsExpand extends BaseExpandableListAdapter {
             LayoutInflater view = (LayoutInflater) mContext.getSystemService
                     (Context.LAYOUT_INFLATER_SERVICE);
 
-
             row = view.inflate(R.layout.feed_list_detail, parent, false);
 
             feedHolder = new FeedHolder();
@@ -154,7 +153,6 @@ public class AdapterFeedsExpand extends BaseExpandableListAdapter {
             feedHolder.txtFeedTag = (TextView) row.findViewById(R.id.textView_tag);
             feedHolder.btnFeedValue = (Button) row.findViewById(R.id.button_value);
             feedHolder.btnFeedValue.setTag(groupPosition);
-            //feedHolder.viewPlusSign =  row.findViewById(R.id.plus_sign);
             feedHolder.viewVerticalLine = row.findViewById(R.id.vertical_line);
 
             feedHolder.btnFeedValue.setOnClickListener(new Feeds.OnClickListener() {
@@ -177,6 +175,9 @@ public class AdapterFeedsExpand extends BaseExpandableListAdapter {
         feedHolder.btnFeedValue.setText(feedDetails.getStrValue());
 
         int val = Integer.parseInt(feedDetails.getStrTime());
+
+        //TODO
+        // Add these to Preferences as defaults.
         if (val > 120) {
             feedHolder.btnFeedValue.setBackgroundResource(R.drawable.traffic_light_red);
         } else if (val > 60) {
@@ -212,11 +213,7 @@ public class AdapterFeedsExpand extends BaseExpandableListAdapter {
         TextView txtFeedName;
         TextView txtFeedTag;
         Button btnFeedValue;
-        //View viewPlusSign;
         View viewVerticalLine;
-        //TextView txtFeedUpdated;
-        //TextView txtFeedLight;
-        //Button btn;
 
 
     }
